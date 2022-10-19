@@ -4,3 +4,5 @@ sb3_contrib
 tqdm
 torch
 psutil
+build
+twine

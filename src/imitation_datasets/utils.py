@@ -3,9 +3,9 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 import multiprocessing
 import os
-from typing import Callable, DefaultDict, Tuple, Union
+from typing import Any, Callable, DefaultDict, Tuple, Union
 
-from utils.experts import Policy
+from .experts import Policy
 
 
 @dataclass
@@ -85,4 +85,5 @@ class CPUS:
         self.cpus[cpu_idx] = False
         self.cpu_semaphore.release()
 
-EnjoyFunction = Callable[[Policy, str, Context], Tuple[bool]]
+EnjoyFunction = Callable[[Policy, str, Context], bool]
+CollateFunction = Callable[[str, list[str]], None]

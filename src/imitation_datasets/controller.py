@@ -1,28 +1,25 @@
-from argparse import ArgumentParser
+from argparse import Namespace
 import asyncio
 from functools import partial
 import os
+from os import listdir
 import psutil
 from sys import platform
 
 from torch.multiprocessing import set_start_method
 from tqdm import tqdm
 
-from utils.experts import Experts 
-
-from .utils import CPUS, Context, Experiment, EnjoyFunction
-
-import warnings
-import ctypes
-
-warnings.filterwarnings("ignore")
+from .experts import Experts 
+from .utils import CPUS, CollateFunction, Context, Experiment, EnjoyFunction
 
 
 class Controller:
-    def __init__(self, func: EnjoyFunction, amount: int, threads: int = 1) -> None:
-        self.enjoy = func
+    def __init__(self, enjoy: EnjoyFunction, collate: CollateFunction, amount: int, threads: int = 1, path: str = './dataset/') -> None:
+        self.enjoy = enjoy
+        self.collate = collate
         self.threads = CPUS(threads)
         self.experiments = Experiment(amount)
+        self.path = path
 
         self.pbar = tqdm(range(self.experiments.amount), position=0, leave=True)
         set_start_method('spawn', force=True)
@@ -37,10 +34,15 @@ class Controller:
         if 'linux' in platform:
             os.sched_setaffinity(proc.pid, [int(cpu)])
 
-    def enjoy_closure(self, opt: ArgumentParser) -> EnjoyFunction:
+    def enjoy_closure(self, opt: Namespace) -> EnjoyFunction:
         os.system("set LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so")
         os.system("set LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia")
         return partial(self.enjoy, expert=Experts.get_expert(opt.game))
+
+    def collate_closure(self, opt: Namespace):
+        path = f'{self.path}{opt.game}/'
+        files = [f for f in listdir(path)]
+        return partial(self.collate, data=files, path=path)
 
     async def enjoy_sequence(self, future: EnjoyFunction) -> bool:
         # Pre
@@ -59,7 +61,7 @@ class Controller:
         return result
 
     async def run(self, opt) -> None:
-        path = f'./dataset/{opt.game}/'
+        path = f'{self.path}{opt.game}/'
         self.create_folder(path)
 
         tasks = []
@@ -68,8 +70,8 @@ class Controller:
             task = asyncio.ensure_future(
                 self.enjoy_sequence(
                     enjoy( 
-                        path,
-                        Context(self.experiments, idx),
+                        path=path,
+                        context=Context(self.experiments, idx),
                     )
                 )
             )
@@ -78,6 +80,15 @@ class Controller:
 
 
     def start(self, opt):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.run(opt))
-        loop.close()
+        if opt.mode in ['all', 'play']: 
+            self.pbar = tqdm(range(self.experiments.amount), desc='Running episodes')
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(self.run(opt))
+            loop.close()
+
+        if opt.mode in ['all', 'collate']:
+            self.pbar = tqdm(range(self.experiments.amount), desc='Running collate')
+            collate = self.collate_closure(opt)
+            collate()
+        
+        self.experiments.write_log()

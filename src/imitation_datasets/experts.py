@@ -1,11 +1,10 @@
-from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, DefaultDict, List, Tuple
+from typing import Any, List, Tuple
 
 from huggingface_sb3 import load_from_hub
 from stable_baselines3.common.base_class import BaseAlgorithm
 
-from .register import atari, mujoco
+from .register import atari, classic, mujoco
 
 
 @dataclass
@@ -16,8 +15,9 @@ class Policy:
     threshold: float
     algo: BaseAlgorithm
     policy: BaseAlgorithm = field(init=False, default=None)
+    internal_state: Any = field(init=False, default=None)
 
-    def load(self) -> BaseAlgorithm:
+    def load(self) -> None:
         checkpoint = load_from_hub(
             repo_id=self.repo_id,
             filename=self.filename,
@@ -29,18 +29,28 @@ class Policy:
             "clip_range": lambda _: 0.0
         }
         
-        return self.algo.load(
+        self.policy = self.algo.load(
             checkpoint, 
             custom_objects=custom_objects
         )
+        return self.policy
 
-    def predict(self, obs, state, deterministic: bool = True) -> Tuple[Any, Any]:
-        raise NotImplementedError('TODO')
+    def predict(self, obs, deterministic: bool = True) -> Tuple[Any, Any]:
+            action, internal_states = self.policy.predict(
+                obs,
+                state=self.internal_state,
+                deterministic=deterministic,
+            )
+            self.internal_state = internal_states
+            return action, internal_states
+
+    def get_environment(self) -> str:
+        return self.name
 
 
 class Experts:
 
-    experts: List[Policy] = {key: Policy(**value) for env in [atari, mujoco] for key, value in env.items()}
+    experts: List[Policy] = {key: Policy(**value) for env in [atari, classic, mujoco] for key, value in env.items()}
 
     @classmethod
     def register(cls, identifier: str, policy: Policy) -> None:

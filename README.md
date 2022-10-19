@@ -25,9 +25,8 @@ Obs: To use the model you can call ``predict``, the policy class already has the
 The ``collate`` function will receive 2 parameters:
 
 * path: str - where it should save the final dataset
-* episodes: TBD
+* episodes: list\[str\] - A list of paths for each file
 
-Obs: This function is still in development
 
 ---
 ## Requirements
@@ -59,7 +58,7 @@ Obs: If not using StableBaselines, the expert has to have a `predict` function t
 
 Here is a list of the upcoming releases:
 
-- [ ] Collate function support
+- [x] Collate function support
 - [ ] Support for installing as a dependency
 - [ ] Module for downloading trajectories from a Hugging Face dataset 
 - [ ] Create actual documentation

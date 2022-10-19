@@ -1,9 +1,6 @@
-from argparse import ArgumentParser
-from typing import Any
+from argparse import ArgumentParser, Namespace
 
-from numpy import require
-
-def get_args() -> Any:
+def get_args() -> Namespace:
     parser = ArgumentParser()
     
     parser.add_argument(
@@ -19,7 +16,7 @@ def get_args() -> Any:
         "--threshold", type=float, default=None, help="reward threshold for each execution",
     )
     parser.add_argument(
-        "--mode", default="play", type=str, help="reward threshold for each execution",
+        "--mode", default="play", choices=['all', 'play', 'collate'], type=str, help="reward threshold for each execution",
     )
 
     return parser.parse_args()
