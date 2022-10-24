@@ -24,7 +24,7 @@ class Controller:
         self.path = path
 
         self.pbar = tqdm(range(self.experiments.amount), position=0, leave=True)
-        set_start_method('fork', force=True)
+        set_start_method('spawn', force=True)
 
     def create_folder(self, path: str) -> None:
         if not os.path.exists(path):
