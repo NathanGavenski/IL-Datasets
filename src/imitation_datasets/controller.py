@@ -5,13 +5,15 @@ import os
 from os import listdir
 import psutil
 from sys import platform
+import warnings
 
-from torch.multiprocessing import set_start_method
+from torch.multiprocessing import Process, set_start_method
 from tqdm import tqdm
 
 from .experts import Experts 
 from .utils import CPUS, CollateFunction, Context, Experiment, EnjoyFunction
 
+warnings.filterwarnings("ignore")
 
 class Controller:
     def __init__(self, enjoy: EnjoyFunction, collate: CollateFunction, amount: int, threads: int = 1, path: str = './dataset/') -> None:
@@ -22,7 +24,7 @@ class Controller:
         self.path = path
 
         self.pbar = tqdm(range(self.experiments.amount), position=0, leave=True)
-        set_start_method('spawn', force=True)
+        set_start_method('fork', force=True)
 
     def create_folder(self, path: str) -> None:
         if not os.path.exists(path):
@@ -33,6 +35,7 @@ class Controller:
         proc.cpu_affinity([int(cpu)])
         if 'linux' in platform:
             os.sched_setaffinity(proc.pid, [int(cpu)])
+        return proc
 
     def enjoy_closure(self, opt: Namespace) -> EnjoyFunction:
         os.system("set LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so")
@@ -47,11 +50,12 @@ class Controller:
     async def enjoy_sequence(self, future: EnjoyFunction) -> bool:
         # Pre
         cpu = await self.threads.cpu_allock()
-        await self.experiments.start()
-        await self.set_cpu(cpu)
+        _, idx = await self.experiments.start()
+        proc = await self.set_cpu(cpu)
+        print(cpu)
 
         # Enjoy
-        result = await future
+        result = await future()
 
         # Post
         self.threads.cpu_release(cpu)
@@ -60,35 +64,43 @@ class Controller:
 
         return result
 
-    async def run(self, opt) -> None:
+    def run_closure(self, future, path, context):
+        future = partial(future, path=path, context=context)
+        task = asyncio.ensure_future(
+            self.enjoy_sequence(
+                future
+            )
+        )
+
+        asyncio.get_event_loop().run_until_complete(
+            asyncio.gather(task)
+        )
+
+    def run(self, opt) -> None:
         path = f'{self.path}{opt.game}/'
         self.create_folder(path)
 
-        tasks = []
         for idx in range(self.experiments.amount):
             enjoy = self.enjoy_closure(opt)
-            task = asyncio.ensure_future(
-                self.enjoy_sequence(
-                    enjoy( 
-                        path=path,
-                        context=Context(self.experiments, idx),
-                    )
-                )
-            )
-            tasks.append(task)
-        await asyncio.wait(tasks)
 
+            p = Process(
+                target=self.run_closure, 
+                args=(
+                    enjoy,
+                    path,
+                    Context(self.experiments, idx),
+                ), 
+            )
+            p.start()
 
     def start(self, opt):
-        if opt.mode in ['all', 'play']: 
+        if opt.mode in ['all', 'play']:
             self.pbar = tqdm(range(self.experiments.amount), desc='Running episodes')
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.run(opt))
-            loop.close()
+            self.run(opt)
 
         if opt.mode in ['all', 'collate']:
             self.pbar = tqdm(range(self.experiments.amount), desc='Running collate')
             collate = self.collate_closure(opt)
             collate()
-        
+
         self.experiments.write_log()

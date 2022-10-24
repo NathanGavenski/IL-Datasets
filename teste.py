@@ -5,12 +5,13 @@ from imitation_datasets import get_args
 from imitation_datasets import Controller
 from imitation_datasets import Policy, Context
 
+
 async def enjoy(expert: Policy, path, context: Context) -> bool:
     done = False
     expert.load()
-    
+
     env = gym.make(expert.get_environment())
-    
+
     states, actions = [], []
     acc_reward, state = 0, env.reset()
     while not done:
@@ -20,7 +21,7 @@ async def enjoy(expert: Policy, path, context: Context) -> bool:
         states.append(state)
         actions.append(action)
         env.render()
-    
+
     episode = {
         'states': numpy.array(states),
         'actions': numpy.array(actions)
@@ -28,7 +29,8 @@ async def enjoy(expert: Policy, path, context: Context) -> bool:
     numpy.savez(f'{path}{context.index}', **episode)
     context.add_log(f'Accumulated reward {acc_reward}')
     return True
-        
+
+
 def collate(path, data) -> bool:
     episodes_starts = []
     states, actions = [], []
@@ -57,6 +59,7 @@ def collate(path, data) -> bool:
         os.remove(f'{path}{f}')
 
     return True
+
 
 if __name__ == '__main__':
     args = get_args()
