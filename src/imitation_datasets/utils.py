@@ -10,6 +10,14 @@ import gymnasium as gym
 from .experts import Policy
 
 
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
 @dataclass
 class Experiment:
     amount: int
@@ -66,14 +74,14 @@ class Context:
 
 
 @dataclass
-class CPUS:
+class CPUS(metaclass=Singleton):
     available_cpus: int = field(default_factory=multiprocessing.cpu_count())
     cpus: DefaultDict[int, bool] = field(init=False, default_factory=lambda: defaultdict(bool))
     cpu_semaphore: asyncio.Lock = field(init=False)
 
     def __post_init__(self) -> None:
-        if self.available_cpus > multiprocessing.cpu_count():
-            self.available_cpus = multiprocessing.cpu_count()
+        if self.available_cpus > multiprocessing.cpu_count() - 1:
+            self.available_cpus = multiprocessing.cpu_count() - 1
         self.cpu_semaphore = asyncio.BoundedSemaphore(value=self.available_cpus)
 
     async def cpu_allock(self) -> int:
@@ -82,13 +90,14 @@ class CPUS:
             if not self.cpus[idx]:
                 self.cpus[idx] = True
                 return idx
-    
+
     def cpu_release(self, cpu_idx: int) -> None:
         self.cpus[cpu_idx] = False
         self.cpu_semaphore.release()
 
+
 EnjoyFunction = Callable[[Policy, str, Context], bool]
-CollateFunction = Callable[[str, list[str]], None]
+CollateFunction = Callable[[str, List[str]], None]
 
 
 # TODO create an actual wrapper that implements all functions (missing render and others)

@@ -6,13 +6,15 @@ import os
 from os import listdir
 import psutil
 from sys import platform
+import warnings
 
-from torch.multiprocessing import set_start_method
+from torch.multiprocessing import Process, set_start_method
 from tqdm import tqdm
 
 from .experts import Experts 
 from .utils import CPUS, CollateFunction, Context, Experiment, EnjoyFunction
 
+warnings.filterwarnings("ignore")
 
 class Controller:
     def __init__(self, enjoy: EnjoyFunction, collate: CollateFunction, amount: int, threads: int = 1, path: str = './dataset/') -> None:
@@ -34,6 +36,7 @@ class Controller:
         proc.cpu_affinity([int(cpu)])
         if 'linux' in platform:
             os.sched_setaffinity(proc.pid, [int(cpu)])
+        return proc
 
     def enjoy_closure(self, opt: Namespace) -> EnjoyFunction:
         os.system("set LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so")
@@ -48,8 +51,9 @@ class Controller:
     async def enjoy_sequence(self, future: EnjoyFunction, executor: ProcessPoolExecutor) -> bool:
         # Pre
         cpu = await self.threads.cpu_allock()
-        await self.experiments.start()
-        await self.set_cpu(cpu)
+        _, idx = await self.experiments.start()
+        proc = await self.set_cpu(cpu)
+        print(cpu)
 
         # Enjoy
         result = await asyncio.get_event_loop().run_in_executor(executor, future)
@@ -61,7 +65,19 @@ class Controller:
 
         return result if result else await asyncio.gather(self.enjoy_sequence(future, executor))
 
-    async def run(self, opt) -> None:
+    def run_closure(self, future, path, context):
+        future = partial(future, path=path, context=context)
+        task = asyncio.ensure_future(
+            self.enjoy_sequence(
+                future
+            )
+        )
+
+        asyncio.get_event_loop().run_until_complete(
+            asyncio.gather(task)
+        )
+
+    def run(self, opt) -> None:
         path = f'{self.path}{opt.game}/'
         self.create_folder(path)
 
@@ -78,7 +94,6 @@ class Controller:
                 )
                 tasks.append(task)
             await asyncio.gather(*tasks)
-
 
     def start(self, opt):
         try:
