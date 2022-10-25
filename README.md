@@ -12,20 +12,24 @@ It consists of one ``Controller`` class, which requires two different functions 
 
 ---
 
-The ``enjoy`` function will receive 3 parameters:
+The ``enjoy`` function will receive 3 parameters and return 1:
 
 * path: str - where the episode is going to be recorded
 * experiment: Context - A class for recording all information (if you don't want to use `print` - keeping the console clear)
 * expert: Policy - A model based on the [StableBaselines3](https://stable-baselines3.readthedocs.io/en/master/) `BaseAlgorithm`.
 
+* returns: bool - Whether it was successfull or not
+
 Obs: To use the model you can call ``predict``, the policy class already has the correct form of using it (a.k.a., how the StableBaselines3 uses).
 
 ---
 
-The ``collate`` function will receive 2 parameters:
+The ``collate`` function will receive 2 parameters and return 1:
 
 * path: str - where it should save the final dataset
 * episodes: list\[str\] - A list of paths for each file
+
+* returns: bool - Whether it was successfull or not
 
 
 ---
@@ -54,12 +58,12 @@ Obs: If not using StableBaselines, the expert has to have a `predict` function t
 * deterministic: bool - If it should explore or not
 
 ---
-## This repository is not completed
+## This repository is not complete
 
 Here is a list of the upcoming releases:
 
 - [x] Collate function support
-- [ ] Support for installing as a dependency
+- [X] Support for installing as a dependency
 - [ ] Module for downloading trajectories from a Hugging Face dataset 
 - [ ] Create actual documentation
 - [ ] Create some examples
