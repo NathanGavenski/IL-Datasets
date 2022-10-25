@@ -22,7 +22,7 @@ class Controller:
         self.experiments = Experiment(amount)
         self.path = path
 
-        self.pbar = tqdm(range(self.experiments.amount), position=0, leave=True)
+        self.pbar = None
         set_start_method('spawn', force=True)
 
     def create_folder(self, path: str) -> None:

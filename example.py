@@ -5,7 +5,7 @@ from imitation_datasets import get_args
 from imitation_datasets import Controller
 from imitation_datasets import Policy, Context
 
-async def enjoy(expert: Policy, path, context: Context) -> bool:
+def enjoy(expert: Policy, path, context: Context) -> bool:
     done = False
     expert.load()
     
@@ -20,7 +20,8 @@ async def enjoy(expert: Policy, path, context: Context) -> bool:
         states.append(state)
         actions.append(action)
         env.render()
-    
+    env.close()
+
     episode = {
         'states': numpy.array(states),
         'actions': numpy.array(actions)
