@@ -1,5 +1,6 @@
 from argparse import Namespace
 import asyncio
+from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import os
 from os import listdir
@@ -47,7 +48,7 @@ class Controller:
         files = [f for f in listdir(path)]
         return partial(self.collate, data=files, path=path)
 
-    async def enjoy_sequence(self, future: EnjoyFunction) -> bool:
+    async def enjoy_sequence(self, future: EnjoyFunction, executor: ProcessPoolExecutor) -> bool:
         # Pre
         cpu = await self.threads.cpu_allock()
         _, idx = await self.experiments.start()
@@ -55,7 +56,7 @@ class Controller:
         print(cpu)
 
         # Enjoy
-        result = await future()
+        result = await asyncio.get_event_loop().run_in_executor(executor, future)
 
         # Post
         self.threads.cpu_release(cpu)
@@ -80,18 +81,19 @@ class Controller:
         path = f'{self.path}{opt.game}/'
         self.create_folder(path)
 
-        for idx in range(self.experiments.amount):
-            enjoy = self.enjoy_closure(opt)
-
-            p = Process(
-                target=self.run_closure, 
-                args=(
-                    enjoy,
-                    path,
-                    Context(self.experiments, idx),
-                ), 
-            )
-            p.start()
+        tasks = []
+        with ProcessPoolExecutor() as executor:
+            for idx in range(self.experiments.amount):
+                enjoy = self.enjoy_closure(opt)
+                enjoy = partial(enjoy, path=path, context=Context(self.experiments, idx))
+                task = asyncio.ensure_future(
+                    self.enjoy_sequence(
+                        enjoy,
+                        executor
+                    )
+                )
+                tasks.append(task)
+            await asyncio.gather(*tasks)
 
     def start(self, opt):
         if opt.mode in ['all', 'play']:
