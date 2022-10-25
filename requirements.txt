@@ -6,3 +6,4 @@ torch
 psutil
 build
 twine
+bumpver

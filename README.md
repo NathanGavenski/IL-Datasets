@@ -66,8 +66,9 @@ Here is a list of the upcoming releases:
 - [X] Support for installing as a dependency
 - [ ] Module for downloading trajectories from a Hugging Face dataset 
 - [ ] Create actual documentation
-- [ ] Create some examples
-
+- [X] Create some examples
+- [ ] Create tests
+ 
 ---
 
 ## If you like this repository be sure to check my other projects:
