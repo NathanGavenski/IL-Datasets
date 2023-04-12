@@ -57,9 +57,9 @@ class Controller:
         # Post
         self.threads.cpu_release(cpu)
         await self.experiments.stop(result)
-        self.pbar.update(1)
+        self.pbar.update(1 if result else 0)
 
-        return result
+        return result if result else await asyncio.gather(self.enjoy_sequence(future, executor))
 
     async def run(self, opt) -> None:
         path = f'{self.path}{opt.game}/'
@@ -81,15 +81,21 @@ class Controller:
 
 
     def start(self, opt):
-        if opt.mode in ['all', 'play']: 
-            self.pbar = tqdm(range(self.experiments.amount), desc='Running episodes')
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.run(opt))
-            loop.close()
+        try:
 
-        if opt.mode in ['all', 'collate']:
-            self.pbar = tqdm(range(self.experiments.amount), desc='Running collate')
-            collate = self.collate_closure(opt)
-            collate()
-        
-        self.experiments.write_log()
+            if opt.mode in ['all', 'play']: 
+                self.pbar = tqdm(range(self.experiments.amount), desc='Running episodes')
+                loop = asyncio.get_event_loop()
+                loop.run_until_complete(self.run(opt))
+                loop.close()
+
+            if opt.mode in ['all', 'collate']:
+                self.pbar = tqdm(range(self.experiments.amount), desc='Running collate')
+                collate = self.collate_closure(opt)
+                collate()
+
+        except Exception as e:
+            self.experiments.add_log(-99, e)
+            raise e
+        finally:
+            self.experiments.write_log()

@@ -34,8 +34,8 @@ mujoco = {
         'name': 'HalfCheetah-v3',
         'repo_id': 'sb3/tqc-HalfCheetah-v3',
         'filename': 'tqc-HalfCheetah-v3.zip',
-        'threshold': 12102.,
-        'algo': TQC
+        'threshold': 9709.,
+        'algo': TD3
     },
     'hopper': {
         'name': 'Hopper-v3',

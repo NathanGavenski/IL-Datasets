@@ -39,7 +39,7 @@ class Experiment:
 
     async def stop(self, status: bool, amount: int = 1) -> None:
         await self.experiment_semaphore.acquire()
-        self.amount += -amount if status else amount
+        self.amount += 0 if status else amount
         self.waiting -= amount
         self.experiment_semaphore.release()
 
