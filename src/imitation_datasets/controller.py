@@ -94,8 +94,8 @@ class Controller:
                 collate = self.collate_closure(opt)
                 collate()
 
-        except Exception as e:
-            self.experiments.add_log(-99, e)
-            raise e
+        except Exception as exception:
+            self.experiments.add_log(-99, exception)
+            raise exception
         finally:
             self.experiments.write_log()

@@ -3,7 +3,9 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 import multiprocessing
 import os
-from typing import Any, Callable, DefaultDict, Tuple, Union
+from typing import Any, Callable, DefaultDict, Union, List, Dict, Tuple
+
+import gymnasium as gym
 
 from .experts import Policy
 
@@ -87,3 +89,73 @@ class CPUS:
 
 EnjoyFunction = Callable[[Policy, str, Context], bool]
 CollateFunction = Callable[[str, list[str]], None]
+
+
+# TODO create an actual wrapper that implements all functions (missing render and others)
+# FIXME Gym got rid of the seed function, it would be nice to have one
+class GymWrapper:
+    """
+        Wrapper for gym environment. Since Gymnasium and Gym version 0.26 
+        there are some environments that were working under Gym-v.0.21 stopped 
+        working. This wrapper just makes sure that the output for the environment 
+        will always work with the version the user wants.
+    """
+
+    def __init__(self, name: str, version: str = "newest") -> None:
+        """
+        Args:
+            name: gym environment name
+            version: ["newest", "older"] = refers to the compatibility version. 
+        
+        In this case, "newest" is 0.26 and "older" is 0.21.
+        """
+        if version not in ["newest", "older"]:
+            raise ValueError("Version has to be :" + ["newest", "older"])
+
+        self.env = gym.make(name)
+        self.version = version
+
+    def reset(self) -> Union[Tuple[List[float], Dict[str, Any]], List[float]]:
+        """
+        Resets the framework and return the appropriate return.
+        """
+        state = self.env.reset()
+        if self.version == "newest":
+            return state
+
+        if len(state) > 1:
+            return state[0]
+        return state
+
+    def step(
+            self, 
+            action: Union[float, int]
+        ) -> Union[
+            Tuple[List[float], float, bool, bool, Dict[str, Any]], 
+            Tuple[List[float], float, bool, Dict[str, Any]]
+        ]:
+        """
+        Perform an action in the environment and return the appropriate return 
+        according to version.
+        """
+        gym_return = self.env.step(action)
+        if self.version == "newest":
+            return gym_return
+
+        if len(gym_return) > 4:
+            state, reward, terminated, truncated, info = gym_return
+            return state, reward, terminated or truncated, info
+        else:
+            return gym_return
+
+    def render(self):
+        """
+        Return the render for the environment.
+        """
+        return self.env.render()
+
+    def close(self) -> None:
+        """
+        Close the environment.
+        """
+        self.env.close()
