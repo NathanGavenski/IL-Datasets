@@ -1,3 +1,4 @@
+"""Register of MuJoCo imitation learning teachers."""
 from stable_baselines3 import TD3, SAC
 from sb3_contrib import TQC
 

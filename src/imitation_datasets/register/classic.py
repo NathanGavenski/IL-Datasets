@@ -1,3 +1,4 @@
+"""Register classic control imitation teachers."""
 from stable_baselines3 import PPO
 
 classic = {

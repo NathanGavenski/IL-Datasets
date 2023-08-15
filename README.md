@@ -68,6 +68,7 @@ Here is a list of the upcoming releases:
 - [ ] Create actual documentation
 - [X] Create some examples
 - [ ] Create tests
+- [ ] Create GitHub workflow with pylint
  
 ---
 

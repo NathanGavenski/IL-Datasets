@@ -1,21 +1,40 @@
+"""Controller module for running experiments"""
 from argparse import Namespace
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import os
 from os import listdir
-import psutil
 from sys import platform
 
 from torch.multiprocessing import set_start_method
 from tqdm import tqdm
+import psutil
 
-from .experts import Experts 
+from .experts import Experts
 from .utils import CPUS, CollateFunction, Context, Experiment, EnjoyFunction
 
 
 class Controller:
-    def __init__(self, enjoy: EnjoyFunction, collate: CollateFunction, amount: int, threads: int = 1, path: str = './dataset/') -> None:
+    """Controller for running experiments."""
+
+    def __init__(
+            self,
+            enjoy: EnjoyFunction,
+            collate: CollateFunction,
+            amount: int,
+            threads: int = 1,
+            path: str = './dataset/'
+        ) -> None:
+        """Initialize the controller.
+        
+        Args:
+            enjoy (EnjoyFunction): Function to run the expert.
+            collate (CollateFunction): Function to collate the data.
+            amount (int): Amount of episodes to run.
+            threads (int, optional): Amount of threads to use. Defaults to 1.
+            path (str, optional): Path to save the dataset. Defaults to './dataset/'.
+        """
         self.enjoy = enjoy
         self.collate = collate
         self.threads = CPUS(threads)
@@ -26,26 +45,62 @@ class Controller:
         set_start_method('spawn', force=True)
 
     def create_folder(self, path: str) -> None:
+        """Create a folder if it does not exist.
+        
+        Args:
+            path (str): Path to the folder.
+        """
         if not os.path.exists(path):
             os.makedirs(path)
 
     async def set_cpu(self, cpu: int) -> None:
+        """Set the cpu affinity for the current process.
+        
+        Args:
+            cpu (int): CPU index to use.
+        """
         proc = psutil.Process()
         proc.cpu_affinity([int(cpu)])
         if 'linux' in platform:
             os.sched_setaffinity(proc.pid, [int(cpu)])
 
     def enjoy_closure(self, opt: Namespace) -> EnjoyFunction:
+        """Create a closure for the enjoy function.
+
+        Args:
+            opt (Namespace): Namespace with the arguments.
+
+        Returns:
+            EnjoyFunction: Enjoy function with part of the arguments.
+        """
         os.system("set LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so")
         os.system("set LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia")
         return partial(self.enjoy, expert=Experts.get_expert(opt.game))
 
-    def collate_closure(self, opt: Namespace):
+    def collate_closure(self, opt: Namespace) -> CollateFunction:
+        """Create a closure for the collate function.
+
+        Args:
+            opt (Namespace): Namespace with the arguments.
+
+        Returns:
+            CollateFunction: Collate function with part of the arguments.
+        """
         path = f'{self.path}{opt.game}/'
-        files = [f for f in listdir(path)]
+        files = list(listdir(path))
         return partial(self.collate, data=files, path=path)
 
     async def enjoy_sequence(self, future: EnjoyFunction, executor: ProcessPoolExecutor) -> bool:
+        """_summary_
+
+        Args:
+            future (EnjoyFunction): Enjoy function already with async future.
+            executor (ProcessPoolExecutor): Executor to run the future.
+
+        Returns:
+            bool: Result of the future. 
+                  True if the expert was able to solve the game. False otherwise.
+        """
         # Pre
         cpu = await self.threads.cpu_allock()
         await self.experiments.start()
@@ -62,6 +117,11 @@ class Controller:
         return result if result else await asyncio.gather(self.enjoy_sequence(future, executor))
 
     async def run(self, opt) -> None:
+        """Run the experiments.
+        
+        Args:
+            opt (Namespace): Namespace with the arguments.
+        """
         path = f'{self.path}{opt.game}/'
         self.create_folder(path)
 
@@ -79,11 +139,17 @@ class Controller:
                 tasks.append(task)
             await asyncio.gather(*tasks)
 
-
     def start(self, opt):
-        try:
+        """Start the experiments.
+        
+        Args:
+            opt (Namespace): Namespace with the arguments.
 
-            if opt.mode in ['all', 'play']: 
+        Raises:
+            exception: Exception (general) raised during the execution. 
+        """
+        try:
+            if opt.mode in ['all', 'play']:
                 self.pbar = tqdm(range(self.experiments.amount), desc='Running episodes')
                 loop = asyncio.get_event_loop()
                 loop.run_until_complete(self.run(opt))
