@@ -3,7 +3,6 @@ import os
 from typing import List
 
 import numpy as np
-import gymnasium as gym
 
 from .experts import Policy
 from .utils import Context
