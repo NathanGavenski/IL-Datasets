@@ -92,8 +92,9 @@ class Policy:
 
 class Experts:
     """Helper class to register and get expert policies."""
-    experts: List[Policy] = {key: Policy(
-        **value) for env in [atari, classic, mujoco] for key, value in env.items()}
+    experts: List[Policy] = {
+        key: Policy(**value) for env in [atari, classic, mujoco] for key, value in env.items()
+    }
 
     @classmethod
     def register(cls, identifier: str, policy: Policy) -> None:
