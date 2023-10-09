@@ -8,6 +8,7 @@ from typing import Any, Callable, DefaultDict, Union, List, Dict, Tuple
 from typing_extensions import Self
 
 import gymnasium as gym
+import numpy as np
 
 from .experts import Policy
 
@@ -51,7 +52,7 @@ class Experiment:
 
     def is_done(self) -> bool:
         """Check if the experiment is done.
-        
+
         Returns:
             bool: True if the experiment is done, False otherwise.
         """
@@ -79,7 +80,7 @@ class Experiment:
 
     async def stop(self, status: bool, amount: int = 1) -> None:
         """Stop an experiment.
-        
+
         Args:
             status (bool): True if the experiment was successful, False otherwise.
             amount (int, optional): How many experiments are left to run. Defaults to 1.
@@ -91,7 +92,7 @@ class Experiment:
 
     def add_log(self, experiment: int, log: str) -> None:
         """Add a log to the experiment.
-        
+
         Args:
             experiment (int): Experiment index.
             log (str): Log to add.
@@ -161,9 +162,15 @@ EnjoyFunction = Callable[[Policy, str, Context], bool]
 CollateFunction = Callable[[str, List[str]], None]
 
 
+class WrapperException(Exception):
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super().__init__(self.message)
+
+
 class GymWrapper:
     """
-        Wrapper for gym environment. Since Gymnasium and Gym version 0.26 
+        Wrapper for gym environment. Since Gymnasium and Gym version 0.26
         there are some environments that were working under Gym-v.0.21 stopped 
         working. This wrapper just makes sure that the output for the environment 
         will always work with the version the user wants.
@@ -171,19 +178,33 @@ class GymWrapper:
     # FIXME Implement all functions from a gym environment -- missing render and others
     # TODO Gym got rid of the seed function, it would be nice to have one
 
-    def __init__(self, name: str, version: str = "newest") -> None:
+    def __init__(self, environment: Any, version: str = "newest") -> None:
         """
         Args:
             name: gym environment name
-            version: ["newest", "older"] = refers to the compatibility version. 
+            version: ["newest", "older"] refers to the compatibility version.
 
         In this case, "newest" is 0.26 and "older" is 0.21.
         """
         if version not in ["newest", "older"]:
-            raise ValueError("Version has to be :" + ["newest", "older"])
+            raise ValueError("Version has to be : ['newest', 'older']")
 
-        self.env = gym.make(name)
+        self.env = environment
+        state = environment.reset()
+        if version == "older" and not isinstance(state[0], np.floating):
+            raise WrapperException("Incopatible environment version and wrapper version.")
+        if version == "newest" and not isinstance(state[0], np.ndarray):
+            raise WrapperException("Incopatible environment version and wrapper version.")
+
         self.version = version
+
+    @property
+    def action_space(self):
+        return self.env.action_space
+
+    @property
+    def state_space(self):
+        return self.env.state_space
 
     def reset(self) -> Union[Tuple[List[float], Dict[str, Any]], List[float]]:
         """
@@ -191,9 +212,6 @@ class GymWrapper:
         """
         state = self.env.reset()
         if self.version == "newest":
-            return state
-
-        if len(state) > 1:
             return state[0]
         return state
 
@@ -205,24 +223,27 @@ class GymWrapper:
             Tuple[List[float], float, bool, Dict[str, Any]]
     ]:
         """
-        Perform an action in the environment and return the appropriate return 
+        Perform an action in the environment and return the appropriate return
         according to version.
         """
         gym_return = self.env.step(action)
         if self.version == "newest":
-            return gym_return
-
-        if len(gym_return) > 4:
             state, reward, terminated, truncated, info = gym_return
             return state, reward, terminated or truncated, info
 
         return gym_return
 
-    def render(self):
+    def render(self, mode="rgb_array"):
         """
         Return the render for the environment.
         """
-        return self.env.render()
+        if self.version == "newest":
+            state = self.env.render()
+            if state is None:
+                raise WrapperException("No render mode set.")
+            return state
+        state = self.env.render(mode)
+        return self.env.render(mode)
 
     def close(self) -> None:
         """

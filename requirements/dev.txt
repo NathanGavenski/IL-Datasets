@@ -1,0 +1,16 @@
+setuptools==59.5.0
+gym==0.21.0
+pyglet==1.5.27
+gymnasium
+pytest
+pylint
+
+huggingface_sb3
+stable_baselines3
+sb3_contrib
+tqdm
+torch
+psutil
+build
+twine
+bumpver
