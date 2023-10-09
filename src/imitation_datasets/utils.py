@@ -6,6 +6,7 @@ import multiprocessing
 import os
 from typing import Any, Callable, DefaultDict, Union, List, Dict, Tuple
 from typing_extensions import Self
+from weakref import WeakValueDictionary
 
 import gymnasium as gym
 import numpy as np
@@ -15,7 +16,7 @@ from .experts import Policy
 
 class Singleton(type):
     """Singleton metaclass."""
-    _instances = {}
+    _instances = WeakValueDictionary()
 
     def __call__(cls, *args, **kwargs) -> Self:
         """Call method for Singleton metaclass.
@@ -24,8 +25,8 @@ class Singleton(type):
             Self: Singleton instance.
         """
         if cls not in cls._instances:
-            cls._instances[cls] = super(
-                Singleton, cls).__call__(*args, **kwargs)
+            instance = super(Singleton, cls).__call__(*args, **kwargs)
+            cls._instances[cls] = instance
         return cls._instances[cls]
 
 
@@ -35,11 +36,18 @@ class Experiment:
 
     amount: int
     path: str = './logs.txt'
-    waiting: int = field(init=False, default_factory=int)
+    waiting: int = field(
+        init=False,
+        default_factory=int
+    )
     logs: DefaultDict[int, list] = field(
-        init=False, default_factory=lambda: defaultdict(list))
+        init=False,
+        default_factory=lambda: defaultdict(list)
+    )
     experiment_semaphore: asyncio.Lock = field(
-        init=False, default=asyncio.BoundedSemaphore(value=1))
+        init=False,
+        default=asyncio.BoundedSemaphore(value=1)
+    )
 
     def __post_init__(self) -> None:
         """Write in log file that the dataset creation has started."""
@@ -125,16 +133,14 @@ class CPUS(metaclass=Singleton):
     # FIXME if the user is not the admin, the class should not be invoked
 
     available_cpus: int = field(default_factory=multiprocessing.cpu_count())
-    cpus: DefaultDict[int, bool] = field(
-        init=False, default_factory=lambda: defaultdict(bool))
+    cpus: DefaultDict[int, bool] = field(init=False, default_factory=lambda: defaultdict(bool))
     cpu_semaphore: asyncio.Lock = field(init=False)
 
     def __post_init__(self) -> None:
         """Initialize the cpu_semaphore."""
         if self.available_cpus > multiprocessing.cpu_count() - 1:
             self.available_cpus = multiprocessing.cpu_count() - 1
-        self.cpu_semaphore = asyncio.BoundedSemaphore(
-            value=self.available_cpus)
+        self.cpu_semaphore = asyncio.BoundedSemaphore(value=self.available_cpus)
 
     async def cpu_allock(self) -> int:
         """Acquire a CPU.
@@ -154,8 +160,11 @@ class CPUS(metaclass=Singleton):
         Args:
             cpu_idx (int): CPU index.
         """
-        self.cpus[cpu_idx] = False
-        self.cpu_semaphore.release()
+        try:
+            self.cpus[cpu_idx] = False
+            self.cpu_semaphore.release()
+        except ValueError:
+            pass
 
 
 EnjoyFunction = Callable[[Policy, str, Context], bool]

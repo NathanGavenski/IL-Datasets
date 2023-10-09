@@ -27,7 +27,7 @@ class Controller:
             path: str = './dataset/'
         ) -> None:
         """Initialize the controller.
-        
+
         Args:
             enjoy (EnjoyFunction): Function to run the expert.
             collate (CollateFunction): Function to collate the data.
@@ -46,7 +46,7 @@ class Controller:
 
     def create_folder(self, path: str) -> None:
         """Create a folder if it does not exist.
-        
+
         Args:
             path (str): Path to the folder.
         """
@@ -55,7 +55,7 @@ class Controller:
 
     async def set_cpu(self, cpu: int) -> None:
         """Set the cpu affinity for the current process.
-        
+
         Args:
             cpu (int): CPU index to use.
         """
