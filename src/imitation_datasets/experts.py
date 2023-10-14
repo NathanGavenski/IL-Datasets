@@ -11,6 +11,7 @@ from .register import atari, classic, mujoco
 @dataclass
 class Policy:
     """Policy dataclass to load and use expert policies."""
+
     name: str
     repo_id: str
     filename: str
@@ -54,9 +55,9 @@ class Policy:
             self,
             obs: List[Union[int, float]],
             deterministic: bool = True
-        ) -> Tuple[
-            Union[int, float, List[Union[int, float]]],
-            Union[int, float, List[Union[int, float]]]
+    ) -> Tuple[
+        Union[int, float, List[Union[int, float]]],
+        Union[int, float, List[Union[int, float]]]
     ]:
         """
         Predict action given observation.
@@ -66,9 +67,9 @@ class Policy:
             deterministic (bool, optional): Use exploration to predict action. Defaults to True.
 
         Returns:
-            action (Union[int, float, List[Union[int, float]]]): 
+            action (Union[int, float, List[Union[int, float]]]):
                 action predicted by the policy.
-            internal_states (Union[int, float, List[Union[int, float]]]): 
+            internal_states (Union[int, float, List[Union[int, float]]]):
                 internal states of the policy.
 
         Note: typing depends on the environment.

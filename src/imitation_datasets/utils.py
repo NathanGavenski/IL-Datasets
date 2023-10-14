@@ -5,11 +5,12 @@ from dataclasses import dataclass, field
 import multiprocessing
 import os
 from typing import Any, Callable, DefaultDict, Union, List, Dict, Tuple
-from typing_extensions import Self
 from weakref import WeakValueDictionary
+import random
+from typing_extensions import Self
 
-import gymnasium as gym
 import numpy as np
+import torch
 
 from .experts import Policy
 
@@ -130,7 +131,6 @@ class Context:
 @dataclass
 class CPUS(metaclass=Singleton):
     """CPUS dataclass to keep track of the available CPUs."""
-    # FIXME if the user is not the admin, the class should not be invoked
 
     available_cpus: int = field(default_factory=multiprocessing.cpu_count())
     cpus: DefaultDict[int, bool] = field(init=False, default_factory=lambda: defaultdict(bool))
@@ -172,6 +172,8 @@ CollateFunction = Callable[[str, List[str]], None]
 
 
 class WrapperException(Exception):
+    """Wrapper exception for all exceptions related to the wrapper."""
+
     def __init__(self, message: str) -> None:
         self.message = message
         super().__init__(self.message)
@@ -184,8 +186,6 @@ class GymWrapper:
         working. This wrapper just makes sure that the output for the environment 
         will always work with the version the user wants.
     """
-    # FIXME Implement all functions from a gym environment -- missing render and others
-    # TODO Gym got rid of the seed function, it would be nice to have one
 
     def __init__(self, environment: Any, version: str = "newest") -> None:
         """
@@ -209,16 +209,26 @@ class GymWrapper:
 
     @property
     def action_space(self):
+        """Map gym action_space attribute to wrapper."""
         return self.env.action_space
 
     @property
     def state_space(self):
+        """Map gym env_space attribute to wrapper."""
         return self.env.state_space
 
+    def set_seed(self, seed: int) -> None:
+        """Set seed for all packages (Pytorch, Numpy and Python).
+
+        Args:
+            seed (optional, int): seed number to use for the random generator.
+        """
+        torch.manual_seed(seed)
+        np.random.seed(seed)
+        random.seed(seed)
+
     def reset(self) -> Union[Tuple[List[float], Dict[str, Any]], List[float]]:
-        """
-        Resets the framework and return the appropriate return.
-        """
+        """Resets the framework and return the appropriate return."""
         state = self.env.reset()
         if self.version == "newest":
             return state[0]
@@ -227,9 +237,9 @@ class GymWrapper:
     def step(
             self,
             action: Union[float, int]
-        ) -> Union[
-            Tuple[List[float], float, bool, bool, Dict[str, Any]],
-            Tuple[List[float], float, bool, Dict[str, Any]]
+    ) -> Union[
+        Tuple[List[float], float, bool, bool, Dict[str, Any]],
+        Tuple[List[float], float, bool, Dict[str, Any]]
     ]:
         """
         Perform an action in the environment and return the appropriate return
@@ -243,19 +253,16 @@ class GymWrapper:
         return gym_return
 
     def render(self, mode="rgb_array"):
-        """
-        Return the render for the environment.
-        """
+        """Return the render for the environment."""
         if self.version == "newest":
             state = self.env.render()
             if state is None:
                 raise WrapperException("No render mode set.")
             return state
+
         state = self.env.render(mode)
         return self.env.render(mode)
 
     def close(self) -> None:
-        """
-        Close the environment.
-        """
+        """Close the environment."""
         self.env.close()

@@ -11,7 +11,7 @@ from .utils import GymWrapper
 
 def enjoy(expert: Policy, path: str, context: Context) -> bool:
     """
-    This is a simple enjoy function example. 
+    This is a simple enjoy function example.
     It has three arguments and should return a boolean.
     """
     done = False
@@ -40,9 +40,7 @@ def enjoy(expert: Policy, path: str, context: Context) -> bool:
 
 
 def collate(path, data) -> bool:
-    """
-    This function is a simple collate function.
-    """
+    """This function is a simple collate function."""
     episodes_starts = []
     states, actions = [], []
 
@@ -74,9 +72,7 @@ def collate(path, data) -> bool:
 
 
 def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
-    """
-    Enjoy following StableBaseline output.
-    """
+    """Enjoy following StableBaseline output."""
     done = False
     expert.load()
 
@@ -112,9 +108,7 @@ def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
 
 
 def baseline_collate(path: str, data: List[str]) -> bool:
-    """
-    Collate that outputs the same as StableBaseline.
-    """
+    """Collate that outputs the same as StableBaseline."""
     episodes_starts = []
     states = []
     actions = []
