@@ -213,9 +213,9 @@ class GymWrapper:
         return self.env.action_space
 
     @property
-    def state_space(self):
+    def observation_space(self):
         """Map gym env_space attribute to wrapper."""
-        return self.env.state_space
+        return self.env.observation_space
 
     def set_seed(self, seed: int) -> None:
         """Set seed for all packages (Pytorch, Numpy and Python).
