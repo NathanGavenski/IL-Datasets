@@ -58,7 +58,7 @@ Obs: If not using StableBaselines, the expert has to have a `predict` function t
 * deterministic: bool - If it should explore or not
 
 ---
-## This repository is not complete
+## This repository is in development
 
 Here is a list of the upcoming releases:
 
