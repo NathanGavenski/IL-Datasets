@@ -3,12 +3,12 @@ import multiprocessing
 
 
 def setUp():
-    from imitation_datasets.utils import CPUS
+    from src.imitation_datasets.utils import CPUS
     return CPUS(4)
 
 
 def tearDown(cpus) -> None:
-    from imitation_datasets.utils import CPUS
+    from src.imitation_datasets.utils import CPUS
     for cpu, status in cpus.cpus.items():
         if status:
             cpus.cpu_release(cpu)
@@ -17,7 +17,7 @@ def tearDown(cpus) -> None:
 
 
 def test_cpu_init() -> None:
-    from imitation_datasets.utils import CPUS
+    from src.imitation_datasets.utils import CPUS
     try:
         cpus = CPUS(50)
         number_of_cpus = multiprocessing.cpu_count() - 1

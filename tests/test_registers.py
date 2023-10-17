@@ -3,8 +3,8 @@ from unittest import TestCase
 
 from abc import ABCMeta
 
-from imitation_datasets import register
-from imitation_datasets.register import *
+from src.imitation_datasets import register
+from src.imitation_datasets.register import *
 
 
 class TestRegisters(TestCase):

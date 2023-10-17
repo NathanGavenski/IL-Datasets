@@ -260,7 +260,6 @@ class GymWrapper:
                 raise WrapperException("No render mode set.")
             return state
 
-        state = self.env.render(mode)
         return self.env.render(mode)
 
     def close(self) -> None:
