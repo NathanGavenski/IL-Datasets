@@ -11,13 +11,13 @@ from .utils import GymWrapper
 
 def enjoy(expert: Policy, path: str, context: Context) -> bool:
     """
-    This is a simple enjoy function example. 
+    This is a simple enjoy function example.
     It has three arguments and should return a boolean.
     """
     done = False
     expert.load()
 
-    env = GymWrapper(expert.get_environment(), version="older")
+    env = GymWrapper(expert.get_environment(), version="newest")
 
     states, actions = [], []
     acc_reward, state = 0, env.reset()
@@ -40,9 +40,7 @@ def enjoy(expert: Policy, path: str, context: Context) -> bool:
 
 
 def collate(path, data) -> bool:
-    """
-    This function is a simple collate function.
-    """
+    """This function is a simple collate function."""
     episodes_starts = []
     states, actions = [], []
 
@@ -74,13 +72,11 @@ def collate(path, data) -> bool:
 
 
 def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
-    """
-    Enjoy following StableBaseline output.
-    """
+    """Enjoy following StableBaseline output."""
     done = False
     expert.load()
 
-    env = GymWrapper(expert.get_environment(), version="older")
+    env = GymWrapper(expert.get_environment(), version="newest")
 
     states = []
     actions = []
@@ -97,7 +93,7 @@ def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
         rewards.append(reward)
     env.close()
 
-    episode_returns= np.array([acc_reward])
+    episode_returns = np.array([acc_reward])
 
     episode = {
         'obs': np.array(states),
@@ -112,9 +108,7 @@ def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
 
 
 def baseline_collate(path: str, data: List[str]) -> bool:
-    """
-    Collate that outputs the same as StableBaseline.
-    """
+    """Collate that outputs the same as StableBaseline."""
     episodes_starts = []
     states = []
     actions = []

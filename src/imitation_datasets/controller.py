@@ -25,9 +25,9 @@ class Controller:
             amount: int,
             threads: int = 1,
             path: str = './dataset/'
-        ) -> None:
+    ) -> None:
         """Initialize the controller.
-        
+
         Args:
             enjoy (EnjoyFunction): Function to run the expert.
             collate (CollateFunction): Function to collate the data.
@@ -46,7 +46,7 @@ class Controller:
 
     def create_folder(self, path: str) -> None:
         """Create a folder if it does not exist.
-        
+
         Args:
             path (str): Path to the folder.
         """
@@ -55,14 +55,17 @@ class Controller:
 
     async def set_cpu(self, cpu: int) -> None:
         """Set the cpu affinity for the current process.
-        
+
         Args:
             cpu (int): CPU index to use.
         """
-        proc = psutil.Process()
-        proc.cpu_affinity([int(cpu)])
-        if 'linux' in platform:
-            os.sched_setaffinity(proc.pid, [int(cpu)])
+        try:
+            proc = psutil.Process()
+            proc.cpu_affinity([int(cpu)])
+            if 'linux' in platform:
+                os.sched_setaffinity(proc.pid, [int(cpu)])
+        except OSError:
+            pass
 
     def enjoy_closure(self, opt: Namespace) -> EnjoyFunction:
         """Create a closure for the enjoy function.
@@ -98,7 +101,7 @@ class Controller:
             executor (ProcessPoolExecutor): Executor to run the future.
 
         Returns:
-            bool: Result of the future. 
+            bool: Result of the future.
                   True if the expert was able to solve the game. False otherwise.
         """
         # Pre
@@ -118,7 +121,7 @@ class Controller:
 
     async def run(self, opt) -> None:
         """Run the experiments.
-        
+
         Args:
             opt (Namespace): Namespace with the arguments.
         """
@@ -139,14 +142,14 @@ class Controller:
                 tasks.append(task)
             await asyncio.gather(*tasks)
 
-    def start(self, opt):
+    def start(self, opt: Namespace):
         """Start the experiments.
-        
+
         Args:
             opt (Namespace): Namespace with the arguments.
 
         Raises:
-            exception: Exception (general) raised during the execution. 
+            exception: Exception (general) raised during the execution.
         """
         try:
             if opt.mode in ['all', 'play']:
@@ -159,7 +162,6 @@ class Controller:
                 self.pbar = tqdm(range(self.experiments.amount), desc='Running collate')
                 collate = self.collate_closure(opt)
                 collate()
-
         except Exception as exception:
             self.experiments.add_log(-99, exception)
             raise exception

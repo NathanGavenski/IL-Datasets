@@ -1,6 +1,5 @@
 """Register of MuJoCo imitation learning teachers."""
 from stable_baselines3 import TD3, SAC
-from sb3_contrib import TQC
 
 mujoco = {
     'ant': {
@@ -33,23 +32,23 @@ mujoco = {
     },
     'cheetah': {
         'name': 'HalfCheetah-v3',
-        'repo_id': 'sb3/tqc-HalfCheetah-v3',
-        'filename': 'tqc-HalfCheetah-v3.zip',
+        'repo_id': 'sb3/td3-HalfCheetah-v3',
+        'filename': 'td3-HalfCheetah-v3.zip',
         'threshold': 9709.,
         'algo': TD3
     },
     'hopper': {
         'name': 'Hopper-v3',
-        'repo_id': 'sb3/tqc-Hopper-v3',
-        'filename': 'tqc-Hopper-v3.zip',
-        'threshold': 3752.,
-        'algo': TQC
+        'repo_id': 'sb3/td3-Hopper-v3',
+        'filename': 'td3-Hopper-v3.zip',
+        'threshold': 3604.,
+        'algo': TD3
     },
     'humanoid': {
         'name': 'Humanoid-v3',
-        'repo_id': 'sb3/tqc-Humanoid-v3',
-        'filename': 'tqc-Humanoid-v3.zip',
-        'threshold': 6866.,
-        'algo': TQC
+        'repo_id': 'sb3/sac-Humanoid-v3',
+        'filename': 'sac-Humanoid-v3.zip',
+        'threshold': 6251.,
+        'algo': SAC
     },
 }

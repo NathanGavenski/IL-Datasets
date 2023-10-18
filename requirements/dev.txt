@@ -1,0 +1,10 @@
+setuptools==65.5.0
+gym==0.21.0
+pyglet==1.5.27
+gymnasium[classic-control]
+pytest
+pylint
+pytest-asyncio
+build
+twine
+bumpver

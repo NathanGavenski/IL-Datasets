@@ -1,7 +1,8 @@
 """Helper classes for loading and using expert policies."""
 from dataclasses import dataclass, field
-from typing import Any, List, Tuple, Union
+from typing import Any, List, Tuple, Union, Dict
 
+import gymnasium as gym
 from huggingface_sb3 import load_from_hub
 from stable_baselines3.common.base_class import BaseAlgorithm
 
@@ -11,6 +12,7 @@ from .register import atari, classic, mujoco
 @dataclass
 class Policy:
     """Policy dataclass to load and use expert policies."""
+
     name: str
     repo_id: str
     filename: str
@@ -18,6 +20,7 @@ class Policy:
     algo: BaseAlgorithm
     policy: BaseAlgorithm = field(init=False, default=None)
     internal_state: Any = field(init=False, default=None)
+    environment: Any = field(init=False, default=None)
 
     def load(self) -> BaseAlgorithm:
         """
@@ -54,9 +57,9 @@ class Policy:
             self,
             obs: List[Union[int, float]],
             deterministic: bool = True
-        ) -> Tuple[
-            Union[int, float, List[Union[int, float]]],
-            Union[int, float, List[Union[int, float]]]
+    ) -> Tuple[
+        Union[int, float, List[Union[int, float]]],
+        Union[int, float, List[Union[int, float]]]
     ]:
         """
         Predict action given observation.
@@ -66,9 +69,9 @@ class Policy:
             deterministic (bool, optional): Use exploration to predict action. Defaults to True.
 
         Returns:
-            action (Union[int, float, List[Union[int, float]]]): 
+            action (Union[int, float, List[Union[int, float]]]):
                 action predicted by the policy.
-            internal_states (Union[int, float, List[Union[int, float]]]): 
+            internal_states (Union[int, float, List[Union[int, float]]]):
                 internal states of the policy.
 
         Note: typing depends on the environment.
@@ -87,13 +90,16 @@ class Policy:
         Returns:
             str: environment name.
         """
-        return self.name
+        if self.environment is None:
+            self.environment = gym.make(self.name, render_mode="rgb_array")
+        return self.environment
 
 
 class Experts:
     """Helper class to register and get expert policies."""
-    experts: List[Policy] = {key: Policy(
-        **value) for env in [atari, classic, mujoco] for key, value in env.items()}
+    experts: Dict[str, Policy] = {
+        key: Policy(**value) for env in [atari, classic, mujoco] for key, value in env.items()
+    }
 
     @classmethod
     def register(cls, identifier: str, policy: Policy) -> None:

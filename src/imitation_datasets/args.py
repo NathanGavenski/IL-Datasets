@@ -6,15 +6,15 @@ def get_args() -> Namespace:
     """Get arguments from command line
 
     Args:
-        -g or --game (str): 
+        -g or --game (str):
             register environment name
-        -e or --episodes (int): 
+        -e or --episodes (int):
             number of episodes to record
-        -t or --threads (int): 
+        -t or --threads (int):
             number of threads to use
-        --threshold (float): 
+        --threshold (float):
             reward threshold for each execution, if using register environment this is optional
-        --mode (str): 
+        --mode (str):
             mode to run the script, all: record and collate, play: play the game, and 
             collate: collate the episodes
 
@@ -36,7 +36,7 @@ def get_args() -> Namespace:
         "--threshold", type=float, default=None, help="reward threshold for each execution",
     )
     parser.add_argument(
-        "--mode", default="play", choices=['all', 'play', 'collate'], 
+        "--mode", default="play", choices=['all', 'play', 'collate'],
         type=str, help="reward threshold for each execution",
     )
 

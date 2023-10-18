@@ -1,0 +1,44 @@
+name: PR Action
+
+on:
+  pull_request:
+    branches: 
+      main
+
+env: 
+  SERVER: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Setup OpenGL
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-opengl mesa-utils xvfb
+        xvfb-run glxinfo
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools==65.5.0 pip==21
+        pip install pylint pytest
+        pip install -r ./requirements/requirements.txt
+        pip install -r ./requirements/dev.txt
+
+    - name: Analysing the code with pylint
+      run: |
+        pylint --fail-under=9 $(git ls-files '*.py') --ignore-paths=./tests/
+
+    - name: Unit testing 
+      run: |
+        xvfb-run -s "-screen 0 1400x900x24" pytest 

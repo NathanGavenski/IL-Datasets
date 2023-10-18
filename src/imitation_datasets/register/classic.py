@@ -1,5 +1,5 @@
 """Register classic control imitation teachers."""
-from stable_baselines3 import PPO
+from stable_baselines3 import PPO, DQN
 
 classic = {
     'cartpole': {
@@ -11,9 +11,9 @@ classic = {
     },
     "mountaincar": {
         'name': 'MountainCar-v0',
-        'repo_id': "sb3/ppo-MountainCar-v0",
-        'filename': "ppo-MountainCar-v0.zip",
-        'threshold': -108.,
-        'algo': PPO
+        'repo_id': "sb3/dqn-MountainCar-v0",
+        'filename': "dqn-MountainCar-v0.zip",
+        'threshold': -110.,
+        'algo': DQN
     }
 }
