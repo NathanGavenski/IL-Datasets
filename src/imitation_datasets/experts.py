@@ -1,9 +1,9 @@
 """Helper classes for loading and using expert policies."""
 from dataclasses import dataclass, field
-from typing import Any, List, Tuple, Union
+from typing import Any, List, Tuple, Union, Dict
 
-from huggingface_sb3 import load_from_hub
 import gymnasium as gym
+from huggingface_sb3 import load_from_hub
 from stable_baselines3.common.base_class import BaseAlgorithm
 
 from .register import atari, classic, mujoco
@@ -97,7 +97,7 @@ class Policy:
 
 class Experts:
     """Helper class to register and get expert policies."""
-    experts: List[Policy] = {
+    experts: Dict[str, Policy] = {
         key: Policy(**value) for env in [atari, classic, mujoco] for key, value in env.items()
     }
 
