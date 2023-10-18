@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import Any, List, Tuple, Union
 
 from huggingface_sb3 import load_from_hub
+import gymnasium as gym
 from stable_baselines3.common.base_class import BaseAlgorithm
 
 from .register import atari, classic, mujoco
@@ -19,6 +20,7 @@ class Policy:
     algo: BaseAlgorithm
     policy: BaseAlgorithm = field(init=False, default=None)
     internal_state: Any = field(init=False, default=None)
+    environment: Any = field(init=False, default=None)
 
     def load(self) -> BaseAlgorithm:
         """
@@ -88,7 +90,9 @@ class Policy:
         Returns:
             str: environment name.
         """
-        return self.name
+        if self.environment is None:
+            self.environment = gym.make(self.name, render_mode="rgb_array")
+        return self.environment
 
 
 class Experts:

@@ -17,7 +17,7 @@ def enjoy(expert: Policy, path: str, context: Context) -> bool:
     done = False
     expert.load()
 
-    env = GymWrapper(expert.get_environment(), version="older")
+    env = GymWrapper(expert.get_environment(), version="newest")
 
     states, actions = [], []
     acc_reward, state = 0, env.reset()
@@ -76,7 +76,7 @@ def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
     done = False
     expert.load()
 
-    env = GymWrapper(expert.get_environment(), version="older")
+    env = GymWrapper(expert.get_environment(), version="newest")
 
     states = []
     actions = []
@@ -93,7 +93,7 @@ def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
         rewards.append(reward)
     env.close()
 
-    episode_returns= np.array([acc_reward])
+    episode_returns = np.array([acc_reward])
 
     episode = {
         'obs': np.array(states),
