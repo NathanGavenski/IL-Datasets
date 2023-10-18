@@ -1,5 +1,10 @@
 import pytest
 import multiprocessing
+import os
+
+
+github = os.getenv("SERVER")
+github = bool(int(github)) if github is not None else False
 
 
 def setUp():
@@ -27,6 +32,7 @@ def test_cpu_init() -> None:
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(github, reason="only run locally")
 async def test_cpu_allock() -> None:
     cpus = setUp()
     try:
@@ -44,6 +50,7 @@ async def test_cpu_allock() -> None:
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(github, reason="only run locally")
 async def test_cpu_release():
     cpus = setUp()
 

@@ -5,6 +5,9 @@ on:
     branches: 
       main
 
+env: 
+  SERVER: 1
+
 jobs:
   build:
     runs-on: ubuntu-latest
