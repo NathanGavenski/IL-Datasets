@@ -1,7 +1,8 @@
+"""Module for mlp policies"""
 import torch
-import torch.nn as nn
+from torch import nn
 
-from .attention import Self_Attn1D
+from .attention import SelfAttn1D
 
 
 class MLP(nn.Module):
@@ -15,15 +16,21 @@ class MLP(nn.Module):
             out_dim (int): output dimensions.
             activation (nn.Module): activation for the MLP. Defaults to LeakyReLU.
         """
-        super(MLP, self).__init__()
+        super().__init__()
 
         out = max(8, in_dim * 2)
-        self.input = nn.Linear(in_dim, out)
-        self.fc = nn.Linear(out, out)
-        self.fc2 = nn.Linear(out, out)
-        self.output = nn.Linear(out, out_dim)
+        self.layers = nn.Sequential(
+            nn.Linear(in_dim, out),
+            activation(),
 
-        self.activation = activation()
+            nn.Linear(out, out),
+            activation(),
+
+            nn.Linear(out, out),
+            activation(),
+
+            nn.Linear(out, out_dim)
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward for default MLP
@@ -35,62 +42,89 @@ class MLP(nn.Module):
             out (torch.Tensor): output (B, out_dim).
         """
         x = x.float()
-        x = self.activation(self.input(x))
-        x = self.activation(self.fc(x))
-        x = self.activation(self.fc2(x))
-        x = self.output(x)
-        return x
+        return self.layers(x)
 
 
 class MlpWithAttention(nn.Module):
+    """Default Multi Layer Perceptron with attention after first two layers."""
+
     def __init__(self, in_dim: int, out_dim: int, activation: nn.Module = nn.LeakyReLU):
         """Initialize MlpWithAttention class.
 
         Args:
-            in_dim (int): 
+            in_dim (int): input dimensions.
+            out_dim (int): output dimensions.
+            activation (nn.Module): torch module for the activation layer.
         """
-        super(MlpWithAttention, self).__init__()
+        super().__init__()
 
         out = max(8, in_dim * 2)
-        self.input = nn.Linear(in_dim, out)
-        self.output = nn.Linear(out, out_dim)
+        self.layers = nn.Sequential(
+            nn.Linear(in_dim, out),
+            activation(),
 
-        self.fc = nn.Linear(out, out)
-        self.fc2 = nn.Linear(out, out)
-        self.fc3 = nn.Linear(out, out)
-        self.attention = Self_Attn1D(out)
-        self.attention2 = Self_Attn1D(out)
+            SelfAttn1D(out),
+            nn.Linear(out, out),
+            activation(),
 
-        self.relu = nn.LeakyReLU()
+            SelfAttn1D(out),
+            nn.Linear(out, out),
+            activation(),
 
-    def forward(self, x):
+            nn.Linear(out, out),
+            activation(),
+
+            nn.Linear(out, out_dim)
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward function for the method.
+
+        Args:
+            x (torch.Tensor): input for model.
+
+        Returns:
+            x (torch.Tensor): output from the model (B X out_dim).
+        """
         x = x.float()
-        x = self.relu(self.input(x))
-        x = self.attention(x)
-        x = self.relu(self.fc(x))
-        x = self.attention2(x)
-        x = self.relu(self.fc2(x))
-        x = self.relu(self.fc3(x))
-        x = self.relu(self.output(x))
-        return x
+        return self.layers(x)
 
 
 class MlpAttention(nn.Module):
-    def __init__(self, in_dim, out_dim):
-        super(MlpAttention, self).__init__()
+    """Default Multi Layer Perceptron with attention as hidden layers."""
+
+    def __init__(self, in_dim: int, out_dim: int, activation: nn.Module = nn.LeakyReLU):
+        """Initialize MlpAttention class.
+
+        Args:
+            in_dim (int): input dimensions.
+            out_dim (int): output dimensions.
+            activation (nn.Module): torch module for the activation layer.
+        """
+        super().__init__()
 
         out = max(8, in_dim * 2)
-        self.input = nn.Linear(in_dim, out)
-        self.output = nn.Linear(out, out_dim)
-        self.attention = Self_Attn1D(out)
-        self.attention2 = Self_Attn1D(out)
+        self.layers = nn.Sequential(
+            nn.Linear(in_dim, out),
+            activation(),
 
-        self.relu = nn.LeakyReLU()
+            SelfAttn1D(out),
+            activation(),
 
-    def forward(self, x):
+            SelfAttn1D(out),
+            activation(),
+
+            nn.Linear(out, out_dim)
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward function for the method.
+
+        Args:
+            x (torch.Tensor): input for model.
+
+        Returns:
+            x (torch.Tensor): output from the model (B X out_dim).
+        """
         x = x.float()
-        x = self.input(x)
-        x = self.attention(x)
-        x = self.attention2(x)
-        x = self.relu(self.output(x))
-        return x
+        return self.layers(x)

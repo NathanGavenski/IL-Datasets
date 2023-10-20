@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.benchmark.methods.policies.attention import Self_Attn1D
+from src.benchmark.methods.policies.attention import SelfAttn1D
 from src.benchmark.methods.policies.mlp import MLP, MlpWithAttention, MlpAttention
 
 
@@ -8,67 +8,71 @@ class TestMLP(TestCase):
 
     def test_init(self) -> None:
         model = MLP(2, 2)
-        assert model.input.in_features == 2
-        assert model.input.out_features == 8
-        assert model.fc.in_features == 8
-        assert model.fc.out_features == 8
-        assert model.fc2.in_features == 8
-        assert model.fc2.out_features == 8
-        assert model.output.in_features == 8
-        assert model.output.out_features == 2
+        assert model.layers[0].in_features == 2
+        assert model.layers[0].out_features == 8
+        assert model.layers[2].in_features == 8
+        assert model.layers[2].out_features == 8
+        assert model.layers[4].in_features == 8
+        assert model.layers[4].out_features == 8
+        assert model.layers[6].in_features == 8
+        assert model.layers[6].out_features == 2
 
         model = MLP(8, 2)
-        assert model.input.in_features == 8
-        assert model.input.out_features == 8 * 2
-        assert model.fc.in_features == 8 * 2
-        assert model.fc.out_features == 8 * 2
-        assert model.fc2.in_features == 8 * 2
-        assert model.fc2.out_features == 8 * 2
-        assert model.output.in_features == 8 * 2
-        assert model.output.out_features == 2
+        assert model.layers[0].in_features == 8
+        assert model.layers[0].out_features == 8 * 2
+        assert model.layers[2].in_features == 8 * 2
+        assert model.layers[2].out_features == 8 * 2
+        assert model.layers[4].in_features == 8 * 2
+        assert model.layers[4].out_features == 8 * 2
+        assert model.layers[6].in_features == 8 * 2
+        assert model.layers[6].out_features == 2
 
 
 class TestMlpWithAttention(TestCase):
 
     def test_init(self) -> None:
         model = MlpWithAttention(2, 2)
-        assert model.input.in_features == 2
-        assert model.input.out_features == 8
-        assert model.fc.in_features == 8
-        assert model.fc.out_features == 8
-        assert model.fc2.in_features == 8
-        assert model.fc2.out_features == 8
-        assert model.output.in_features == 8
-        assert model.output.out_features == 2
+        assert model.layers[0].in_features == 2
+        assert model.layers[0].out_features == 8
+        assert model.layers[3].in_features == 8
+        assert model.layers[3].out_features == 8
+        assert model.layers[6].in_features == 8
+        assert model.layers[6].out_features == 8
+        assert model.layers[8].in_features == 8
+        assert model.layers[8].out_features == 8
+        assert model.layers[10].in_features == 8
+        assert model.layers[10].out_features == 2
 
         model = MlpWithAttention(8, 2)
-        assert model.input.in_features == 8
-        assert model.input.out_features == 8 * 2
-        assert model.fc.in_features == 8 * 2
-        assert model.fc.out_features == 8 * 2
-        assert model.fc2.in_features == 8 * 2
-        assert model.fc2.out_features == 8 * 2
-        assert model.output.in_features == 8 * 2
-        assert model.output.out_features == 2
+        assert model.layers[0].in_features == 8
+        assert model.layers[0].out_features == 8 * 2
+        assert model.layers[3].in_features == 8 * 2
+        assert model.layers[3].out_features == 8 * 2
+        assert model.layers[6].in_features == 8 * 2
+        assert model.layers[6].out_features == 8 * 2
+        assert model.layers[8].in_features == 8 * 2
+        assert model.layers[8].out_features == 8 * 2
+        assert model.layers[10].in_features == 8 * 2
+        assert model.layers[10].out_features == 2
 
-        assert isinstance(model.attention, Self_Attn1D)
-        assert isinstance(model.attention2, Self_Attn1D)
+        assert isinstance(model.layers[2], SelfAttn1D)
+        assert isinstance(model.layers[5], SelfAttn1D)
 
 
 class TestMlpAttention(TestCase):
 
     def test_init(self) -> None:
         model = MlpAttention(2, 2)
-        assert model.input.in_features == 2
-        assert model.input.out_features == 8
-        assert model.output.in_features == 8
-        assert model.output.out_features == 2
+        assert model.layers[0].in_features == 2
+        assert model.layers[0].out_features == 8
+        assert model.layers[6].in_features == 8
+        assert model.layers[6].out_features == 2
 
         model = MlpAttention(8, 2)
-        assert model.input.in_features == 8
-        assert model.input.out_features == 8 * 2
-        assert model.output.in_features == 8 * 2
-        assert model.output.out_features == 2
+        assert model.layers[0].in_features == 8
+        assert model.layers[0].out_features == 8 * 2
+        assert model.layers[6].in_features == 8 * 2
+        assert model.layers[6].out_features == 2
 
-        assert isinstance(model.attention, Self_Attn1D)
-        assert isinstance(model.attention2, Self_Attn1D)
+        assert isinstance(model.layers[2], SelfAttn1D)
+        assert isinstance(model.layers[4], SelfAttn1D)

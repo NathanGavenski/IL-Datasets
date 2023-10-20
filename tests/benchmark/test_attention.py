@@ -3,19 +3,19 @@ from unittest import TestCase
 import torch
 from torch import nn
 
-from src.benchmark.methods.policies.attention import Self_Attn1D, Self_Attn2D
+from src.benchmark.methods.policies.attention import SelfAttn1D, SelfAttn2D
 
 
 class TestSelfAtten2D(TestCase):
 
     def test_init(self) -> None:
-        attention = Self_Attn2D(3)
+        attention = SelfAttn2D(3)
         assert attention.chanel_in == 3
         assert attention.gamma == nn.Parameter(torch.zeros(1))
         assert isinstance(attention.softmax, nn.Softmax)
 
     def test_forward(self) -> None:
-        attention_layer = Self_Attn2D(64)
+        attention_layer = SelfAttn2D(64)
         feature_map = torch.zeros((1, 64, 32, 32))
         result = attention_layer(feature_map, True)
         assert len(result) == 2
@@ -39,13 +39,13 @@ class TestSelfAtten2D(TestCase):
 class TestSelfAtten1D(TestCase):
 
     def test_init(self) -> None:
-        attention = Self_Attn1D(3)
+        attention = SelfAttn1D(3)
         assert attention.chanel_in == 3
         assert attention.gamma == nn.Parameter(torch.zeros(1))
         assert isinstance(attention.softmax, nn.Softmax)
 
     def test_forward(self) -> None:
-        attention_layer = Self_Attn1D(1080)
+        attention_layer = SelfAttn1D(1080)
         feature_map = torch.zeros((1, 1080))
         result = attention_layer(feature_map, True)
         assert len(result) == 2

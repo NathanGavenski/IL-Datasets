@@ -1,10 +1,11 @@
+"""Module for attention layers."""
 from typing import Tuple, Union
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 
-class Self_Attn2D(nn.Module):
+class SelfAttn2D(nn.Module):
     """Self attention Layer"""
 
     def __init__(self, in_dim: int) -> None:
@@ -13,7 +14,7 @@ class Self_Attn2D(nn.Module):
         Args:
             in_dim (int): dimensions for the input.
         """
-        super(Self_Attn2D, self).__init__()
+        super().__init__()
         self.chanel_in = in_dim
 
         self.query_conv = nn.Conv2d(in_channels=in_dim, out_channels=in_dim // 8, kernel_size=1)
@@ -64,7 +65,7 @@ class Self_Attn2D(nn.Module):
         return out, attention
 
 
-class Self_Attn1D(nn.Module):
+class SelfAttn1D(nn.Module):
     """Self attention Layer"""
 
     def __init__(self, in_dim: int, k: int = 8):
@@ -74,7 +75,7 @@ class Self_Attn1D(nn.Module):
             in_dim (int): dimensions for input.
             k (int): division factor for out_channels. Defaults to 8.
         """
-        super(Self_Attn1D, self).__init__()
+        super().__init__()
         self.chanel_in = in_dim
 
         self.query_conv = nn.Conv1d(
