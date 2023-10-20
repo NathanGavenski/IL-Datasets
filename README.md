@@ -68,7 +68,7 @@ Here is a list of the upcoming releases:
     - [ ] Create benchmark for data
 - [ ] Create actual documentation
 - [X] Create some examples
-- [ ] Create tests
+- [X] Create tests
 - [X] Create GitHub workflow with pylint
  
 ---
