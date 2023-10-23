@@ -1,1 +1,3 @@
 torchvision
+tensorboard-wrapper
+tensorboard
