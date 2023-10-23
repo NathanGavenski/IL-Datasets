@@ -125,12 +125,17 @@ class BC(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            predictions_argmax = torch.argmax(predictions, 1)
             loss = self.loss_fn(predictions, action.long())
             loss.backward()
             accumulated_loss.append(loss.item())
+            self.optimizer_fn.step()
 
-            accuracy = ((predictions_argmax == action).sum().item() / action.size(0)) * 100
+            accuracy: Number = None
+            if self.discrete:
+                predictions_argmax = torch.argmax(predictions, 1)
+                accuracy = ((predictions_argmax == action).sum().item() / action.size(0)) * 100
+            else:
+                accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
 
         return {"loss": np.mean(accumulated_loss), "accuracy": np.mean(accumulated_accuracy)}
@@ -149,8 +154,13 @@ class BC(Method):
 
             with torch.no_grad:
                 predictions = self.policy(state)
-            predictions_argmax = torch.argmax(predictions, 1)
-            accuracy = ((predictions_argmax == action).sum().item() / action.size(0)) * 100
+
+            accuracy: Number = None
+            if self.discrete:
+                predictions_argmax = torch.argmax(predictions, 1)
+                accuracy = ((predictions_argmax == action).sum().item() / action.size(0)) * 100
+            else:
+                accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
 
         return {"accuracy": np.mean(accumulated_accuracy)}
