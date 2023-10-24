@@ -2,4 +2,4 @@
 max-args=6
 
 [FORMAT]
-good-names=B,C,T,x,fc
+good-names=B,C,T,x,fc,f
