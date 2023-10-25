@@ -1,5 +1,5 @@
 __pycache__/
-dataset/
 logs.txt
 dist/
 src/il_datasets.egg-info
+!src/imitation_datasets/dataset/
