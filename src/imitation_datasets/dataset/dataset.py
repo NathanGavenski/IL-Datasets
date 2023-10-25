@@ -29,9 +29,11 @@ class BaselineDataset(Dataset):
 
         if source == "local":
             self.data = np.load(path, allow_pickle=True)
+            self.average_reward = np.mean(self.data["episode_returns"])
         else:
             dataset = load_dataset(path, split="train")
             self.data = huggingface_to_baseline(dataset)
+            self.average_reward = []
 
         self.states = np.ndarray(shape=(0, self.data["obs"].shape[-1]))
         self.next_states = np.ndarray(shape=(0, self.data["obs"].shape[-1]))
@@ -53,9 +55,17 @@ class BaselineDataset(Dataset):
             episode = self.data["obs"][start:end]
             actions = self.data["actions"][start:end - 1].reshape((-1, 1))
             self.actions = np.append(self.actions, actions, axis=0)
+
+            if source != "local":
+                self.average_reward.append(self.data["rewards"][start:end].sum())
+
             for (state, next_state) in zip(episode, episode[1:]):
                 self.states = np.append(self.states, state[None], axis=0)
                 self.next_states = np.append(self.next_states, next_state[None], axis=0)
+
+        if isinstance(self.average_reward, list):
+            self.average_reward = np.mean(self.average_reward)
+
         assert self.states.shape[0] == self.actions.shape[0] == self.next_states.shape[0]
 
     def __len__(self) -> int:

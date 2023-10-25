@@ -63,13 +63,13 @@ Obs: If not using StableBaselines, the expert has to have a `predict` function t
 Here is a list of the upcoming releases:
 
 - [x] Collate function support
-- [X] Support for installing as a dependency
-- [ ] Module for downloading trajectories from a Hugging Face dataset 
+- [x] Support for installing as a dependency
+- [x] Module for downloading trajectories from a Hugging Face dataset 
     - [ ] Create benchmark for data
 - [ ] Create actual documentation
-- [X] Create some examples
-- [X] Create tests
-- [X] Create GitHub workflow with pylint
+- [x] Create some examples
+- [x] Create tests
+- [x] Create GitHub workflow with pylint
  
 ---
 
