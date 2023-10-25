@@ -9,7 +9,7 @@ from datasets import Dataset
 
 
 def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
-    """Convert a NpzFile dataset into a dict dataset for the baseline function.
+    """Convert a  NpzFile dataset into a dict dataset for the baseline function.
 
     Args:
         dataset (NpzFile): dataset numpy file.
