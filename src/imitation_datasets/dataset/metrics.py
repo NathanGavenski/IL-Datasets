@@ -87,6 +87,6 @@ def accuracy(prediction: Tensor, ground_truth: Tensor) -> Number:
         raise ValueError("'prediction' and 'ground truth' need to be 2 dimensional.")
 
     if len(ground_truth.size()) != 1:
-        raise ValueError("'prediction' and 'ground truth' need to be 1 dimensional.")
+        raise ValueError("'ground truth' need to be 1 dimensional.")
 
     return ((argmax(prediction, 1) == ground_truth).sum().item() / ground_truth.size(0)) * 100
