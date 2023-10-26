@@ -6,6 +6,7 @@ from datasets import load_dataset
 import numpy as np
 import torch
 from torch.utils.data import Dataset
+from tqdm import tqdm
 
 from .huggingface import huggingface_to_baseline
 
@@ -51,17 +52,15 @@ class BaselineDataset(Dataset):
             episode_starts = episode_starts[:n_episodes]
             episode_ends = episode_ends[:n_episodes]
 
-        for start, end in zip(episode_starts, episode_ends):
+        for start, end in zip(tqdm(episode_starts), episode_ends):
             episode = self.data["obs"][start:end]
             actions = self.data["actions"][start:end - 1].reshape((-1, 1))
             self.actions = np.append(self.actions, actions, axis=0)
+            self.states = np.append(self.states, episode[:-1], axis=0)
+            self.next_states = np.append(self.next_states, episode[1:], axis=0)
 
             if source != "local":
                 self.average_reward.append(self.data["rewards"][start:end].sum())
-
-            for (state, next_state) in zip(episode, episode[1:]):
-                self.states = np.append(self.states, state[None], axis=0)
-                self.next_states = np.append(self.next_states, next_state[None], axis=0)
 
         if isinstance(self.average_reward, list):
             self.average_reward = np.mean(self.average_reward)

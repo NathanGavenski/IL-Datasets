@@ -14,6 +14,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from gymnasium import Env, spaces
 import numpy as np
+from imitation_datasets.utils import GymWrapper
 
 
 Metrics = Dict[str, Any]
@@ -67,6 +68,22 @@ class Method(ABC):
         """
         raise NotImplementedError()
 
+    def save(self, path: str = None) -> None:
+        """Save all model weights.
+
+        Args:
+            path (str): where to save the models. Defaults to None.
+        """
+        raise NotImplementedError()
+
+    def load(self, path: str = None) -> None:
+        """Load all model weights.
+
+        Args:
+            path (str): where to look for the model's weights. Defaults to None.
+        """
+        raise NotImplementedError()
+
     # pylint: disable=W0221
     def train(
         self,
@@ -101,3 +118,22 @@ class Method(ABC):
             dataset (DataLoader): data to eval.
         """
         raise NotImplementedError()
+
+    def _enjoy(self) -> None:
+        """Function for evaluation of the policy in the environment
+
+        Returns:
+            average reward (Number): average reward for 10 episodes.
+        """
+        environment = GymWrapper(self.environment)
+        average_reward = []
+        for _ in range(10):
+            done = False
+            obs = environment.reset()
+            accumulated_reward = 0
+            while not done:
+                action = self.predict(obs)
+                obs, reward, done, *_ = self.environment.step(action)
+                accumulated_reward += reward
+            average_reward.append(accumulated_reward)
+        return np.mean(average_reward)
