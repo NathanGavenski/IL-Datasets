@@ -77,13 +77,15 @@ class BC(Method):
             if len(obs.shape) == 1:
                 obs = obs[None]
 
+        obs = obs.to(self.device)
+
         with torch.no_grad():
             actions = self.forward(obs)
             actions = actions[0]
 
             if self.discrete:
-                return torch.argmax(actions).numpy()
-            return actions.numpy()
+                return torch.argmax(actions).cpu().numpy()
+            return actions.cpu().numpy()
 
     def save(self, path: str = None) -> None:
         """Save all model weights.
