@@ -60,33 +60,6 @@ class BC(Method):
         """
         return self.policy(x)
 
-    def predict(self, obs: Union[np.ndarray, torch.Tensor]) -> Union[List[Number], Number]:
-        """Predict method.
-
-        Args:
-            obs (Union[np.ndarray, torch.Tensor]): input observation.
-
-        Returns:
-            action (Union[List[Number], Number): predicted action.
-        """
-        self.policy.eval()
-
-        if isinstance(obs, np.ndarray):
-            obs = torch.from_numpy(obs)
-
-            if len(obs.shape) == 1:
-                obs = obs[None]
-
-        obs = obs.to(self.device)
-
-        with torch.no_grad():
-            actions = self.forward(obs)
-            actions = actions[0]
-
-            if self.discrete:
-                return torch.argmax(actions).cpu().numpy()
-            return actions.cpu().numpy()
-
     def save(self, path: str = None) -> None:
         """Save all model weights.
 
