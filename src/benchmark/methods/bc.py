@@ -108,6 +108,7 @@ class BC(Method):
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
         board = Tensorboard(path=folder, name=date.today(), delete=True)
+        self.policy.to(self.device)
 
         best_model = -np.inf
 
