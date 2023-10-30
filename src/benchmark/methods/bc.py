@@ -25,7 +25,7 @@ from imitation_datasets.dataset.metrics import accuracy as accuracy_fn
 class BC(Method):
     """Behavioural Clonning method based on (Pomerleau, 1988)"""
 
-    def __init__(self, environment: Env, enjoy_criteria: int = 10, verbose: bool = False) -> None:
+    def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
         """Initialize BC method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
@@ -113,7 +113,12 @@ class BC(Method):
         if not os.path.exists(path):
             raise ValueError("Path does not exists.")
 
-        self.policy.load_state_dict(torch.load(f"{path}best_model.ckpt"))
+        self.policy.load_state_dict(
+            torch.load(
+                f"{path}best_model.ckpt",
+                map_location=torch.device(self.device)
+            )
+        )
 
     def train(
         self,
