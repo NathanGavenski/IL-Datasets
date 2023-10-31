@@ -18,16 +18,20 @@ if __name__ == "__main__":
     controller = Controller(baseline_enjoy, baseline_collate, args.episodes, args.threads)
     controller.start(args)
 
-    print("Creating Dataset")
-    env = gym.make("CartPole-v1")
-    dataset = BaselineDataset("./dataset/cartpole/teacher.npz")
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+    print("Creating Training Dataset")
+    dataset_train = BaselineDataset("./dataset/cartpole/teacher.npz", n_episodes=700)
+    dataloader_train = DataLoader(dataset_train, batch_size=2048, shuffle=True)
+
+    print("Creating Evaluation Dataset")
+    dataset_eval = BaselineDataset("./dataset/cartpole/teacher.npz", n_episodes=700, split="eval")
+    dataloader_eval = DataLoader(dataset_eval, batch_size=2048, shuffle=True)
 
     print("Creating BC")
-    bc = BC(env, verbose=True)
-    bc.train(100, dataloader)
+    env = gym.make("CartPole-v1")
+    bc = BC(env, verbose=True, enjoy_criteria=10)
+    bc.train(1000, train_dataset=dataloader_train, eval_dataset=dataloader_eval)
     bc.load()
-    aer = bc._enjoy()
+    aer = bc._enjoy(render=True)["aer"]
     print("Model results:")
     print(f"\tAER: {aer}")
     print(f"\tPerformance: {performance(aer, 500, 9.8)}")

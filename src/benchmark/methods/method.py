@@ -135,11 +135,15 @@ class Method(ABC):
         """
         raise NotImplementedError()
 
-    def _enjoy(self) -> None:
+    def _enjoy(self, render: bool = False) -> Metrics:
         """Function for evaluation of the policy in the environment
 
+        Args:
+            render (bool): Whether it should render. Defaults to False.
+
         Returns:
-            average reward (Number): average reward for 10 episodes.
+            Metrics:
+                aer (Number): average reward for 10 episodes.
         """
         environment = GymWrapper(self.environment)
         average_reward = []
@@ -148,8 +152,10 @@ class Method(ABC):
             obs = environment.reset()
             accumulated_reward = 0
             while not done:
+                if render:
+                    environment.render()
                 action = self.predict(obs)
                 obs, reward, done, *_ = self.environment.step(action)
                 accumulated_reward += reward
             average_reward.append(accumulated_reward)
-        return np.mean(average_reward)
+        return {"aer": np.mean(average_reward)}

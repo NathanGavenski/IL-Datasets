@@ -1,6 +1,5 @@
 """Module for Behavioural Cloning"""
 import os
-from typing import List, Union
 from numbers import Number
 from datetime import date
 
@@ -13,6 +12,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from gymnasium import Env, spaces
+from gym import spaces as gym_spaces
 from tensorboard_wrapper.tensorboard import Tensorboard
 from tqdm import tqdm
 
@@ -31,6 +31,7 @@ class BC(Method):
         self.verbose = verbose
         self.environment = environment
         self.discrete = isinstance(environment.action_space, spaces.Discrete)
+        self.discrete |= isinstance(environment.action_space, gym_spaces.Discrete)
         self.observation_size = environment.observation_space.shape[0]
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -46,7 +47,7 @@ class BC(Method):
         super().__init__(
             self.environment,
             self.policy.parameters(),
-            {"lr": 1e-3}
+            {"lr": 5e-4}
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -112,7 +113,8 @@ class BC(Method):
         folder = "./benchmark_results/bc/"
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
-        board = Tensorboard(path=folder, name=date.today(), delete=True)
+
+        board = Tensorboard(path=folder)
         self.policy.to(self.device)
 
         best_model = -np.inf
@@ -125,14 +127,15 @@ class BC(Method):
             if eval_dataset is not None:
                 eval_metrics = self._eval(eval_dataset)
                 board.add_scalars("Eval", epoch="eval", **eval_metrics)
-            board.step("train")
-            board.step("eval")
+                board.step(["train", "eval"])
+            else:
+                board.step("train")
 
             if epoch % self.enjoy_criteria == 0:
-                average_reward = self._enjoy()
-                board.add_scalars("Enjoy", epoch="enjoy", reward=average_reward)
+                metrics = self._enjoy()
+                board.add_scalars("Enjoy", epoch="enjoy", **metrics)
                 board.step("enjoy")
-                if best_model < average_reward:
+                if best_model < metrics["aer"]:
                     self.save()
 
         return self
@@ -159,8 +162,8 @@ class BC(Method):
 
             loss = self.loss_fn(predictions, action.squeeze().long())
             loss.backward()
-            accumulated_loss.append(loss.item())
             self.optimizer_fn.step()
+            accumulated_loss.append(loss.item())
 
             accuracy: Number = None
             if self.discrete:
@@ -186,13 +189,12 @@ class BC(Method):
             state, action, _ = batch
             state = state.to(self.device)
 
-            with torch.no_grad:
+            with torch.no_grad():
                 predictions = self.policy(state)
 
             accuracy: Number = None
             if self.discrete:
-                predictions_argmax = torch.argmax(predictions, 1)
-                accuracy = ((predictions_argmax == action).sum().item() / action.size(0)) * 100
+                accuracy = accuracy_fn(predictions, action.squeeze())
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)

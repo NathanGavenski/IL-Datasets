@@ -18,7 +18,7 @@ class MLP(nn.Module):
         """
         super().__init__()
 
-        out = max(8, in_dim * 2)
+        out = max(32, in_dim * 2)
         self.layers = nn.Sequential(
             nn.Linear(in_dim, out),
             activation(),

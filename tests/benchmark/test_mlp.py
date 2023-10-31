@@ -9,22 +9,22 @@ class TestMLP(TestCase):
     def test_init(self) -> None:
         model = MLP(2, 2)
         assert model.layers[0].in_features == 2
-        assert model.layers[0].out_features == 8
-        assert model.layers[2].in_features == 8
-        assert model.layers[2].out_features == 8
-        assert model.layers[4].in_features == 8
-        assert model.layers[4].out_features == 8
-        assert model.layers[6].in_features == 8
+        assert model.layers[0].out_features == 32
+        assert model.layers[2].in_features == 32
+        assert model.layers[2].out_features == 32
+        assert model.layers[4].in_features == 32
+        assert model.layers[4].out_features == 32
+        assert model.layers[6].in_features == 32
         assert model.layers[6].out_features == 2
 
-        model = MLP(8, 2)
-        assert model.layers[0].in_features == 8
-        assert model.layers[0].out_features == 8 * 2
-        assert model.layers[2].in_features == 8 * 2
-        assert model.layers[2].out_features == 8 * 2
-        assert model.layers[4].in_features == 8 * 2
-        assert model.layers[4].out_features == 8 * 2
-        assert model.layers[6].in_features == 8 * 2
+        model = MLP(30, 2)
+        assert model.layers[0].in_features == 30
+        assert model.layers[0].out_features == 30 * 2
+        assert model.layers[2].in_features == 30 * 2
+        assert model.layers[2].out_features == 30 * 2
+        assert model.layers[4].in_features == 30 * 2
+        assert model.layers[4].out_features == 30 * 2
+        assert model.layers[6].in_features == 30 * 2
         assert model.layers[6].out_features == 2
 
 

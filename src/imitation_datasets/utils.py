@@ -256,7 +256,7 @@ class GymWrapper:
         """Return the render for the environment."""
         if self.version == "newest":
             state = self.env.render()
-            if state is None:
+            if state is None and self.env.render_mode != "human":
                 raise WrapperException("No render mode set.")
             return state
 

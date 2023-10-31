@@ -86,10 +86,11 @@ def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
 
     while not done:
         action, _ = expert.predict(state)
-        state, reward, done, _ = env.step(action)
-        acc_reward += reward
         states.append(state)
         actions.append(action)
+
+        state, reward, done, _ = env.step(action)
+        acc_reward += reward
         rewards.append(reward)
     env.close()
 
