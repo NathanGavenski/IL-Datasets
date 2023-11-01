@@ -179,6 +179,7 @@ class WrapperException(Exception):
         super().__init__(self.message)
 
 
+# TODO Support Vectorized environments
 class GymWrapper:
     """
         Wrapper for gym environment. Since Gymnasium and Gym version 0.26

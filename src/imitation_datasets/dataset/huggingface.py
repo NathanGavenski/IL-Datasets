@@ -9,6 +9,7 @@ from datasets import Dataset
 from tqdm import tqdm
 
 
+# TODO Make this faster with master-slave
 def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
     """Convert a  NpzFile dataset into a dict dataset for the baseline function.
 
