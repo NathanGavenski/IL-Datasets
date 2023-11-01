@@ -13,21 +13,23 @@ import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
 from gymnasium import Env, spaces
+from gym import spaces as gym_spaces
 import numpy as np
 from imitation_datasets.utils import GymWrapper
+from imitation_datasets.dataset import BaselineDataset
+from .policies import MLP
 
 
 Metrics = Dict[str, Any]
 
 
-# TODO Define type dataset.
+# TODO adapt for visual
 class Method(ABC):
     """Base class for all methods."""
 
     def __init__(
         self,
         environment: Env,
-        model_parameters: nn.Parameter,
         environment_parameters: Dict[str, Any],
         discrete_loss: nn.Module = nn.CrossEntropyLoss,
         continuous_loss: nn.Module = nn.MSELoss,
@@ -35,14 +37,24 @@ class Method(ABC):
     ) -> None:
         """Initialize base class."""
         super().__init__()
-        self.loss_fn: nn.Module = None
-        if isinstance(environment.action_space, spaces.Discrete):
+        self.environment = environment
+        self.discrete = isinstance(environment.action_space, spaces.Discrete)
+        self.discrete |= isinstance(environment.action_space, gym_spaces.Discrete)
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        observation_size = environment.observation_space.shape[0]
+
+        if self.discrete:
+            action_size = environment.action_space.n
             self.loss_fn = discrete_loss()
         else:
+            action_size = environment.action_space.shape[0]
             self.loss_fn = continuous_loss()
 
+        self.policy = MLP(observation_size, action_size)
+
         self.optimizer_fn = optimizer_fn(
-            model_parameters,
+            self.policy.parameters(),
             **environment_parameters
         )
 
@@ -119,7 +131,7 @@ class Method(ABC):
         """
         raise NotImplementedError()
 
-    def _train(self, dataset: DataLoader) -> Metrics:
+    def _train(self, dataset: DataLoader[BaselineDataset]) -> Metrics:
         """Train loop.
 
         Args:
@@ -127,7 +139,7 @@ class Method(ABC):
         """
         raise NotImplementedError()
 
-    def _eval(self, dataset: DataLoader) -> Metrics:
+    def _eval(self, dataset: DataLoader[BaselineDataset]) -> Metrics:
         """Evaluation loop.
 
         Args:

@@ -1,27 +1,23 @@
 """Module for Behavioural Cloning"""
 import os
 from numbers import Number
-from datetime import date
 
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+from gymnasium import Env
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
-from gymnasium import Env, spaces
-from gym import spaces as gym_spaces
 from tensorboard_wrapper.tensorboard import Tensorboard
 from tqdm import tqdm
 
-from .policies.mlp import MLP
-from .method import Method, Metrics
 from imitation_datasets.dataset.metrics import accuracy as accuracy_fn
+from .method import Method, Metrics
 
 
-# TODO adapt for visual
 class BC(Method):
     """Behavioural Clonning method based on (Pomerleau, 1988)"""
 
@@ -29,24 +25,10 @@ class BC(Method):
         """Initialize BC method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
-        self.environment = environment
-        self.discrete = isinstance(environment.action_space, spaces.Discrete)
-        self.discrete |= isinstance(environment.action_space, gym_spaces.Discrete)
-        self.observation_size = environment.observation_space.shape[0]
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-
-        self.action_size = None
-        if self.discrete:
-            self.action_size = environment.action_space.n
-        else:
-            self.action_size = environment.action_space.shape[0]
-
         self.save_path = "./tmp/bc/"
 
-        self.policy = MLP(self.observation_size, self.action_size)
         super().__init__(
-            self.environment,
-            self.policy.parameters(),
+            environment,
             {"lr": 5e-4}
         )
 
@@ -133,6 +115,7 @@ class BC(Method):
 
             if epoch % self.enjoy_criteria == 0:
                 metrics = self._enjoy()
+                print(metrics)
                 board.add_scalars("Enjoy", epoch="enjoy", **metrics)
                 board.step("enjoy")
                 if best_model < metrics["aer"]:
