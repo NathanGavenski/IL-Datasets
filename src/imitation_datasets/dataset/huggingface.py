@@ -6,6 +6,7 @@ import json
 import numpy as np
 from numpy.lib.npyio import NpzFile
 from datasets import Dataset
+from tqdm import tqdm
 
 
 def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
@@ -18,7 +19,7 @@ def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
         dataset (List[Dict[str, Any]]): converted dataset.
     """
     converted = []
-    for index in range(dataset["obs"].shape[0]):
+    for index in tqdm(range(dataset["obs"].shape[0]), desc="Converting to dict"):
         row = {}
         for key in ["obs", "actions", "rewards", "episode_starts"]:
             row[key] = dataset[key][index].tolist()
@@ -34,7 +35,7 @@ def save_dataset_into_huggingface_format(dataset: List[Dict[str, Any]], path: st
         path (str): path to save the new dataset.
     """
     with open(path, "w", encoding="utf-8") as f:
-        for line in dataset:
+        for line in tqdm(dataset, desc="Writing into file"):
             f.write(json.dumps(line) + "\n")
 
 
