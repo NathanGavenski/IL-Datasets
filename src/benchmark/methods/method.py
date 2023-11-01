@@ -167,7 +167,7 @@ class Method(ABC):
                 if render:
                     environment.render()
                 action = self.predict(obs)
-                obs, reward, done, *_ = self.environment.step(action)
+                obs, reward, done, *_ = environment.step(action)
                 accumulated_reward += reward
             average_reward.append(accumulated_reward)
         return {"aer": np.mean(average_reward)}
