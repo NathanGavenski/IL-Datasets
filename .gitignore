@@ -1,5 +1,18 @@
+# Package folders
+.ipynb_checkpoints/
+.pytest_cache/
 __pycache__/
+
+# Log and dev files
 logs.txt
+dev.py
+
+# Build files
 dist/
 src/il_datasets.egg-info
+
+# Project folders
+dataset/
+benchmark_results/
 !src/imitation_datasets/dataset/
+
