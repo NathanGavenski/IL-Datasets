@@ -27,6 +27,10 @@ classic_control: Dict[str, Dict[str, Any]] = {
     "CartPole-v1": {
         "path": "NathanGavenski/CartPole-v1",
         "random_reward": 9.8
+    },
+    "MountainCar-v0": {
+        "path": "NathanGavenski/MountainCar-v0",
+        "random_reward": -200
     }
 }
 
