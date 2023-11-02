@@ -59,7 +59,7 @@ class BC(Method):
 
         torch.save(self.policy.state_dict(), f"{path}/best_model.ckpt")
 
-    def load(self, path: str = None) -> None:
+    def load(self, path: str = None) -> Self:
         """Load all model weights.
 
         Args:
@@ -79,6 +79,8 @@ class BC(Method):
                 map_location=torch.device(self.device)
             )
         )
+
+        return self
 
     def train(
         self,

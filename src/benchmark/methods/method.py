@@ -109,7 +109,7 @@ class Method(ABC):
         """
         raise NotImplementedError()
 
-    def load(self, path: str = None) -> None:
+    def load(self, path: str = None) -> Self:
         """Load all model weights.
 
         Args:

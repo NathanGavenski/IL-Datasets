@@ -49,14 +49,10 @@ def benchmark_method(
             aer (Dict[str, str]): average episodic reward.
             performance (Dict[str, str]) performance.
     """
-    policy: Method = method(environment, verbose=True, enjoy_criteria=100)
-    policy.train(10000, train_dataset=dataloader)
-    policy.load()
-
-    metrics = policy._enjoy(
-        teacher_reward=teacher_reward,
-        random_reward=random_reward
-    )
+    policy: Method = method(environment, verbose=True, enjoy_criteria=1)
+    metrics = policy.train(10, train_dataset=dataloader) \
+        .load() \
+        ._enjoy(teacher_reward=teacher_reward, random_reward=random_reward)
     aer = f"{metrics['aer']} ± {metrics['aer_std']}"
     performance = f"{metrics['performance']} ± {metrics['performance_std']}"
     return {"aer": aer, "performance": performance}
