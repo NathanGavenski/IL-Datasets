@@ -25,6 +25,7 @@ def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
     ).T
     return dataframe.to_dict(orient="records")
 
+
 def save_dataset_into_huggingface_format(dataset: List[Dict[str, Any]], path: str) -> None:
     """Save Hasmap dataset into a JSONL file.
 
