@@ -17,6 +17,7 @@ from gym import spaces as gym_spaces
 import numpy as np
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
+from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from .policies import MLP
 
 
@@ -26,6 +27,10 @@ Metrics = Dict[str, Any]
 # TODO adapt for visual
 class Method(ABC):
     """Base class for all methods."""
+
+    __version__ = "1.0.0"
+    __author__ = "Nathan Gavenski"
+    __method_name__ = "Abstract Method"
 
     def __init__(
         self,
@@ -147,7 +152,12 @@ class Method(ABC):
         """
         raise NotImplementedError()
 
-    def _enjoy(self, render: bool = False) -> Metrics:
+    def _enjoy(
+        self,
+        render: bool = False,
+        teacher_reward: Number = None,
+        random_reward: Number = None
+    ) -> Metrics:
         """Function for evaluation of the policy in the environment
 
         Args:
@@ -170,4 +180,8 @@ class Method(ABC):
                 obs, reward, done, *_ = environment.step(action)
                 accumulated_reward += reward
             average_reward.append(accumulated_reward)
-        return {"aer": np.mean(average_reward)}
+
+        metrics = average_episodic_reward(average_reward)
+        if teacher_reward is not None and random_reward is not None:
+            metrics.update(performance(average_reward, teacher_reward, random_reward))
+        return metrics

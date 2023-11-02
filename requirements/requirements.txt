@@ -6,6 +6,7 @@ psutil
 gymnasium
 shimmy>=0.2.1
 datasets
+pandas
 
 -f https://download.pytorch.org/whl/torch_stable.html
 torch==2.0.1+cpu

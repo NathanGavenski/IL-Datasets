@@ -21,6 +21,10 @@ from .method import Method, Metrics
 class BC(Method):
     """Behavioural Clonning method based on (Pomerleau, 1988)"""
 
+    __version__ = "1.0.0"
+    __author__ = "Pomerleau"
+    __method_name__ = "Behavioural Cloning"
+
     def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
         """Initialize BC method."""
         self.enjoy_criteria = enjoy_criteria
@@ -101,7 +105,9 @@ class BC(Method):
 
         best_model = -np.inf
 
-        pbar = tqdm(range(n_epochs)) if self.verbose else range(n_epochs)
+        pbar = range(n_epochs)
+        if self.verbose:
+            pbar = tqdm(pbar, desc=self.__method_name__)
         for epoch in pbar:
             train_metrics = self._train(train_dataset)
             board.add_scalars("Train", epoch="train", **train_metrics)
@@ -115,7 +121,6 @@ class BC(Method):
 
             if epoch % self.enjoy_criteria == 0:
                 metrics = self._enjoy()
-                print(metrics)
                 board.add_scalars("Enjoy", epoch="enjoy", **metrics)
                 board.step("enjoy")
                 if best_model < metrics["aer"]:

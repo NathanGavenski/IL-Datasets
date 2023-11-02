@@ -1,6 +1,6 @@
 """Module for metrics"""
 from numbers import Number
-from typing import Union, List
+from typing import Union, List, Dict
 
 import numpy as np
 from torch import Tensor, argmax
@@ -10,7 +10,7 @@ def performance(
     agent_reward: Union[Number, List, np.ndarray],
     teacher_reward: Number,
     random_reward: Number
-) -> Number:
+) -> Dict[str, Number]:
     """Compute the performance for the agent. Performance normalises between
     random and expert policies rewards, where performance 0 corresponds to
     random policy performance, and 1 are for expert policy performance.
@@ -45,11 +45,11 @@ def performance(
 
     perf = (agent_reward - random_reward) / (teacher_reward - random_reward)
     if isinstance(perf, np.ndarray):
-        return perf.mean()
-    return perf
+        return {"performance": perf.mean(), "performance_std": perf.std()}
+    return {"performance": perf, "performance_std": 0}
 
 
-def average_episodic_reward(agent_reward: List[Number]) -> Number:
+def average_episodic_reward(agent_reward: List[Number]) -> Dict[str, Number]:
     """Compute the average episodic reward for the agent. AER is the average
     of 'n' episodes for each agent in each environment.
 
@@ -61,7 +61,7 @@ def average_episodic_reward(agent_reward: List[Number]) -> Number:
     """
     if isinstance(agent_reward, list):
         agent_reward = np.array(agent_reward)
-    return agent_reward.mean()
+    return {"aer": agent_reward.mean(), "aer_std": agent_reward.std()}
 
 
 def accuracy(prediction: Tensor, ground_truth: Tensor) -> Number:
