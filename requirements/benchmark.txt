@@ -1,3 +1,4 @@
 torchvision
 tensorboard-wrapper
 tensorboard
+tabulate

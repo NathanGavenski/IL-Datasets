@@ -110,24 +110,26 @@ def baseline_enjoy(expert: Policy, path: str, context: Context) -> bool:
 
 def baseline_collate(path: str, data: List[str]) -> bool:
     """Collate that outputs the same as StableBaseline."""
+    episode = np.load(f'{path}{data[0]}')
+    observation_space = episode["obs"].shape[1]
+
+    states = np.ndarray(shape=(0, observation_space))
     episodes_starts = []
-    states = []
     actions = []
     rewards = []
     episode_returns = []
 
     for file in data:
         episode = np.load(f'{path}{file}')
-        states.append(episode['obs'])
-        actions.append(episode['actions'])
-        rewards.append(episode['rewards'])
-        episode_returns.append(episode['episode_returns'])
+        states = np.append(states, episode['obs'], axis=0)
+        actions += episode['actions'].tolist()
+        rewards += episode['rewards'].tolist()
+        episode_returns += episode['episode_returns'].tolist()
 
         episode_starts = np.zeros(episode['actions'].shape)
         episode_starts[0] = 1
-        episodes_starts.append(episode_starts)
+        episodes_starts += episode_starts.tolist()
 
-    states = np.array(states)
     states = states.reshape((-1, states.shape[-1]))
 
     actions = np.array(actions).reshape(-1)
