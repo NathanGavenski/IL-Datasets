@@ -63,8 +63,8 @@ class TestDataset(TestCase):
         with raises(ValueError):
             BaselineDataset('./tmp/teacher.npz')
 
-    def test_huggingface(self) -> None:
-        dataset = BaselineDataset('NathanGavenski/CartPole-v1', source='huggingface')
+    def test_huggingface_file(self) -> None:
+        dataset = BaselineDataset('NathanGavenski/CartPole-v1', source='huggingface', n_episodes=10)
         assert len(dataset) == 500 * 10 - 10
         assert dataset.states.shape[0] == 500 * 10 - 10
         assert dataset.next_states.shape[0] == 500 * 10 - 10

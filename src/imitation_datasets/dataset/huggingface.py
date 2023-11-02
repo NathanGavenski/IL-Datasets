@@ -4,12 +4,12 @@ import os
 import json
 
 import numpy as np
+import pandas as pd
 from numpy.lib.npyio import NpzFile
 from datasets import Dataset
 from tqdm import tqdm
 
 
-# TODO Make this faster with master-slave
 def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
     """Convert a  NpzFile dataset into a dict dataset for the baseline function.
 
@@ -19,14 +19,11 @@ def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
     Returns:
         dataset (List[Dict[str, Any]]): converted dataset.
     """
-    converted = []
-    for index in tqdm(range(dataset["obs"].shape[0]), desc="Converting to dict"):
-        row = {}
-        for key in ["obs", "actions", "rewards", "episode_starts"]:
-            row[key] = dataset[key][index].tolist()
-        converted.append(row)
-    return converted
-
+    dataframe = pd.DataFrame.from_dict(
+        {key: dataset[key].tolist() for key in ["obs", "actions", "rewards", "episode_starts"]},
+        orient="index"
+    ).T
+    return dataframe.to_dict(orient="records")
 
 def save_dataset_into_huggingface_format(dataset: List[Dict[str, Any]], path: str) -> None:
     """Save Hasmap dataset into a JSONL file.
@@ -73,32 +70,11 @@ def huggingface_to_baseline(dataset: Dataset) -> Dict[str, np.ndarray]:
     Returns:
         dataset (Dict[str, np.ndarray]): dataset with Baseline pattern.
     """
-    obs = np.ndarray(shape=(0, len(dataset[0]["obs"])))
-
-    if isinstance(dataset[0]["actions"], list):
-        actions = np.ndarray(shape=(0, len(dataset[0]["actions"])))
-    else:
-        actions = []
-
-    rewards = []
-    episode_starts = []
-
-    for row in dataset:
-        _obs = np.array(row["obs"])[None]
-        obs = np.append(obs, _obs, axis=0)
-
-        if isinstance(row["actions"], list):
-            _actions = np.array(row["actions"])[None]
-            actions = np.append(actions, _actions, axis=0)
-        else:
-            actions.append(row["actions"])
-
-        rewards.append(row["rewards"])
-        episode_starts.append(row["episode_starts"])
+    dataframe = dataset.to_pandas()
 
     return {
-        "obs": np.array(obs),
-        "actions": np.array(actions),
-        "rewards": np.array(rewards),
-        "episode_starts": np.array(episode_starts)
+        "obs": np.array(dataframe["obs"].to_list()),
+        "actions": np.array(dataframe["actions"].to_list()),
+        "rewards": np.array(dataframe["rewards"].to_list()),
+        "episode_starts": np.array(dataframe["episode_starts"].to_list())
     }
