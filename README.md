@@ -65,7 +65,7 @@ Here is a list of the upcoming releases:
 - [x] Collate function support
 - [x] Support for installing as a dependency
 - [x] Module for downloading trajectories from a Hugging Face dataset 
-    - [ ] Create benchmark for data
+    - [x] Create benchmark for data
 - [ ] Create actual documentation
 - [x] Create some examples
 - [x] Create tests

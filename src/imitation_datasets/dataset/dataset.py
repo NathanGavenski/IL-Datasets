@@ -6,6 +6,7 @@ from datasets import load_dataset
 import numpy as np
 import torch
 from torch.utils.data import Dataset
+from tqdm import tqdm
 
 from .huggingface import huggingface_to_baseline
 
@@ -13,7 +14,13 @@ from .huggingface import huggingface_to_baseline
 class BaselineDataset(Dataset):
     """Teacher dataset for IL methods."""
 
-    def __init__(self, path: str, source: str = "local", n_episodes: int = None) -> None:
+    def __init__(
+        self,
+        path: str,
+        source: str = "local",
+        split: str = "train",
+        n_episodes: int = None
+    ) -> None:
         """Initialize dataset.
 
         Args:
@@ -44,24 +51,24 @@ class BaselineDataset(Dataset):
             action_size = self.data["actions"].shape[-1]
         self.actions = np.ndarray(shape=(0, action_size))
 
-        episode_starts = np.where(self.data["episode_starts"] == 1)[0]
-        episode_ends = [*episode_starts[1:], len(self.data["obs"])]
+        episode_starts = list(np.where(self.data["episode_starts"] == 1)[0])
+        episode_starts.append(len(self.data["episode_starts"]))
 
         if n_episodes is not None:
-            episode_starts = episode_starts[:n_episodes]
-            episode_ends = episode_ends[:n_episodes]
+            if split == "train":
+                episode_starts = episode_starts[:n_episodes + 1]
+            else:
+                episode_starts = episode_starts[n_episodes:]
 
-        for start, end in zip(episode_starts, episode_ends):
+        for start, end in zip(episode_starts, tqdm(episode_starts[1:], desc="Creating dataset")):
             episode = self.data["obs"][start:end]
-            actions = self.data["actions"][start:end - 1].reshape((-1, 1))
-            self.actions = np.append(self.actions, actions, axis=0)
+            actions = self.data["actions"][start:end].reshape((-1, 1))
+            self.actions = np.append(self.actions, actions[:-1], axis=0)
+            self.states = np.append(self.states, episode[:-1], axis=0)
+            self.next_states = np.append(self.next_states, episode[1:], axis=0)
 
             if source != "local":
                 self.average_reward.append(self.data["rewards"][start:end].sum())
-
-            for (state, next_state) in zip(episode, episode[1:]):
-                self.states = np.append(self.states, state[None], axis=0)
-                self.next_states = np.append(self.next_states, next_state[None], axis=0)
 
         if isinstance(self.average_reward, list):
             self.average_reward = np.mean(self.average_reward)
@@ -88,6 +95,6 @@ class BaselineDataset(Dataset):
             next_state (torch.Tensor): state for timestep t + 1.
         """
         state = torch.from_numpy(self.states[index])
-        action = torch.tensor([self.data["actions"][index]])
+        action = torch.from_numpy(np.array(self.actions[index]))
         next_state = torch.from_numpy(self.next_states[index])
         return state, action, next_state

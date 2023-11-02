@@ -33,7 +33,9 @@ jobs:
         pip install setuptools==65.5.0 pip==21
         pip install pylint pytest
         pip install -r ./requirements/requirements.txt
+        pip install -r ./requirements/benchmark.txt
         pip install -r ./requirements/dev.txt
+        pip install -e .
 
     - name: Analysing the code with pylint
       run: |
