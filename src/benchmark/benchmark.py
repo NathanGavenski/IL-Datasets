@@ -107,7 +107,7 @@ def benchmark() -> None:
     table = tabulate(
         benchmark_results,
         headers=["Environment", "Method", "AER", "Performance"],
-        tablefmt="grid"
+        tablefmt="github"
     )
 
     with open("./benchmark_results.md", "w", encoding="utf-8") as _file:
