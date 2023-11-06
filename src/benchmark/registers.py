@@ -18,9 +18,10 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
     np.mean(rewards)
     ```
 """
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from methods.bc import BC
+from methods.method import Method
 
 
 classic_control: Dict[str, Dict[str, Any]] = {
@@ -39,11 +40,11 @@ classic_control: Dict[str, Dict[str, Any]] = {
 }
 
 
-benchmark_environments = [
+benchmark_environments: List[Dict[str, Dict[str, Any]]]  = [
     classic_control
 ]
 
 
-benchmark_methods = [
+benchmark_methods: List[Method] = [
     BC
 ]

@@ -29,7 +29,8 @@ class BC(Method):
         """Initialize BC method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
-        self.save_path = "./tmp/bc/"
+        self.environment_name = environment.spec.name
+        self.save_path = f"./tmp/bc/{self.environment_name}/"
 
         super().__init__(
             environment,
@@ -98,7 +99,7 @@ class BC(Method):
         Returns:
             method (Self): trained method.
         """
-        folder = "./benchmark_results/bc/"
+        folder = f"./benchmark_results/bc/{self.environment_name}"
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
 
