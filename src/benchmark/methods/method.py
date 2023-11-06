@@ -169,7 +169,7 @@ class Method(ABC):
         """
         environment = GymWrapper(self.environment)
         average_reward = []
-        for _ in range(10):
+        for _ in range(100):
             done = False
             obs = environment.reset()
             accumulated_reward = 0
