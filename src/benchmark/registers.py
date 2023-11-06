@@ -31,6 +31,10 @@ classic_control: Dict[str, Dict[str, Any]] = {
     "MountainCar-v0": {
         "path": "NathanGavenski/MountainCar-v0",
         "random_reward": -200
+    },
+    "Acrobot-v1": {
+        "path": "NathanGavenski/Acrobot-v1",
+        "random_reward": -498.65
     }
 }
 

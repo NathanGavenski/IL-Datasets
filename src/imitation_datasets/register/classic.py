@@ -15,5 +15,12 @@ classic = {
         'filename': "dqn-MountainCar-v0.zip",
         'threshold': -110.,
         'algo': DQN
+    },
+    "acrobot": {
+        'name': 'Acrobot-v1',
+        'repo_id': "sb3/dqn-Acrobot-v1",
+        'filename': "dqn-Acrobot-v1.zip",
+        'threshold': -75.,
+        'algo': DQN
     }
 }
