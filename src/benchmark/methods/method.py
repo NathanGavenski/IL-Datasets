@@ -56,11 +56,13 @@ class Method(ABC):
             action_size = environment.action_space.shape[0]
             self.loss_fn = continuous_loss()
 
-        self.policy = MLP(observation_size, action_size)
+        self.policy = None
+        if environment_parameters['policy'] == 'MlpPolicy':
+            self.policy = MLP(observation_size, action_size)
 
         self.optimizer_fn = optimizer_fn(
             self.policy.parameters(),
-            **environment_parameters
+            lr=environment_parameters['lr']
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

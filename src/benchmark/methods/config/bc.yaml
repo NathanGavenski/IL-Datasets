@@ -1,0 +1,15 @@
+CartPole-v1:
+  lr: 4.57e-3
+  policy: 'MlpPolicy'
+
+MountainCar-v0:
+  lr: 1e-3
+  policy: 'MlpPolicy'
+
+Acrobot-v1:
+  lr: 2.33e-3 
+  policy: 'MlpPolicy'
+
+Default:
+  lr: 5e-4
+  policy: 'MlpPolicy'
