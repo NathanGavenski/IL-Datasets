@@ -2,3 +2,4 @@ torchvision
 tensorboard-wrapper
 tensorboard
 tabulate
+pyyaml

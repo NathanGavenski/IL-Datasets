@@ -16,6 +16,10 @@ from tqdm import tqdm
 
 from imitation_datasets.dataset.metrics import accuracy as accuracy_fn
 from .method import Method, Metrics
+from .utils import import_hyperparameters
+
+
+CONFIG_FILE = "./src/benchmark/methods/config/bc.yaml"
 
 
 class BC(Method):
@@ -32,9 +36,14 @@ class BC(Method):
         self.environment_name = environment.spec.name
         self.save_path = f"./tmp/bc/{self.environment_name}/"
 
+        self.hyperparameters = import_hyperparameters(
+            CONFIG_FILE,
+            self.environment_name,
+        )
+
         super().__init__(
             environment,
-            {"lr": 5e-4}
+            self.hyperparameters
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
