@@ -30,7 +30,7 @@ def load_hyperparameters(path: str, environment_name: str = None) -> Dict[str, A
     if environment_name is None:
         environment_name = 'Default'
 
-    with open(path, 'r', encoding='urf-8') as _file:
+    with open(path, 'r', encoding='utf-8') as _file:
         config = yaml.safe_load(_file)
 
     if environment_name not in config.keys() and 'Default' not in config.keys():
