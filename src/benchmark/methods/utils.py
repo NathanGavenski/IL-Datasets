@@ -1,3 +1,9 @@
+"""Module for utility functions
+
+    load_hyperparameters: load hyperparameters from YAML file
+    convert_hyperparameters: convert string values into other typings
+    import_hyperparameters: loads and converts string values.
+"""
 from typing import Dict, Any
 import os
 
@@ -19,16 +25,16 @@ def load_hyperparameters(path: str, environment_name: str = None) -> Dict[str, A
         hyperparameters (Dict[str, Any]): loaded hyperparameters.
     """
     if not os.path.exists(path):
-        raise FileNotFoundError("%s does not exists" % path)
+        raise FileNotFoundError(f"{path} does not exists")
 
     if environment_name is None:
         environment_name = 'Default'
 
-    with open(path, 'r') as _file:
+    with open(path, 'r', encoding='urf-8') as _file:
         config = yaml.safe_load(_file)
 
     if environment_name not in config.keys() and 'Default' not in config.keys():
-        raise KeyError("Default configuration missing from file at %s" % path)
+        raise KeyError(f"Default configuration missing from file at {path}")
 
     return config.get(environment_name, config['Default'])
 
