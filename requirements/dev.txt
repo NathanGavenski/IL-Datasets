@@ -7,4 +7,4 @@ pylint
 pytest-asyncio
 build
 twine
-bumpver
+torch_lr_finder

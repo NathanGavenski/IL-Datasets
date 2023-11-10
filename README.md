@@ -182,8 +182,8 @@ Here is a list of the upcoming releases:
    - [ ] Model-Based Imitation Learning From Observation Alone
 - [ ] Benchmark environments
    - [x] CartPole-v1
-   - [ ] MountainCar-v0
-   - [ ] Acrobot-v1
+   - [x] MountainCar-v0
+   - [x] Acrobot-v1
    - [ ] LunarLander-v2
    - [ ] Ant-v3
    - [ ] Hopper-v3

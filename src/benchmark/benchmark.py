@@ -50,7 +50,7 @@ def benchmark_method(
             performance (Dict[str, str]) performance.
     """
     policy: Method = method(environment, verbose=True, enjoy_criteria=100)
-    metrics = policy.train(1000, train_dataset=dataloader) \
+    metrics = policy.train(5000, train_dataset=dataloader) \
         .load() \
         ._enjoy(teacher_reward=teacher_reward, random_reward=random_reward)
     aer = f"{round(metrics['aer'], 4)} ± {round(metrics['aer_std'], 4)}"
@@ -104,14 +104,14 @@ def benchmark() -> None:
                     *metrics.values()
                 ])
 
-    table = tabulate(
-        benchmark_results,
-        headers=["Environment", "Method", "AER", "Performance"],
-        tablefmt="github"
-    )
+        table = tabulate(
+            benchmark_results,
+            headers=["Environment", "Method", "AER", "Performance"],
+            tablefmt="github"
+        )
 
-    with open("./benchmark_results.md", "w", encoding="utf-8") as _file:
-        _file.write(table)
+        with open("./benchmark_results.md", "w", encoding="utf-8") as _file:
+            _file.write(table)
 
 
 if __name__ == "__main__":
