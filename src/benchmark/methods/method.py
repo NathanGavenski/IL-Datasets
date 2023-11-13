@@ -47,18 +47,18 @@ class Method(ABC):
         self.discrete |= isinstance(environment.action_space, gym_spaces.Discrete)
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        observation_size = environment.observation_space.shape[0]
+        self.observation_size = environment.observation_space.shape[0]
 
         if self.discrete:
-            action_size = environment.action_space.n
+            self.action_size = environment.action_space.n
             self.loss_fn = discrete_loss()
         else:
-            action_size = environment.action_space.shape[0]
+            self.action_size = environment.action_space.shape[0]
             self.loss_fn = continuous_loss()
 
         self.policy = None
         if environment_parameters['policy'] == 'MlpPolicy':
-            self.policy = MLP(observation_size, action_size)
+            self.policy = MLP(self.observation_size, self.action_size)
 
         self.optimizer_fn = optimizer_fn(
             self.policy.parameters(),
@@ -164,10 +164,16 @@ class Method(ABC):
 
         Args:
             render (bool): Whether it should render. Defaults to False.
+            teacher_reward (Number): reward for teacher policy.
+            random_reward (Number): reward for a random policy.
 
         Returns:
             Metrics:
-                aer (Number): average reward for 10 episodes.
+                aer (Number): average reward for 100 episodes.
+                aer_std (Number): standard deviation for aer.
+                performance (Number): if teacher_reward and random_reward are
+                    informed than the performance metric is calculated.
+                perforamance_std (Number): standard deviation for performance.
         """
         environment = GymWrapper(self.environment)
         average_reward = []

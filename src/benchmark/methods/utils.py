@@ -48,7 +48,9 @@ def convert_hyperparameters(hyperparameters: Dict[str, Any]) -> Dict[str, Any]:
     Returns:
         hyperparameters (Dict[str, Any]): Dictionary with converted values.
     """
-    hyperparameters['lr'] = float(hyperparameters['lr'])
+    for key, value in hyperparameters.items():
+        if 'lr' in key:
+            hyperparameters[key] = float(hyperparameters[key])
     return hyperparameters
 
 
