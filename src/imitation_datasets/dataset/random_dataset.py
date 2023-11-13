@@ -1,5 +1,4 @@
-# load into a Dataset
-# return dataset
+"""Module for creaiting a random dataset."""
 from argparse import ArgumentParser, Namespace
 import os
 import shutil
@@ -14,6 +13,8 @@ from imitation_datasets.dataset import BaselineDataset
 
 
 def enjoy(expert: Policy, path: str, context: Context) -> bool:
+    """Random enjoy function. It has an expert as parameter, but is only for
+    using the Controller and multithreading."""
     done = False
     env = GymWrapper(expert.get_environment(), version="newest")
 
@@ -48,7 +49,7 @@ def enjoy(expert: Policy, path: str, context: Context) -> bool:
 
 
 def collate(path: str, data: List[str]) -> bool:
-    """Collate that outputs the same as StableBaseline."""
+    """Collate that outputs the same as StableBaselines."""
     episode = np.load(f'{path}{data[0]}')
     observation_space = episode["obs"].shape[1]
 
@@ -94,6 +95,14 @@ def collate(path: str, data: List[str]) -> bool:
 
 
 def create_arguments(args: Dict[str, str]) -> Namespace:
+    """Recreate IL-Datasets arguments.
+
+    Args:
+        args (Dict[str, str]): arguments for creating random dataset.
+
+    Returns:
+        arguments (Namespace): parsed arguments.
+    """
     parser = ArgumentParser()
     parser.add_argument("--game", type=str)
     parser.add_argument("--episodes", type=int)
@@ -107,6 +116,16 @@ def create_dataset(
     episodes: int = 10000,
     threads: int = 4
 ) -> str:
+    """Create random dataset.
+
+    Args:
+        environment_name (str): Gym id.
+        episodes (int): how many episodes. Defaults to 10,000.
+        threads (int): how many threads to use. Defaults to 4.
+
+    Returns:
+        path (str): path to dataset.
+    """
     folder = f"random_{environment_name}"
     path = f"./dataset/{folder}"
     Experts.register(
@@ -140,5 +159,15 @@ def get_random_dataset(
     episodes: int = 10000,
     threads: int = 4
 ) -> BaselineDataset:
+    """Create random dataset.
+
+    Args:
+        environment_name (str): Gym id.
+        episodes (int): how many episodes. Defaults to 10,000.
+        threads (int): how many threads to use. Defaults to 4.
+
+    Returns:
+        dataset (BaselineDataset): BaselineDataset object.
+    """
     random_dataset = create_dataset(environment_name, episodes, threads)
     return BaselineDataset(random_dataset)

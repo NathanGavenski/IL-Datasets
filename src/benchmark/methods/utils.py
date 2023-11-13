@@ -50,7 +50,7 @@ def convert_hyperparameters(hyperparameters: Dict[str, Any]) -> Dict[str, Any]:
     """
     for key, value in hyperparameters.items():
         if 'lr' in key:
-            hyperparameters[key] = float(hyperparameters[key])
+            hyperparameters[key] = float(value)
     return hyperparameters
 
 
