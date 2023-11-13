@@ -36,7 +36,6 @@ class BCO(Method):
     __author__ = "Torabi et. al."
     __method_name__ = "Behavioural Cloning from Observation"
 
-
     def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
         """Initialize BCO method."""
         self.enjoy_criteria = enjoy_criteria
@@ -131,7 +130,6 @@ class BCO(Method):
         board = Tensorboard(path=folder)
 
         best_model = -np.inf
-        # If the random dataset is not there we should create one
         if not isinstance(train_dataset, dict):
             train_dataset = {"expert_dataset": train_dataset}
 
