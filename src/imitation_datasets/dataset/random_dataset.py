@@ -5,6 +5,7 @@ import shutil
 from typing import List, Dict
 
 import numpy as np
+from tqdm import tqdm
 
 from imitation_datasets import Controller
 from imitation_datasets.experts import Policy, Experts
@@ -59,7 +60,7 @@ def collate(path: str, data: List[str]) -> bool:
     rewards = []
     episode_returns = []
 
-    for file in data:
+    for file in tqdm(data, desc="Collating random dataset"):
         episode = np.load(f'{path}{file}')
         states = np.append(states, episode['obs'], axis=0)
         actions += episode['actions'].tolist()
