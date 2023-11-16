@@ -124,10 +124,12 @@ class BCO(Method):
         Returns:
             method (Self): trained method.
         """
-        folder = "../benchmark_results/bc/"
+        folder = f"../benchmark_results/bco/{self.environment_name}"
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
         board = Tensorboard(path=folder)
+        self.policy.to(self.device)
+        self.idm.to(self.device)
 
         best_model = -np.inf
         if not isinstance(train_dataset, dict):
