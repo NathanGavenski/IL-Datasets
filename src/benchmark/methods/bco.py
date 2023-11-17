@@ -174,20 +174,20 @@ class BCO(Method):
 
             if epoch % self.enjoy_criteria == 0:
                 _, i_pos = self._enjoy(return_ipos=True)
-                train_dataset['idm_dataset'].dataset.states = np.append(
+                train_dataset['idm_dataset'].dataset.states = torch.cat((
                     train_dataset['idm_dataset'].dataset.states,
-                    i_pos['states'],
-                    axis=0
+                    torch.from_numpy(i_pos['states'])),
+                    dim=0
                 )
-                train_dataset['idm_dataset'].dataset.next_states = np.append(
+                train_dataset['idm_dataset'].dataset.next_states = torch.cat((
                     train_dataset['idm_dataset'].dataset.next_states,
-                    i_pos['next_states'],
-                    axis=0
+                    torch.from_numpy(i_pos['next_states'])),
+                    dim=0
                 )
-                train_dataset['idm_dataset'].dataset.actions = np.append(
+                train_dataset['idm_dataset'].dataset.actions = torch.cat((
                     train_dataset['idm_dataset'].dataset.actions,
-                    i_pos['actions'].reshape((-1, 1)),
-                    axis=0
+                    torch.from_numpy(i_pos['actions'].reshape((-1, 1)))),
+                    dim=0
                 )
 
             if epoch % self.enjoy_criteria == 0 or epoch + 1 == n_epochs:
