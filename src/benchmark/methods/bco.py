@@ -45,7 +45,7 @@ class BCO(Method):
 
         self.hyperparameters = import_hyperparameters(
             CONFIG_FILE,
-            self.environment_name,
+            environment.spec.id,
         )
 
         super().__init__(
@@ -107,6 +107,7 @@ class BCO(Method):
                 map_location=torch.device(self.device)
             )
         )
+        return self
 
     def train(
         self,
@@ -141,7 +142,10 @@ class BCO(Method):
 
             if not os.path.exists(random_path):
                 print("Creating random dataset from scratch")
-                train_dataset["idm_dataset"] = get_random_dataset(self.environment.spec.id)
+                train_dataset["idm_dataset"] = get_random_dataset(
+                    environment_name=self.environment.spec.id,
+                    episodes=self.hyperparameters["random_episodes"]
+                )
             else:
                 print("Loading local random dataset")
                 train_dataset["idm_dataset"] = BaselineDataset(

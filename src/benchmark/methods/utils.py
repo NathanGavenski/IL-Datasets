@@ -51,6 +51,9 @@ def convert_hyperparameters(hyperparameters: Dict[str, Any]) -> Dict[str, Any]:
     for key, value in hyperparameters.items():
         if 'lr' in key:
             hyperparameters[key] = float(value)
+
+        if 'random_episodes' == key:
+            hyperparameters[key] = int(value)
     return hyperparameters
 
 
