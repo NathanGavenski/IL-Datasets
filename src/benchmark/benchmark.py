@@ -1,6 +1,7 @@
 """Module for benchmarking."""
 import logging
 from numbers import Number
+from typing import List
 
 import gymnasium as gym
 from gymnasium.error import VersionNotFound, NameNotFound
@@ -9,7 +10,8 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 
 from registers import benchmark_environments
-from registers import benchmark_methods
+from registers import get_methods 
+from args import get_args
 from methods.method import Method, Metrics
 from imitation_datasets.dataset import BaselineDataset
 
@@ -59,8 +61,15 @@ def benchmark_method(
 
 
 # pylint: disable=W0718
-def benchmark() -> None:
-    """Benchmark for all methods and environments listed on registers.py"""
+def benchmark(benchmark_methods: List[Method]) -> None:
+    """Benchmark for all methods and environments listed on registers.py
+
+    Args:
+        benchmark_methods (List[Method]): list of benchmark methods to run.
+    """
+    file_name = "benchmark_results_"
+    file_name += "-".join([str(method.__name__) for method in benchmark_methods])
+
     benchmark_results = []
     for environments in tqdm(benchmark_environments, desc="Benchmark Environments"):
         for name, info in environments.items():
@@ -110,9 +119,11 @@ def benchmark() -> None:
             tablefmt="github"
         )
 
-        with open("./benchmark_results.md", "w", encoding="utf-8") as _file:
+        with open(f"./{file_name}.md", "w", encoding="utf-8") as _file:
             _file.write(table)
 
 
 if __name__ == "__main__":
-    benchmark()
+    args = get_args()
+    methods = args.methods.split(",")
+    benchmark(get_methods(methods))

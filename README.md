@@ -172,7 +172,7 @@ Here is a list of the upcoming releases:
 - [ ] Create actual documentation
 - [ ] Benchmark methods
    - [x] Behavioural Cloning
-   - [ ] Behavioural Cloning from Observation
+   - [x] Behavioural Cloning from Observation
    - [ ] Imitating Latent Policies from Observation
    - [ ] Augmented Behavioural Cloning from Observation
    - [ ] Imitating Unkown Policies via Exploration
