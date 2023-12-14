@@ -160,10 +160,10 @@ Last but not least, IL-Datasets comes with its own benchmarking.
 It uses IL methods on already published datasets to provide consistent results for researchers who also use our datasets.
 Currently, we support:
    
-| Algorithm | Implementation |
-| --- | --- |
-| Behavioural Cloning | [`benchmark.methods.bc`](./src/benchmark/methods/bc.py) |
-| Behavioural Cloning from Observation | [`benchmark.methods.bco`](./src/benchmark/methods/bco.py)
+| Algorithm | Implementation | Benchmark
+| --- | --- | :---: |
+| Behavioural Cloning | [`benchmark.methods.bc`](./src/benchmark/methods/bc.py) | ✅ |
+| Behavioural Cloning from Observation | [`benchmark.methods.bco`](./src/benchmark/methods/bco.py) | ✅ |
 
 However, our plan is to implement more state-of-the-art methods.
 
@@ -206,8 +206,8 @@ Here is a list of the upcoming releases:
 - [A watcher for python to facilitate development of small projects](https://github.com/NathanGavenski/python-watcher)
 
 ### Academic
-- [Self-Supervised Adversarial Imitation Learning](https://arxiv.org/pdf/2304.10914.pdf)
-- [How Resilient are Imitation Learning Methods to Sub-Optimal Experts?](https://link.springer.com/chapter/10.1007/978-3-031-21689-3_32)
+- [Self-Supervised Adversarial Imitation Learning (IJCNN)](https://arxiv.org/pdf/2304.10914.pdf)
+- [How Resilient are Imitation Learning Methods to Sub-Optimal Experts? (BRACIS)](https://link.springer.com/chapter/10.1007/978-3-031-21689-3_32)
 - [Self-supervised imitation learning from observation (MSc dissertation)](https://repositorio.pucrs.br/dspace/bitstream/10923/17536/1/000500266-Texto%2Bcompleto-0.pdf)
 - [Imitating Unknown Policies via Exploration (BMVC)](https://arxiv.org/pdf/2008.05660.pdf)
 - [Augmented behavioral cloning from observation (IJCNN)](https://arxiv.org/pdf/2004.13529.pdf)
