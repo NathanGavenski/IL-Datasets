@@ -158,7 +158,13 @@ dataset_eval = BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingfac
 
 Last but not least, IL-Datasets comes with its own benchmarking.
 It uses IL methods on already published datasets to provide consistent results for researchers who also use our datasets.
-Currently, we only have [Behavioural Cloning](https://github.com/NathanGavenski/IL-Datasets/blob/main/src/benchmark/methods/bc.py) implemented. 
+Currently, we support:
+   
+| Algorithm | Implementation |
+| --- | --- |
+| Behavioural Cloning | [`benchmark.methods.bc`](./src/benchmark/methods/bc.py) |
+| Behavioural Cloning from Observation | [`benchmark.methods.bco`](./src/benchmark/methods/bco.py)
+
 However, our plan is to implement more state-of-the-art methods.
 
 You can check the current benchmark results at [benchmark_results.md](https://github.com/NathanGavenski/IL-Datasets/blob/main/benchmark_results.md).
@@ -168,7 +174,6 @@ You can check the current benchmark results at [benchmark_results.md](https://gi
 
 Here is a list of the upcoming releases:
 
-- [ ] Make benchmark a different installation from imitation_datasets
 - [ ] Create actual documentation
 - [ ] Benchmark methods
    - [x] Behavioural Cloning

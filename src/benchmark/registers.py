@@ -20,9 +20,8 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
 """
 from typing import Any, Dict, List
 
-from methods.bc import BC
-from methods.bco import BCO
-from methods.method import Method
+from .methods import BC, BCO
+from .methods.method import Method
 
 
 classic_control: Dict[str, Dict[str, Any]] = {
