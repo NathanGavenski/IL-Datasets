@@ -1,6 +1,7 @@
 """Module for benchmarking."""
 import logging
 from numbers import Number
+from typing import List
 
 import gymnasium as gym
 from gymnasium.error import VersionNotFound, NameNotFound
@@ -8,9 +9,10 @@ from tabulate import tabulate
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 
-from registers import benchmark_environments
-from registers import benchmark_methods
-from methods.method import Method, Metrics
+from .registers import benchmark_environments
+from .registers import get_methods
+from .args import get_args
+from .methods.method import Method, Metrics
 from imitation_datasets.dataset import BaselineDataset
 
 
@@ -49,18 +51,25 @@ def benchmark_method(
             aer (Dict[str, str]): average episodic reward.
             performance (Dict[str, str]) performance.
     """
-    policy: Method = method(environment, verbose=True, enjoy_criteria=1)
-    metrics = policy.train(10, train_dataset=dataloader) \
+    policy: Method = method(environment, verbose=True, enjoy_criteria=100)
+    metrics = policy.train(5000, train_dataset=dataloader) \
         .load() \
         ._enjoy(teacher_reward=teacher_reward, random_reward=random_reward)
-    aer = f"{metrics['aer']} ± {metrics['aer_std']}"
-    performance = f"{metrics['performance']} ± {metrics['performance_std']}"
+    aer = f"{round(metrics['aer'], 4)} ± {round(metrics['aer_std'], 4)}"
+    performance = f"{round(metrics['performance'], 4)} ± {round(metrics['performance_std'], 4)}"
     return {"aer": aer, "performance": performance}
 
 
 # pylint: disable=W0718
-def benchmark() -> None:
-    """Benchmark for all methods and environments listed on registers.py"""
+def benchmark(benchmark_methods: List[Method]) -> None:
+    """Benchmark for all methods and environments listed on registers.py
+
+    Args:
+        benchmark_methods (List[Method]): list of benchmark methods to run.
+    """
+    file_name = "benchmark_results_"
+    file_name += "-".join([str(method.__name__) for method in benchmark_methods])
+
     benchmark_results = []
     for environments in tqdm(benchmark_environments, desc="Benchmark Environments"):
         for name, info in environments.items():
@@ -104,15 +113,17 @@ def benchmark() -> None:
                     *metrics.values()
                 ])
 
-    table = tabulate(
-        benchmark_results,
-        headers=["Environment", "Method", "AER", "Performance"],
-        tablefmt="github"
-    )
+        table = tabulate(
+            benchmark_results,
+            headers=["Environment", "Method", "AER", "Performance"],
+            tablefmt="github"
+        )
 
-    with open("./benchmark_results.md", "w", encoding="utf-8") as _file:
-        _file.write(table)
+        with open(f"./{file_name}.md", "w", encoding="utf-8") as _file:
+            _file.write(table)
 
 
 if __name__ == "__main__":
-    benchmark()
+    args = get_args()
+    methods = args.methods.split(",")
+    benchmark(get_methods(methods))

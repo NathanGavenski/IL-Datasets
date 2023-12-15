@@ -75,6 +75,10 @@ class BaselineDataset(Dataset):
 
         assert self.states.shape[0] == self.actions.shape[0] == self.next_states.shape[0]
 
+        self.states = torch.from_numpy(self.states)
+        self.actions = torch.from_numpy(self.actions)
+        self.next_states = torch.from_numpy(self.next_states)
+
     def __len__(self) -> int:
         """Dataset length.
 
@@ -94,7 +98,7 @@ class BaselineDataset(Dataset):
             action (torch.Tensor): action for timestep t.
             next_state (torch.Tensor): state for timestep t + 1.
         """
-        state = torch.from_numpy(self.states[index])
-        action = torch.from_numpy(np.array(self.actions[index]))
-        next_state = torch.from_numpy(self.next_states[index])
+        state = self.states[index]
+        action = self.actions[index]
+        next_state = self.next_states[index]
         return state, action, next_state

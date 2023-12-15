@@ -154,9 +154,7 @@ class Controller:
         try:
             if opt.mode in ['all', 'play']:
                 self.pbar = tqdm(range(self.experiments.amount), desc='Running episodes')
-                loop = asyncio.get_event_loop()
-                loop.run_until_complete(self.run(opt))
-                loop.close()
+                asyncio.run(self.run(opt))
 
             if opt.mode in ['all', 'collate']:
                 self.pbar = tqdm(range(self.experiments.amount), desc='Running collate')

@@ -18,24 +18,52 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
     np.mean(rewards)
     ```
 """
-from typing import Any, Dict
+from typing import Any, Dict, List
 
-from methods.bc import BC
+from .methods import BC, BCO
+from .methods.method import Method
 
 
 classic_control: Dict[str, Dict[str, Any]] = {
     "CartPole-v1": {
         "path": "NathanGavenski/CartPole-v1",
         "random_reward": 9.8
+    },
+    "MountainCar-v0": {
+        "path": "NathanGavenski/MountainCar-v0",
+        "random_reward": -200
+    },
+    "Acrobot-v1": {
+        "path": "NathanGavenski/Acrobot-v1",
+        "random_reward": -498.65
     }
 }
 
 
-benchmark_environments = [
+benchmark_environments: List[Dict[str, Dict[str, Any]]]  = [
     classic_control
 ]
 
 
-benchmark_methods = [
-    BC
+benchmark_methods: List[Method] = [
+    BC,
+    BCO
 ]
+
+
+def get_methods(names: List[str]) -> List[Method]:
+    """Get methods from string list.
+
+    Args:
+        names (List[str]): list of method names.
+
+    Returns:
+        benchmark_methods (List[Method]): list of methods.
+    """
+    if len(names) == 1 and names[0] == "all":
+        return benchmark_methods
+
+    partial_benchmark_methods = []
+    for name in names:
+        partial_benchmark_methods.append(eval(name.upper()))
+    return partial_benchmark_methods

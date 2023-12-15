@@ -1,0 +1,27 @@
+Default:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_episodes: 10000
+
+CartPole-v1:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_episodes: 50
+
+MountainCar-v0:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_episodes: 10
+
+Acrobot-v1:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_episodes: 10
