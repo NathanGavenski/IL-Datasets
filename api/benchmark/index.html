@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Benchmark - IL-Datasets</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Benchmark";
+        var mkdocs_page_input_path = "api/benchmark.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> IL-Datasets
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../about/license/">License</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../about/release-notes/">Release Notes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/install/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/creation/">Creating a new dataset</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/datasets/">Using available datasets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/benchmark/">Benchmarking</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Algorithms</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/method/">Default Method Class</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/bc/">Behavioural Cloning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/bco/">Behavioural Cloning from Observation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Benchmark</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#benchmark_1">benchmark</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#create_dataloader">create_dataloader</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#benchmark_method">benchmark_method</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#benchmark_2">benchmark</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#registers">registers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#get_methods">get_methods</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../imitation/">Imitation Datasets</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">IL-Datasets</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API Reference</li>
+      <li class="breadcrumb-item active">Benchmark</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="benchmark">Benchmark</h1>
+<h2 id="benchmark_1">benchmark</h2>
+<p></bl></p>
+<h3 id="create_dataloader">create_dataloader</h3>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+  <div class="doc doc-contents first">
+  
+      <p>Creates dataloader based on the BaselineDataset.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>path(str)</code></b>
+              –
+              <div class="doc-md-description">
+                <p>HuggingFace path to dataset.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>dataloader</code></b>(                <code><span title="torch.utils.data.DataLoader">DataLoader</span></code>
+)            –
+            <div class="doc-md-description">
+              <p>dataloader to use for training.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>src/benchmark/benchmark.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create_dataloader</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates dataloader based on the BaselineDataset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path(str): HuggingFace path to dataset.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dataloader (DataLoader): dataloader to use for training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">BaselineDataset</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;huggingface&quot;</span><span class="p">)</span>
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataloader</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p></bl></p>
+<h3 id="benchmark_method">benchmark_method</h3>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+  <div class="doc doc-contents first">
+  
+      <p>Function for training a method and evaluating.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>method</code></b>
+                  (<code><span title="benchmark.methods.method.Method">Method</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>class for a method.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>environment</code></b>
+                  (<code>Env</code>)
+              –
+              <div class="doc-md-description">
+                <p>environment to train the method.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dataloader</code></b>
+                  (<code><span title="torch.utils.data.DataLoader">DataLoader</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>dataloader to train the method.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>teacher_reward</code></b>
+                  (<code><span title="numbers.Number">Number</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>teacher reward to compute performance.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>random_reward</code></b>
+                  (<code><span title="numbers.Number">Number</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>random reward to compute performance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>metrics</code></b>(                <code><span title="benchmark.methods.method.Metrics">Metrics</span></code>
+)            –
+            <div class="doc-md-description">
+              <p>resulting metrics for best checkpoint.
+aer (Dict[str, str]): average episodic reward.
+performance (Dict[str, str]) performance.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>src/benchmark/benchmark.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">benchmark_method</span><span class="p">(</span>
+    <span class="n">method</span><span class="p">:</span> <span class="n">Method</span><span class="p">,</span>
+    <span class="n">environment</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">,</span>
+    <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+    <span class="n">teacher_reward</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+    <span class="n">random_reward</span><span class="p">:</span> <span class="n">Number</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Metrics</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function for training a method and evaluating.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        method (Method): class for a method.</span>
+<span class="sd">        environment (Env): environment to train the method.</span>
+<span class="sd">        dataloader (DataLoader): dataloader to train the method.</span>
+<span class="sd">        teacher_reward (Number): teacher reward to compute performance.</span>
+<span class="sd">        random_reward (Number): random reward to compute performance.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        metrics (Metrics): resulting metrics for best checkpoint.</span>
+<span class="sd">            aer (Dict[str, str]): average episodic reward.</span>
+<span class="sd">            performance (Dict[str, str]) performance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">policy</span><span class="p">:</span> <span class="n">Method</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">enjoy_criteria</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="n">train_dataset</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">load</span><span class="p">()</span> \
+        <span class="o">.</span><span class="n">_enjoy</span><span class="p">(</span><span class="n">teacher_reward</span><span class="o">=</span><span class="n">teacher_reward</span><span class="p">,</span> <span class="n">random_reward</span><span class="o">=</span><span class="n">random_reward</span><span class="p">)</span>
+    <span class="n">aer</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;aer&#39;</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;aer_std&#39;</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">performance</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;performance&#39;</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;performance_std&#39;</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;aer&quot;</span><span class="p">:</span> <span class="n">aer</span><span class="p">,</span> <span class="s2">&quot;performance&quot;</span><span class="p">:</span> <span class="n">performance</span><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p></bl></p>
+<h3 id="benchmark_2">benchmark</h3>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+  <div class="doc doc-contents first">
+  
+      <p>Benchmark for all methods and environments listed on registers.py</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>benchmark_methods</code></b>
+                  (<code><span title="typing.List">List</span>[<span title="benchmark.methods.method.Method">Method</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>list of benchmark methods to run.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>src/benchmark/benchmark.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">benchmark</span><span class="p">(</span><span class="n">benchmark_methods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Method</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Benchmark for all methods and environments listed on registers.py</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        benchmark_methods (List[Method]): list of benchmark methods to run.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;benchmark_results_&quot;</span>
+    <span class="n">file_name</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">benchmark_methods</span><span class="p">])</span>
+
+    <span class="n">benchmark_results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">environments</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">benchmark_environments</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Benchmark Environments&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">environments</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">path</span><span class="p">,</span> <span class="n">random_reward</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">environment</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">VersionNotFound</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;benchmark: Version for environment does not exist&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">NameNotFound</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;benchmark: Environment name does not exist&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;benchmark: Generic error raised, probably dependency related&quot;</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dataloader</span> <span class="o">=</span> <span class="n">create_dataloader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;benchmark: HuggingFace path is not valid&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">benchmark_methods</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Methods for environment: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">metrics</span> <span class="o">=</span> <span class="n">benchmark_method</span><span class="p">(</span>
+                        <span class="n">method</span><span class="p">,</span>
+                        <span class="n">environment</span><span class="p">,</span>
+                        <span class="n">dataloader</span><span class="p">,</span>
+                        <span class="n">dataloader</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">average_reward</span><span class="p">,</span>
+                        <span class="n">random_reward</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="s2">&quot;benchmark: Method </span><span class="si">%s</span><span class="s2"> did raise an exception during training&quot;</span><span class="p">,</span>
+                        <span class="n">method</span><span class="o">.</span><span class="n">__method_name__</span>
+                    <span class="p">)</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">benchmark_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span>
+                    <span class="n">name</span><span class="p">,</span>
+                    <span class="n">method</span><span class="o">.</span><span class="n">__method_name__</span><span class="p">,</span>
+                    <span class="o">*</span><span class="n">metrics</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="p">])</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="n">tabulate</span><span class="p">(</span>
+            <span class="n">benchmark_results</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Environment&quot;</span><span class="p">,</span> <span class="s2">&quot;Method&quot;</span><span class="p">,</span> <span class="s2">&quot;AER&quot;</span><span class="p">,</span> <span class="s2">&quot;Performance&quot;</span><span class="p">],</span>
+            <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;github&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;./</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.md&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">_file</span><span class="p">:</span>
+            <span class="n">_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div><p></bl></p>
+<h2 id="registers">registers</h2>
+<p></bl></p>
+<h3 id="get_methods">get_methods</h3>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+  <div class="doc doc-contents first">
+  
+      <p>Get methods from string list.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>names</code></b>
+                  (<code><span title="typing.List">List</span>[str]</code>)
+              –
+              <div class="doc-md-description">
+                <p>list of method names.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>benchmark_methods</code></b>(                <code><span title="typing.List">List</span>[<span title="benchmark.methods.method.Method">Method</span>]</code>
+)            –
+            <div class="doc-md-description">
+              <p>list of methods.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary> <code>src/benchmark/registers.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_methods</span><span class="p">(</span><span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Method</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get methods from string list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        names (List[str]): list of method names.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        benchmark_methods (List[Method]): list of methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">benchmark_methods</span>
+
+    <span class="n">partial_benchmark_methods</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">partial_benchmark_methods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">partial_benchmark_methods</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../algorithms/bco/" class="btn btn-neutral float-left" title="Behavioural Cloning from Observation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../imitation/" class="btn btn-neutral float-right" title="Imitation Datasets">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../algorithms/bco/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../imitation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

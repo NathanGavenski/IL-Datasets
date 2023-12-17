@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Creating a new dataset - IL-Datasets</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Creating a new dataset";
+        var mkdocs_page_input_path = "tutorials/creation.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> IL-Datasets
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../about/license/">License</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../about/release-notes/">Release Notes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../install/">Installation</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Creating a new dataset</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#default-functions">Default functions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#converting-to-a-huggingface-dataset">Converting to a HuggingFace dataset</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../datasets/">Using available datasets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmarking</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Algorithms</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/method/">Default Method Class</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/bc/">Behavioural Cloning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/bco/">Behavioural Cloning from Observation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/benchmark/">Benchmark</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/imitation/">Imitation Datasets</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">IL-Datasets</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Tutorials</li>
+      <li class="breadcrumb-item active">Creating a new dataset</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="creating-a-new-dataset">Creating a new dataset</h1>
+<p>Creation of new Datasets use the <code>Controller</code> class, which requires two different function to work:
+* an <code>enjoy</code> function, which uses the agent to interact with the environment and record an episode); and
+* a <code>collate</code> function, which puts all files created by the <code>enjoy</code> function into a dataset file.</p>
+<h2 id="default-functions">Default functions</h2>
+<p>The <code>imitation_datasets</code> module provides a set of default functions, so you don't need to implement an <code>enjoy</code> and a <code>collate</code> function in every project.
+The resulting dataset will be a <code>NpzFile</code> with the following data:</p>
+<pre><code>&quot;&quot;&quot;
+Data:
+   obs (list[list[float]): gym environment observation. Size [steps, observations space].
+   actions (list[float]): agent action. Size [steps, action] (1 if single action, n if multiple actions).
+   rewards (list[int]): reward from the action with the observations (e.g., r(obs, action)). Size [steps, ].
+   episode_returns (list[float]): accumulated reward for each episode. Size [number of peisodes, ].
+   episode_starts (list[bool]): whether the episode started at the current observation. Size [steps, ].
+&quot;&quot;&quot;
+</code></pre>
+<p>A small functional example of how to use the given functions:</p>
+<pre><code># command: $ python &lt;script&gt; --game cartpole --threads 4 --episodes 1000 --mode all
+from imitation_datasets.functions import baseline_enjoy, baseline_collate
+from imitation_datasets.controller import Controller
+from imitation_datasets.args import get_args
+
+args = get_args()
+controller = Controller(baseline_enjoy, baseline_collate, args.episodes, args.threads)
+controller.start(args)
+</code></pre>
+<h2 id="converting-to-a-huggingface-dataset">Converting to a HuggingFace dataset</h2>
+<p>If you want to upload the dataset to HuggingFace, the <code>imitation_datasets</code> module also provides a function for converting the <code>NpzFile</code> into <code>jsonl</code> format.</p>
+<pre><code>from imitation_datasets.dataset.huggingface import baseline_to_huggingface
+
+baseline_to_huggingface(&quot;./path/to/NpZFile&quot;, &quot;./new/path&quot;)
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../install/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../datasets/" class="btn btn-neutral float-right" title="Using available datasets">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../install/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../datasets/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

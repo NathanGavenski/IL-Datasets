@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Installation - IL-Datasets</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Installation";
+        var mkdocs_page_input_path = "tutorials/install.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> IL-Datasets
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">About</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../about/license/">License</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../about/release-notes/">Release Notes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Installation</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pypi">PyPi</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#local">Local</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#local-requirements">Local Requirements</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../creation/">Creating a new dataset</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../datasets/">Using available datasets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmarking</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Algorithms</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/method/">Default Method Class</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/bc/">Behavioural Cloning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/bco/">Behavioural Cloning from Observation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/benchmark/">Benchmark</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../api/imitation/">Imitation Datasets</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">IL-Datasets</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Tutorials</li>
+      <li class="breadcrumb-item active">Installation</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="installing-il-datasets">Installing IL-Datasets</h1>
+<p>IL-Datasets install everythings it depends on, with the exception of PyTorch.
+We do this so we would not overide the current PyTorch version you use on yout local environment.
+Therefore, before running IL-Datasets don't forget to install the PyTorch version you need!</p>
+<h2 id="requirements">Requirements</h2>
+<p>The project supports Python versions <code>3.8</code>~<code>3.11</code>, and the latest PyTorch version.</p>
+<h2 id="pypi">PyPi</h2>
+<p>IL-Datasets is available on PyPi:</p>
+<pre><code># Stable version
+pip install il-datasets
+</code></pre>
+<p>if you plan to use the benchmark module, please use:</p>
+<pre><code># Stable version
+pip install &quot;il-datasets[benchmark]&quot;
+</code></pre>
+<h2 id="local">Local</h2>
+<p>But if you prefer, you can install it from the source:</p>
+<pre><code>git clone https://github.com/NathanGavenski/IL-Datasets.git
+cd IL-Datasets
+pip install -e .
+</code></pre>
+<h3 id="local-requirements">Local Requirements</h3>
+<p>All requirements for the <code>imitation_datasets</code> module are listed in <a href="https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/requirements.txt">requirements.txt</a>.
+These requirements are required by the module and are installed together with the <code>IL-Datasets</code>.
+For requirements to use the <code>benchmark</code> module, use both the <code>imitation_datasets</code> requirements and the ones listed in <a href="https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/benchmark.txt">benchmark.txt</a>.
+Development requirements are listed at <a href="https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/dev.txt">dev.txt</a>.
+We do not recommend using these dependencies outside development.
+They use an outdated version from gym <code>v0.21.0</code> to test the <code>GymWrapper</code> class.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../about/release-notes/" class="btn btn-neutral float-left" title="Release Notes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../creation/" class="btn btn-neutral float-right" title="Creating a new dataset">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../about/release-notes/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../creation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
