@@ -39,7 +39,7 @@ jobs:
 
     - name: Analysing the code with pylint
       run: |
-        pylint --fail-under=9 $(git ls-files '*.py') --ignore-paths=./tests/
+        pylint --fail-under=9 $(git ls-files '*.py') --ignore-paths=./tests/,./docs/
 
     - name: Unit testing 
       run: |

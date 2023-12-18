@@ -174,7 +174,6 @@ You can check the current benchmark results at [benchmark_results.md](https://gi
 
 Here is a list of the upcoming releases:
 
-- [ ] Create actual documentation
 - [ ] Benchmark methods
    - [x] Behavioural Cloning
    - [x] Behavioural Cloning from Observation

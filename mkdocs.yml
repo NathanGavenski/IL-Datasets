@@ -1,0 +1,34 @@
+site_name: IL-Datasets
+
+theme: 
+  name: readthedocs
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            heading_level: 3
+            show_source: true
+            show_root_heading: false
+            show_root_toc_entry: false
+
+nav:
+  - Home: 'index.md'
+  - About:
+    - 'License': 'about/license.md'
+    - 'Release Notes': 'about/release-notes.md'
+  - Tutorials:
+    - 'Installation': 'tutorials/install.md'
+    - 'Creating a new dataset': 'tutorials/creation.md'
+    - 'Using available datasets': 'tutorials/datasets.md'
+    - 'Benchmarking': 'tutorials/benchmark.md'
+  - Algorithms:
+    - 'Default Method Class': 'algorithms/method.md'
+    - 'Behavioural Cloning': 'algorithms/bc.md'
+    - 'Behavioural Cloning from Observation': 'algorithms/bco.md'
+  - 'API Reference':
+    - 'Benchmark': 'api/benchmark.md'
+    - 'Imitation Datasets': 'api/imitation.md'
