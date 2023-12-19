@@ -173,22 +173,7 @@ class BCO(Method):
                 board.step("train")
 
             if epoch % self.enjoy_criteria == 0:
-                _, i_pos = self._enjoy(return_ipos=True)
-                train_dataset['idm_dataset'].dataset.states = torch.cat((
-                    train_dataset['idm_dataset'].dataset.states,
-                    torch.from_numpy(i_pos['states'])),
-                    dim=0
-                )
-                train_dataset['idm_dataset'].dataset.next_states = torch.cat((
-                    train_dataset['idm_dataset'].dataset.next_states,
-                    torch.from_numpy(i_pos['next_states'])),
-                    dim=0
-                )
-                train_dataset['idm_dataset'].dataset.actions = torch.cat((
-                    train_dataset['idm_dataset'].dataset.actions,
-                    torch.from_numpy(i_pos['actions'].reshape((-1, 1)))),
-                    dim=0
-                )
+                train_dataset = self._append_samples(train_dataset)
 
             if epoch % self.enjoy_criteria == 0 or epoch + 1 == n_epochs:
                 metrics = self._enjoy()
@@ -198,6 +183,26 @@ class BCO(Method):
                     self.save()
 
         return self
+
+    def _append_samples(self, train_dataset: DataLoader) -> DataLoader:
+        _, i_pos = self._enjoy(return_ipos=True)
+        train_dataset['idm_dataset'].dataset.states = torch.cat((
+            train_dataset['idm_dataset'].dataset.states,
+            torch.from_numpy(i_pos['states'])),
+            dim=0
+        )
+        train_dataset['idm_dataset'].dataset.next_states = torch.cat((
+            train_dataset['idm_dataset'].dataset.next_states,
+            torch.from_numpy(i_pos['next_states'])),
+            dim=0
+        )
+        train_dataset['idm_dataset'].dataset.actions = torch.cat((
+            train_dataset['idm_dataset'].dataset.actions,
+            torch.from_numpy(i_pos['actions'].reshape((-1, 1)))),
+            dim=0
+        )
+        return train_dataset
+
 
     def _train(self, idm_dataset: DataLoader, expert_dataset: DataLoader) -> Metrics:
         """Train loop.
