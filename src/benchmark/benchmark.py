@@ -8,12 +8,12 @@ from gymnasium.error import VersionNotFound, NameNotFound
 from tabulate import tabulate
 from tqdm import tqdm
 from torch.utils.data import DataLoader
+from imitation_datasets.dataset import BaselineDataset
 
-from .registers import benchmark_environments
-from .registers import get_methods
 from .args import get_args
 from .methods.method import Method, Metrics
-from imitation_datasets.dataset import BaselineDataset
+from .registers import benchmark_environments
+from .registers import get_methods
 
 
 def create_dataloader(path: str) -> DataLoader:

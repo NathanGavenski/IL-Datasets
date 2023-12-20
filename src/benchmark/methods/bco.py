@@ -53,7 +53,12 @@ class BCO(Method):
             self.hyperparameters
         )
 
-        self.idm = MLP(self.observation_size * 2, self.action_size)
+        idm = self.hyperparameters.get('idm', 'MlpPolicy')
+        if idm == 'MlpPolicy':
+            self.idm = MLP(self.observation_size * 2, self.action_size)
+        elif idm == 'MlpWithAttention':
+            self.idm = MlpWithAttention(self.observation_size * 2, self.action_size)
+
         self.idm_optimizer = optim.Adam(self.idm.parameters(), lr=self.hyperparameters['idm_lr'])
         self.idm_loss = nn.CrossEntropyLoss() if self.discrete else nn.MSELoss()
 
