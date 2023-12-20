@@ -190,6 +190,14 @@ class BCO(Method):
         return self
 
     def _append_samples(self, train_dataset: DataLoader) -> DataLoader:
+        """Append samples to DataLoader.
+
+        Args:
+            train_dataset (DataLoader): current train dataset.
+
+        Returns:
+            train_dataset (DataLoader): new train dataset.
+        """
         _, i_pos = self._enjoy(return_ipos=True)
         train_dataset['idm_dataset'].dataset.states = torch.cat((
             train_dataset['idm_dataset'].dataset.states,

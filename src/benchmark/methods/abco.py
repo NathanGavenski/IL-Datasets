@@ -30,6 +30,14 @@ class ABCO(BCO):
         self.save_path = f"./tmp/abco/{self.environment_name}/"
 
     def _append_samples(self, train_dataset: DataLoader) -> DataLoader:
+        """Append samples to DataLoader.
+
+        Args:
+            train_dataset (DataLoader): current train dataset.
+
+        Returns:
+            train_dataset (DataLoader): new train dataset.
+        """
         metrics, i_pos = self._enjoy(return_ipos=True)
         i_pos_ratio = metrics.get('success_rate', 0)
         idm_ratio = 1 - i_pos_ratio
