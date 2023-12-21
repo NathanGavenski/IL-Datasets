@@ -20,7 +20,7 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
 """
 from typing import Any, Dict, List
 
-from .methods import BC, BCO
+from .methods import BC, BCO, ABCO
 from .methods.method import Method
 
 
@@ -47,7 +47,8 @@ benchmark_environments: List[Dict[str, Dict[str, Any]]]  = [
 
 benchmark_methods: List[Method] = [
     BC,
-    BCO
+    BCO,
+    ABCO
 ]
 
 

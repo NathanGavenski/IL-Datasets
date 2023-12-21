@@ -216,7 +216,6 @@ class BCO(Method):
         )
         return train_dataset
 
-
     def _train(self, idm_dataset: DataLoader, expert_dataset: DataLoader) -> Metrics:
         """Train loop.
 
