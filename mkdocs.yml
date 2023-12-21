@@ -14,6 +14,7 @@ plugins:
             show_source: true
             show_root_heading: false
             show_root_toc_entry: false
+            filters: []
 
 nav:
   - Home: 'index.md'
@@ -29,6 +30,7 @@ nav:
     - 'Default Method Class': 'algorithms/method.md'
     - 'Behavioural Cloning': 'algorithms/bc.md'
     - 'Behavioural Cloning from Observation': 'algorithms/bco.md'
+    - 'Augmented Behavioural Cloning from Observation': 'algorithms/abco.md'
   - 'API Reference':
     - 'Benchmark': 'api/benchmark.md'
     - 'Imitation Datasets': 'api/imitation.md'
