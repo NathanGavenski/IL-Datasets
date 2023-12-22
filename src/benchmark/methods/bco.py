@@ -119,6 +119,7 @@ class BCO(Method):
         n_epochs: int,
         train_dataset: Dict[str, DataLoader],
         eval_dataset: Dict[str, DataLoader] = None,
+        folder: str = None
     ) -> Self:
         """Train process.
 
@@ -130,7 +131,8 @@ class BCO(Method):
         Returns:
             method (Self): trained method.
         """
-        folder = f"../benchmark_results/bco/{self.environment_name}"
+        if folder is None:
+            folder = f"../benchmark_results/bco/{self.environment_name}"
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
         board = Tensorboard(path=folder)

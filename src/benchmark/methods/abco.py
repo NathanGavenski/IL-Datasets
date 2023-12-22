@@ -3,6 +3,11 @@ from collections import defaultdict
 from numbers import Number
 from typing import List, Union, Dict, Tuple
 
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
+
 from gymnasium import Env
 import numpy as np
 import torch
@@ -28,6 +33,23 @@ class ABCO(BCO):
     def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
         super().__init__(environment, enjoy_criteria, verbose)
         self.save_path = f"./tmp/abco/{self.environment_name}/"
+
+    def train(
+        self,
+        n_epochs: int,
+        train_dataset: Dict[str, DataLoader],
+        eval_dataset: Dict[str, DataLoader] = None,
+        folder: str = None
+    ) -> Self:
+        if folder is None:
+            folder = f"../benchmark_results/abco/{self.environment_name}"
+
+        super().train(
+            n_epochs,
+            train_dataset,
+            eval_dataset,
+            folder
+        )
 
     def _append_samples(self, train_dataset: DataLoader) -> DataLoader:
         """Append samples to DataLoader.

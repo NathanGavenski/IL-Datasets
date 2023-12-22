@@ -164,7 +164,7 @@ Currently, we support:
 | --- | --- | :---: |
 | Behavioural Cloning | [`benchmark.methods.bc`](./src/benchmark/methods/bc.py) | ✅ |
 | Behavioural Cloning from Observation | [`benchmark.methods.bco`](./src/benchmark/methods/bco.py) | ✅ |
-| Augmented Behavioural Cloning from Observation | [`benchmark.methods.abco`](./src/benchmark/methods/abco.py) | ❌ |
+| Augmented Behavioural Cloning from Observation | [`benchmark.methods.abco`](./src/benchmark/methods/abco.py) | ✅ |
 
 However, our plan is to implement more state-of-the-art methods.
 
