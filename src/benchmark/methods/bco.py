@@ -53,7 +53,12 @@ class BCO(Method):
             self.hyperparameters
         )
 
-        self.idm = MLP(self.observation_size * 2, self.action_size)
+        idm = self.hyperparameters.get('idm', 'MlpPolicy')
+        if idm == 'MlpPolicy':
+            self.idm = MLP(self.observation_size * 2, self.action_size)
+        elif idm == 'MlpWithAttention':
+            self.idm = MlpWithAttention(self.observation_size * 2, self.action_size)
+
         self.idm_optimizer = optim.Adam(self.idm.parameters(), lr=self.hyperparameters['idm_lr'])
         self.idm_loss = nn.CrossEntropyLoss() if self.discrete else nn.MSELoss()
 
@@ -114,6 +119,7 @@ class BCO(Method):
         n_epochs: int,
         train_dataset: Dict[str, DataLoader],
         eval_dataset: Dict[str, DataLoader] = None,
+        folder: str = None
     ) -> Self:
         """Train process.
 
@@ -125,7 +131,8 @@ class BCO(Method):
         Returns:
             method (Self): trained method.
         """
-        folder = f"../benchmark_results/bco/{self.environment_name}"
+        if folder is None:
+            folder = f"../benchmark_results/bco/{self.environment_name}"
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
         board = Tensorboard(path=folder)
@@ -173,22 +180,7 @@ class BCO(Method):
                 board.step("train")
 
             if epoch % self.enjoy_criteria == 0:
-                _, i_pos = self._enjoy(return_ipos=True)
-                train_dataset['idm_dataset'].dataset.states = torch.cat((
-                    train_dataset['idm_dataset'].dataset.states,
-                    torch.from_numpy(i_pos['states'])),
-                    dim=0
-                )
-                train_dataset['idm_dataset'].dataset.next_states = torch.cat((
-                    train_dataset['idm_dataset'].dataset.next_states,
-                    torch.from_numpy(i_pos['next_states'])),
-                    dim=0
-                )
-                train_dataset['idm_dataset'].dataset.actions = torch.cat((
-                    train_dataset['idm_dataset'].dataset.actions,
-                    torch.from_numpy(i_pos['actions'].reshape((-1, 1)))),
-                    dim=0
-                )
+                train_dataset = self._append_samples(train_dataset)
 
             if epoch % self.enjoy_criteria == 0 or epoch + 1 == n_epochs:
                 metrics = self._enjoy()
@@ -198,6 +190,33 @@ class BCO(Method):
                     self.save()
 
         return self
+
+    def _append_samples(self, train_dataset: DataLoader) -> DataLoader:
+        """Append samples to DataLoader.
+
+        Args:
+            train_dataset (DataLoader): current train dataset.
+
+        Returns:
+            train_dataset (DataLoader): new train dataset.
+        """
+        _, i_pos = self._enjoy(return_ipos=True)
+        train_dataset['idm_dataset'].dataset.states = torch.cat((
+            train_dataset['idm_dataset'].dataset.states,
+            torch.from_numpy(i_pos['states'])),
+            dim=0
+        )
+        train_dataset['idm_dataset'].dataset.next_states = torch.cat((
+            train_dataset['idm_dataset'].dataset.next_states,
+            torch.from_numpy(i_pos['next_states'])),
+            dim=0
+        )
+        train_dataset['idm_dataset'].dataset.actions = torch.cat((
+            train_dataset['idm_dataset'].dataset.actions,
+            torch.from_numpy(i_pos['actions'].reshape((-1, 1)))),
+            dim=0
+        )
+        return train_dataset
 
     def _train(self, idm_dataset: DataLoader, expert_dataset: DataLoader) -> Metrics:
         """Train loop.

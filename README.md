@@ -164,6 +164,7 @@ Currently, we support:
 | --- | --- | :---: |
 | Behavioural Cloning | [`benchmark.methods.bc`](./src/benchmark/methods/bc.py) | ✅ |
 | Behavioural Cloning from Observation | [`benchmark.methods.bco`](./src/benchmark/methods/bco.py) | ✅ |
+| Augmented Behavioural Cloning from Observation | [`benchmark.methods.abco`](./src/benchmark/methods/abco.py) | ✅ |
 
 However, our plan is to implement more state-of-the-art methods.
 
@@ -178,12 +179,13 @@ Here is a list of the upcoming releases:
    - [x] Behavioural Cloning
    - [x] Behavioural Cloning from Observation
    - [ ] Imitating Latent Policies from Observation
-   - [ ] Augmented Behavioural Cloning from Observation
+   - [x] Augmented Behavioural Cloning from Observation
    - [ ] Imitating Unkown Policies via Exploration
    - [ ] Generative Adversarial Imitation Learning
    - [ ] Generative Adversarial Imitation Learning from Observation
    - [ ] Off-Policy Imitation Learning from Observations
    - [ ] Model-Based Imitation Learning From Observation Alone
+   - [ ] Self-Supervised Adversarial Imitation Learning
 - [ ] Benchmark environments
    - [x] CartPole-v1
    - [x] MountainCar-v0

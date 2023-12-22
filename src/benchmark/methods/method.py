@@ -18,7 +18,7 @@ import numpy as np
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
-from .policies import MLP
+from .policies import MLP, MlpWithAttention
 
 
 Metrics = Dict[str, Any]
@@ -56,9 +56,11 @@ class Method(ABC):
             self.action_size = environment.action_space.shape[0]
             self.loss_fn = continuous_loss()
 
-        self.policy = None
-        if environment_parameters['policy'] == 'MlpPolicy':
+        policy = self.hyperparameters.get('policy', 'MlpPolicy')
+        if policy == 'MlpPolicy':
             self.policy = MLP(self.observation_size, self.action_size)
+        elif policy == 'MlpWithAttention':
+            self.policy = MlpWithAttention(self.observation_size, self.action_size)
 
         self.optimizer_fn = optimizer_fn(
             self.policy.parameters(),
