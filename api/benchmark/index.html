@@ -70,6 +70,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/bco/">Behavioural Cloning from Observation</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/abco/">Augmented Behavioural Cloning from Observation</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
               <ul class="current">
@@ -602,8 +604,7 @@ performance (Dict[str, str]) performance.</p>
 </table>
           <details class="quote">
             <summary> <code>src/benchmark/registers.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
-<span class="normal">55</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
@@ -617,7 +618,8 @@ performance (Dict[str, str]) performance.</p>
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
-<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_methods</span><span class="p">(</span><span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Method</span><span class="p">]:</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_methods</span><span class="p">(</span><span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Method</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get methods from string list.</span>
 
 <span class="sd">    Args:</span>
@@ -642,7 +644,7 @@ performance (Dict[str, str]) performance.</p>
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../algorithms/bco/" class="btn btn-neutral float-left" title="Behavioural Cloning from Observation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../algorithms/abco/" class="btn btn-neutral float-left" title="Augmented Behavioural Cloning from Observation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../imitation/" class="btn btn-neutral float-right" title="Imitation Datasets">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -666,7 +668,7 @@ performance (Dict[str, str]) performance.</p>
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../../algorithms/bco/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../algorithms/abco/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../imitation/" style="color: #fcfcfc">Next &raquo;</a></span>
