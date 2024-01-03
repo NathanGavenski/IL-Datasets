@@ -18,6 +18,7 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
     np.mean(rewards)
     ```
 """
+from ast import literal_eval
 from typing import Any, Dict, List
 
 from .methods import BC, BCO, ABCO
@@ -40,7 +41,7 @@ classic_control: Dict[str, Dict[str, Any]] = {
 }
 
 
-benchmark_environments: List[Dict[str, Dict[str, Any]]]  = [
+benchmark_environments: List[Dict[str, Dict[str, Any]]] = [
     classic_control
 ]
 
@@ -66,5 +67,5 @@ def get_methods(names: List[str]) -> List[Method]:
 
     partial_benchmark_methods = []
     for name in names:
-        partial_benchmark_methods.append(eval(name.upper()))
+        partial_benchmark_methods.append(literal_eval(name.upper()))
     return partial_benchmark_methods

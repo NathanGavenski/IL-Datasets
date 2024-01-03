@@ -21,7 +21,7 @@ from imitation_datasets.dataset.metrics import accuracy as accuracy_fn
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import get_random_dataset, BaselineDataset
-from .policies.mlp import MLP
+from .policies.mlp import MLP, MlpWithAttention
 from .method import Metrics, Method
 from .utils import import_hyperparameters
 

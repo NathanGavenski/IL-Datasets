@@ -119,7 +119,10 @@ class Experts:
         Returns:
             Policy: dataclass with expert policy information.
         """
-        return cls.experts[identifier]
+        try:
+            return cls.experts[identifier]
+        except KeyError:
+            return None
 
     @classmethod
     def get_register(cls) -> None:
