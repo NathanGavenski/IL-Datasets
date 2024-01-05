@@ -50,6 +50,7 @@ class ABCO(BCO):
             eval_dataset,
             folder
         )
+        return self
 
     def _append_samples(self, train_dataset: DataLoader) -> DataLoader:
         """Append samples to DataLoader.

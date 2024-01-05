@@ -245,14 +245,14 @@ class BCO(Method):
             self.idm_optimizer.zero_grad()
             predictions = self.idm(torch.cat((state, next_state), dim=1))
 
-            loss = self.idm_loss(predictions, action.squeeze().long())
+            loss = self.idm_loss(predictions, action.squeeze(1).long())
             loss.backward()
             idm_accumulated_loss.append(loss.item())
             self.idm_optimizer.step()
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             idm_accumulated_accuracy.append(accuracy)
@@ -274,14 +274,14 @@ class BCO(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            loss = self.loss_fn(predictions, action.squeeze().long())
+            loss = self.loss_fn(predictions, action.squeeze(1).long())
             loss.backward()
             accumulated_loss.append(loss.item())
             self.optimizer_fn.step()
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
@@ -314,7 +314,7 @@ class BCO(Method):
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)

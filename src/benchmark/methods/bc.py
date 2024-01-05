@@ -160,14 +160,14 @@ class BC(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            loss = self.loss_fn(predictions, action.squeeze().long())
+            loss = self.loss_fn(predictions, action.squeeze(1).long())
             loss.backward()
             self.optimizer_fn.step()
             accumulated_loss.append(loss.item())
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
@@ -194,7 +194,7 @@ class BC(Method):
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
