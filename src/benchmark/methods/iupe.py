@@ -27,8 +27,16 @@ class IUPE(ABCO):
     __author__ = "Gavenski et. al."
     __method_name__ = "Imitating Unknown Policies via Exploration"
 
-    def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
-        super().__init__(environment, enjoy_criteria, verbose)
+    def __init__(
+        self,
+        environment: Env,
+        enjoy_criteria: int = 100,
+        verbose: bool = False,
+        config_file: str = None
+    ) -> None:
+        if config_file is None:
+            config_file = CONFIG_FILE
+        super().__init__(environment, enjoy_criteria, verbose, config_file)
         self.save_path = f"./tmp/iupe/{self.environment_name}/"
         self.is_training = False
 

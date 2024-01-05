@@ -36,15 +36,24 @@ class BCO(Method):
     __author__ = "Torabi et. al."
     __method_name__ = "Behavioural Cloning from Observation"
 
-    def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
+    def __init__(
+        self,
+        environment: Env,
+        enjoy_criteria: int = 100,
+        verbose: bool = False,
+        config_file: str = None,
+    ) -> None:
         """Initialize BCO method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
         self.environment_name = environment.spec.name
         self.save_path = f"./tmp/bco/{self.environment_name}/"
 
+        if config_file is None:
+            config_file = CONFIG_FILE
+
         self.hyperparameters = import_hyperparameters(
-            CONFIG_FILE,
+            config_file,
             environment.spec.id,
         )
 
@@ -149,6 +158,8 @@ class BCO(Method):
 
             if not os.path.exists(random_path):
                 print("Creating random dataset from scratch")
+                print(self.hyperparameters["random_episodes"])
+                exit()
                 train_dataset["idm_dataset"] = get_random_dataset(
                     environment_name=self.environment.spec.id,
                     episodes=self.hyperparameters["random_episodes"]
