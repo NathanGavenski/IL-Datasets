@@ -158,8 +158,6 @@ class BCO(Method):
 
             if not os.path.exists(random_path):
                 print("Creating random dataset from scratch")
-                print(self.hyperparameters["random_episodes"])
-                exit()
                 train_dataset["idm_dataset"] = get_random_dataset(
                     environment_name=self.environment.spec.id,
                     episodes=self.hyperparameters["random_episodes"]
