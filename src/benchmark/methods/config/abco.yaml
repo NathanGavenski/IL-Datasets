@@ -25,3 +25,10 @@ Acrobot-v1:
   idm: 'MlpWithAttention'
   policy: 'MlpWithAttention'
   random_episodes: 10
+
+LunarLander-v2:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpWithAttention'
+  policy: 'MlpWithAttention'
+  random_episodes: 10
