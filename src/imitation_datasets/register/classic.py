@@ -22,5 +22,13 @@ classic = {
         'filename': "dqn-Acrobot-v1.zip",
         'threshold': -75.,
         'algo': DQN
+    },
+    "lunarlander": {
+        'name': 'LunarLander-v2',
+        'repo_id': "sb3/ppo-LunarLander-v2",
+        'filename': "ppo-LunarLander-v2.zip",
+        'threshold': 233,
+        'algo': PPO
     }
+
 }

@@ -18,7 +18,6 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
     np.mean(rewards)
     ```
 """
-from ast import literal_eval
 from typing import Any, Dict, List
 
 from .methods import BC, BCO, ABCO, IUPE
@@ -37,6 +36,10 @@ classic_control: Dict[str, Dict[str, Any]] = {
     "Acrobot-v1": {
         "path": "NathanGavenski/Acrobot-v1",
         "random_reward": -498.65
+    },
+    "LunarLander-v2": {
+        "path": "NathanGavenski/LunarLander-v2",
+        "random_reward": -175.65
     }
 }
 
