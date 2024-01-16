@@ -21,7 +21,7 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
 from ast import literal_eval
 from typing import Any, Dict, List
 
-from .methods import BC, BCO, ABCO
+from .methods import BC, BCO, ABCO, IUPE
 from .methods.method import Method
 
 
@@ -49,7 +49,8 @@ benchmark_environments: List[Dict[str, Dict[str, Any]]] = [
 benchmark_methods: List[Method] = [
     BC,
     BCO,
-    ABCO
+    ABCO,
+    IUPE
 ]
 
 
@@ -67,5 +68,5 @@ def get_methods(names: List[str]) -> List[Method]:
 
     partial_benchmark_methods = []
     for name in names:
-        partial_benchmark_methods.append(literal_eval(name.upper()))
+        partial_benchmark_methods.append(eval(name.upper()))
     return partial_benchmark_methods
