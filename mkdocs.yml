@@ -3,6 +3,9 @@ site_name: IL-Datasets
 theme: 
   name: readthedocs
 
+extra_css:
+  - stylesheets/extra.css
+
 plugins:
   - search
   - mkdocstrings:

@@ -21,7 +21,7 @@ from imitation_datasets.dataset.metrics import accuracy as accuracy_fn
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import get_random_dataset, BaselineDataset
-from .policies.mlp import MLP
+from .policies.mlp import MLP, MlpWithAttention
 from .method import Metrics, Method
 from .utils import import_hyperparameters
 
@@ -36,15 +36,24 @@ class BCO(Method):
     __author__ = "Torabi et. al."
     __method_name__ = "Behavioural Cloning from Observation"
 
-    def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
+    def __init__(
+        self,
+        environment: Env,
+        enjoy_criteria: int = 100,
+        verbose: bool = False,
+        config_file: str = None,
+    ) -> None:
         """Initialize BCO method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
         self.environment_name = environment.spec.name
         self.save_path = f"./tmp/bco/{self.environment_name}/"
 
+        if config_file is None:
+            config_file = CONFIG_FILE
+
         self.hyperparameters = import_hyperparameters(
-            CONFIG_FILE,
+            config_file,
             environment.spec.id,
         )
 
@@ -245,14 +254,14 @@ class BCO(Method):
             self.idm_optimizer.zero_grad()
             predictions = self.idm(torch.cat((state, next_state), dim=1))
 
-            loss = self.idm_loss(predictions, action.squeeze().long())
+            loss = self.idm_loss(predictions, action.squeeze(1).long())
             loss.backward()
             idm_accumulated_loss.append(loss.item())
             self.idm_optimizer.step()
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             idm_accumulated_accuracy.append(accuracy)
@@ -274,14 +283,14 @@ class BCO(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            loss = self.loss_fn(predictions, action.squeeze().long())
+            loss = self.loss_fn(predictions, action.squeeze(1).long())
             loss.backward()
             accumulated_loss.append(loss.item())
             self.optimizer_fn.step()
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
@@ -314,7 +323,7 @@ class BCO(Method):
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze())
+                accuracy = accuracy_fn(predictions, action.squeeze(1))
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)

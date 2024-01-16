@@ -10,7 +10,7 @@ from tqdm import tqdm
 from imitation_datasets import Controller
 from imitation_datasets.experts import Policy, Experts
 from imitation_datasets.utils import Context, GymWrapper
-from imitation_datasets.dataset import BaselineDataset
+from .dataset import BaselineDataset
 
 
 def enjoy(expert: Policy, path: str, context: Context) -> bool:

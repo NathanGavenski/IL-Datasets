@@ -30,8 +30,16 @@ class ABCO(BCO):
     __author__ = "Monteiro et. al."
     __method_name__ = "Augmented Behavioural Cloning from Observation"
 
-    def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
-        super().__init__(environment, enjoy_criteria, verbose)
+    def __init__(
+        self,
+        environment: Env,
+        enjoy_criteria: int = 100,
+        verbose: bool = False,
+        config_file: str = None
+    ) -> None:
+        if config_file is None:
+            config_file = CONFIG_FILE
+        super().__init__(environment, enjoy_criteria, verbose, config_file)
         self.save_path = f"./tmp/abco/{self.environment_name}/"
 
     def train(
@@ -50,6 +58,7 @@ class ABCO(BCO):
             eval_dataset,
             folder
         )
+        return self
 
     def _append_samples(self, train_dataset: DataLoader) -> DataLoader:
         """Append samples to DataLoader.
