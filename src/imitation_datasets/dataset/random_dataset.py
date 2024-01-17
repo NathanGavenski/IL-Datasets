@@ -158,7 +158,8 @@ def create_dataset(
 def get_random_dataset(
     environment_name: str,
     episodes: int = 10000,
-    threads: int = 4
+    threads: int = 4,
+    dataset_size: int = 1000,
 ) -> BaselineDataset:
     """Create random dataset.
 
@@ -171,4 +172,4 @@ def get_random_dataset(
         dataset (BaselineDataset): BaselineDataset object.
     """
     random_dataset = create_dataset(environment_name, episodes, threads)
-    return BaselineDataset(random_dataset)
+    return BaselineDataset(random_dataset, n_episodes=dataset_size)

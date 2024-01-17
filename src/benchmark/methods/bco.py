@@ -160,12 +160,14 @@ class BCO(Method):
                 print("Creating random dataset from scratch")
                 train_dataset["idm_dataset"] = get_random_dataset(
                     environment_name=self.environment.spec.id,
-                    episodes=self.hyperparameters["random_episodes"]
+                    episodes=1000,
+                    dataset_size=self.hyperparameters["random_episodes"]
                 )
             else:
                 print("Loading local random dataset")
                 train_dataset["idm_dataset"] = BaselineDataset(
-                    f"{random_path}/teacher.npz"
+                    f"{random_path}/teacher.npz",
+                    n_episodes=self.hyperparameters["random_episodes"]
                 )
 
             train_dataset["idm_dataset"] = DataLoader(
@@ -277,6 +279,7 @@ class BCO(Method):
                 if self.discrete:
                     action = self.idm(torch.cat((state, next_state), dim=1))
                     action = torch.argmax(action, dim=1)
+                    action = action.unsqueeze(1)  # to make consistent with other methods
                 else:
                     action = self.idm(torch.cat((state, next_state), dim=1))
 

@@ -97,3 +97,5 @@ def reached_goal(environment: str, gym_return: Tuple[Any], acc_reward: int) -> b
     if "acrobot" in environment_name:
         # So we don't have to have the environmnet
         return reward == 0
+    if "lunarlander" in environment_name:
+        return reward == 100 and obs[0] < 1.0
