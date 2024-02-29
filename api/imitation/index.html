@@ -73,6 +73,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/abco/">Augmented Behavioural Cloning from Observation</a>
                   </li>
+                  <li class="toctree-l1"><a class="" href="../../algortihms/iupe.md">Imitating Unknown Policies via Exploration</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
               <ul class="current">
@@ -2018,7 +2020,7 @@ It uses a custom_object to replicate stable_baselines behaviour.</p>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_register</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Print entire register of expert policies.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">experts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">experts</span>
 </code></pre></div></td></tr></table></div>
             </details>
 
@@ -2166,7 +2168,7 @@ It uses a custom_object to replicate stable_baselines behaviour.</p>
 <span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">get_register</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print entire register of expert policies.&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">experts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">experts</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
