@@ -1,5 +1,7 @@
 # IL Datasets
 
+![cover](./assets/IL-Datasets.png)
+
 Hi, welcome to the Imitation Learning (IL) Datasets.
 Something that always bothered me a lot was how difficult it was to find good weights for an expert, trying to create a dataset for different state-of-the-art methods, and also having to run all methods due to no common datasets.
 For these reasons, I've created this repository in an effort to make it more accessible for researchers to create datasets using experts from the [Hugging Face](https://huggingface.co/models?pipeline_tag=reinforcement-learning).
@@ -16,6 +18,10 @@ For requirements to use the `benchmark` package, use both the `imitation_dataset
 Development requirements are listed at [dev.txt](https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/dev.txt). We do not recommend using these dependencies outside development. They use an outdated version from gym `v0.21.0` to test the `GymWrapper` class.
 
 ## Install
+
+IL-Datasets doesn't download its **PyTorch** and **Gym** dependencies so it doesn't force users to use specific version.
+We test IL-Datasets using pytorch@latest, gymnasium@latest and gym@v0.21.0.
+If there is any issue with a different version, please open an issue so we might take a look.
 
 The package is available on PyPi:
 ```bash
@@ -200,6 +206,18 @@ Here is a list of the upcoming releases:
    - [ ] Swimmer-v3
 
  Although there are a lot of environments and methods to go through, this repository will be considered done once the documentation and the installation of the benchmarks are done. We don't have a plan for releases for environments and methods yet.
+
+## Cite
+
+If you used IL-Datasets on your research and would like to cite us:
+```{bibtex}
+@inproceedings{gavenski2024ildatasets,
+  title={Imitation Learning Datasets: A Toolkit For Creating Datasets, Training Agents and Benchmarking},
+  author={Gavenski, Nathan and Luck, Michael and Rodrigues, Odinaldo},
+  booktitle={Proceedings of the 2024 International Conference on Autonomous Agents and Multiagent Systems},
+  year={2024}
+}
+```
 
 ## If you like this repository, be sure to check my other projects:
 
