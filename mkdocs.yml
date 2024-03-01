@@ -34,6 +34,7 @@ nav:
     - 'Behavioural Cloning': 'algorithms/bc.md'
     - 'Behavioural Cloning from Observation': 'algorithms/bco.md'
     - 'Augmented Behavioural Cloning from Observation': 'algorithms/abco.md'
+    - 'Imitating Unknown Policies via Exploration': 'algorithms/iupe.md'
   - 'API Reference':
     - 'Benchmark': 'api/benchmark.md'
     - 'Imitation Datasets': 'api/imitation.md'

@@ -127,4 +127,4 @@ class Experts:
     @classmethod
     def get_register(cls) -> None:
         """Print entire register of expert policies."""
-        print(cls.experts)
+        return cls.experts
