@@ -8,9 +8,13 @@ import pandas as pd
 from numpy.lib.npyio import NpzFile
 from datasets import Dataset
 from tqdm import tqdm
+from PIL import Image
 
 
-def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
+def convert_baseline_dataset_to_dict(
+    dataset: NpzFile,
+    keys: List[str] = None
+) -> List[Dict[str, Any]]:
     """Convert a  NpzFile dataset into a dict dataset for the baseline function.
 
     Args:
@@ -19,8 +23,9 @@ def convert_baseline_dataset_to_dict(dataset: NpzFile) -> List[Dict[str, Any]]:
     Returns:
         dataset (List[Dict[str, Any]]): converted dataset.
     """
+    keys = ["obs", "actions", "rewards", "episode_starts"] if keys is None else keys
     dataframe = pd.DataFrame.from_dict(
-        {key: dataset[key].tolist() for key in ["obs", "actions", "rewards", "episode_starts"]},
+        {key: dataset[key].tolist() for key in keys},
         orient="index"
     ).T
     return dataframe.to_dict(orient="records")
@@ -38,7 +43,7 @@ def save_dataset_into_huggingface_format(dataset: List[Dict[str, Any]], path: st
             f.write(json.dumps(line) + "\n")
 
 
-def baseline_to_huggingface(dataset_path: str, new_path: str) -> None:
+def baseline_to_huggingface(dataset_path: str, new_path: str, keys: List[str] = None) -> None:
     """Loads baseline dataset from NpzFile, converts into a dict and save it
     into a JSONL file for upload.
 
@@ -58,7 +63,7 @@ def baseline_to_huggingface(dataset_path: str, new_path: str) -> None:
         raise ValueError(f"'{path}' does not exist.")
 
     dataset = np.load(dataset_path, allow_pickle=True)
-    dataset = convert_baseline_dataset_to_dict(dataset)
+    dataset = convert_baseline_dataset_to_dict(dataset, keys)
     save_dataset_into_huggingface_format(dataset, new_path)
 
 
