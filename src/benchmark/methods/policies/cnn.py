@@ -105,7 +105,7 @@ class CNN(nn.Module):
         super().__init__()
 
         self.block0 = nn.Sequential(
-            nn.Conv2d(in_channels=input_shape[0], out_channels=32, kernel_size=8, stride=4),
+            nn.Conv2d(in_channels=input_shape[-1], out_channels=32, kernel_size=8, stride=4),
             activation()
         )
 

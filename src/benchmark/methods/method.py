@@ -19,6 +19,7 @@ from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from .policies import MLP, MlpWithAttention
+from .policies import CNN, Resnet, ResnetWithAttention
 
 
 Metrics = Dict[str, Any]
@@ -47,7 +48,9 @@ class Method(ABC):
         self.discrete |= isinstance(environment.action_space, gym_spaces.Discrete)
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        self.observation_size = environment.observation_space.shape[0]
+        self.observation_size = environment.observation_space.shape
+        if len(self.observation_size) > 1:
+            self.observation_size = self.observation_size[0]
 
         if self.discrete:
             self.action_size = environment.action_space.n
@@ -61,6 +64,19 @@ class Method(ABC):
             self.policy = MLP(self.observation_size, self.action_size)
         elif policy == 'MlpWithAttention':
             self.policy = MlpWithAttention(self.observation_size, self.action_size)
+        elif policy in ['CnnPolicy', 'ResnetPolicy']:
+            match policy:
+                case 'CnnPolicy':
+                    encoder = CNN(self.observation_size)
+                case 'ResnetPolicy':
+                    encoder = Resnet(self.observation_size)
+                case _:
+                    raise Exception(f"Encoder {policy} not implemented, is it a typo?")
+
+            with torch.no_grad():
+                output = encoder(torch.zeros(1, *self.observation_size[::-1]))
+            linear = MLP(output.shape[-1], self.action_size)
+            self.policy = nn.Sequential(encoder, linear)
 
         self.optimizer_fn = optimizer_fn(
             self.policy.parameters(),
