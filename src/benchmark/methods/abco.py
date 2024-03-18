@@ -20,7 +20,8 @@ from .method import Metrics
 from .utils import reached_goal
 
 
-CONFIG_FILE = "./src/benchmark/methods/config/abco.yaml"
+path = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{path}/config/abco.yaml"
 
 
 class ABCO(BCO):

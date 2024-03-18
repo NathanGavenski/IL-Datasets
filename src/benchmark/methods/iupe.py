@@ -1,6 +1,6 @@
 """Module for Augmented Behavioural Cloning from Observation"""
 from numbers import Number
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Callable
 
 try:
     from typing import Self
@@ -17,7 +17,8 @@ from .abco import ABCO
 from .method import Metrics
 
 
-CONFIG_FILE = "./src/benchmark/methods/config/iupe.yaml"
+path = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{path}/config/iupe.yaml"
 
 
 class IUPE(ABCO):
@@ -40,7 +41,11 @@ class IUPE(ABCO):
         self.save_path = f"./tmp/iupe/{self.environment_name}/"
         self.is_training = False
 
-    def predict(self, obs: Union[np.ndarray, torch.Tensor]) -> Union[List[Number], Number]:
+    def predict(
+        self,
+        obs: Union[np.ndarray, torch.Tensor],
+        transforms: Callable[torch.Tensor, torch.Tensor] = None
+    ) -> Union[List[Number], Number]:
         """Predict method.
 
         Args:
@@ -52,10 +57,18 @@ class IUPE(ABCO):
         self.policy.eval()
 
         if isinstance(obs, np.ndarray):
-            obs = torch.from_numpy(obs)
-
-            if len(obs.shape) == 1:
-                obs = obs[None]
+            if not self.visual:
+                obs = torch.from_numpy(obs)
+                if transforms is not None:
+                    obs = transforms(obs)
+                if len(obs.shape) == 1:
+                    obs = obs[None]
+            else:
+                if transforms is None:
+                    raise ValueError("Visual information requires transforms parameter.")
+                obs = transforms(obs)
+                if len(obs.shape) == 3:
+                    obs = obs[None]
 
         obs = obs.to(self.device)
 

@@ -19,7 +19,8 @@ from .method import Method, Metrics
 from .utils import import_hyperparameters
 
 
-CONFIG_FILE = "./src/benchmark/methods/config/bc.yaml"
+path = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{path}/config/bc.yaml"
 
 
 class BC(Method):
@@ -33,7 +34,10 @@ class BC(Method):
         """Initialize BC method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
-        self.environment_name = environment.spec.name
+        try:
+            self.environment_name = environment.spec.name
+        except AttributeError:
+            self.environment_name = environment.spec._env_name
         self.save_path = f"./tmp/bc/{self.environment_name}/"
 
         self.hyperparameters = import_hyperparameters(
