@@ -8,7 +8,6 @@ import pandas as pd
 from numpy.lib.npyio import NpzFile
 from datasets import Dataset
 from tqdm import tqdm
-from PIL import Image
 
 
 def convert_baseline_dataset_to_dict(

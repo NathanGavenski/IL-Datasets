@@ -19,7 +19,7 @@ from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from .policies import MLP, MlpWithAttention
-from .policies import CNN, Resnet, ResnetWithAttention
+from .policies import CNN, Resnet
 
 
 Metrics = Dict[str, Any]
@@ -71,7 +71,7 @@ class Method(ABC):
             elif policy == 'ResnetPolicy':
                 encoder = Resnet(self.observation_size)
             else:
-                raise Exception(f"Encoder {policy} not implemented, is it a typo?")
+                raise ValueError(f"Encoder {policy} not implemented, is it a typo?")
 
             with torch.no_grad():
                 output = encoder(torch.zeros(1, *self.observation_size[::-1]))

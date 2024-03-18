@@ -81,11 +81,7 @@ def reached_goal(environment: str, gym_return: Tuple[Any], acc_reward: int) -> b
     Returns:
         reached_goal (bool): True if the agent has reached the goal.
     """
-    if len(gym_return) == 4:
-        obs, reward, done, info = gym_return
-    else:
-        obs, reward, done, truncated, info = gym_return
-
+    obs, reward, *_ = gym_return
     environment_name = environment.lower()
 
     if "cartpole" in environment_name:
@@ -97,3 +93,5 @@ def reached_goal(environment: str, gym_return: Tuple[Any], acc_reward: int) -> b
     if "acrobot" in environment_name:
         # So we don't have to have the environmnet
         return reward == 0
+
+    raise ValueError("Environment has no goal registered")

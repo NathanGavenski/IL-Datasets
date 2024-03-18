@@ -20,8 +20,8 @@ from .method import Metrics
 from .utils import reached_goal
 
 
-path = "/".join(__file__.split("/")[:-1])
-CONFIG_FILE = f"{path}/config/abco.yaml"
+PATH = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{PATH}/config/abco.yaml"
 
 
 class ABCO(BCO):
@@ -154,8 +154,7 @@ class ABCO(BCO):
                 gym_return = environment.step(action)
                 obs, reward, done, *_ = gym_return
                 accumulated_reward += reward
-                goal |= reached_goal(self.environment_name,
-                                     gym_return, accumulated_reward)
+                goal |= reached_goal(self.environment_name, gym_return, accumulated_reward)
 
                 i_pos['next_states'].append(obs)
             average_reward.append(accumulated_reward)

@@ -17,8 +17,8 @@ from .abco import ABCO
 from .method import Metrics
 
 
-path = "/".join(__file__.split("/")[:-1])
-CONFIG_FILE = f"{path}/config/iupe.yaml"
+PATH = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{PATH}/config/iupe.yaml"
 
 
 class IUPE(ABCO):

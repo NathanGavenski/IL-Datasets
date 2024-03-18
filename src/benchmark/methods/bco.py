@@ -3,7 +3,6 @@ from collections import defaultdict
 import os
 from typing import List, Union, Dict, Tuple
 from numbers import Number
-
 try:
     from typing import Self
 except ImportError:
@@ -27,8 +26,8 @@ from .method import Metrics, Method
 from .utils import import_hyperparameters
 
 
-path = "/".join(__file__.split("/")[:-1])
-CONFIG_FILE = f"{path}/config/bco.yaml"
+PATH = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{PATH}/config/bco.yaml"
 
 
 class BCO(Method):
@@ -80,7 +79,7 @@ class BCO(Method):
             elif idm == 'ResnetPolicy':
                 encoder = Resnet(self.observation_size)
             else:
-                raise Exception(f'Encoder {idm} not implemented, is it a typo?')
+                raise ValueError(f'Encoder {idm} not implemented, is it a typo?')
 
             with torch.no_grad():
                 output = encoder(torch.zeros(1, *self.observation_size[::-1]))

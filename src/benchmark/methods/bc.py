@@ -19,8 +19,8 @@ from .method import Method, Metrics
 from .utils import import_hyperparameters
 
 
-path = "/".join(__file__.split("/")[:-1])
-CONFIG_FILE = f"{path}/config/bc.yaml"
+PATH = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{PATH}/config/bc.yaml"
 
 
 class BC(Method):
