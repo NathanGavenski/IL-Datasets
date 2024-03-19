@@ -3,7 +3,6 @@ from collections import defaultdict
 import os
 from typing import List, Union, Dict, Tuple
 from numbers import Number
-
 try:
     from typing import Self
 except ImportError:
@@ -22,11 +21,13 @@ from imitation_datasets.dataset.metrics import average_episodic_reward, performa
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import get_random_dataset, BaselineDataset
 from .policies.mlp import MLP, MlpWithAttention
+from .policies.cnn import CNN, Resnet
 from .method import Metrics, Method
 from .utils import import_hyperparameters
 
 
-CONFIG_FILE = "./src/benchmark/methods/config/bco.yaml"
+PATH = "/".join(__file__.split("/")[:-1])
+CONFIG_FILE = f"{PATH}/config/bco.yaml"
 
 
 class BCO(Method):
@@ -46,8 +47,12 @@ class BCO(Method):
         """Initialize BCO method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
-        self.environment_name = environment.spec.name
+        try:
+            self.environment_name = environment.spec.name
+        except AttributeError:
+            self.environment_name = environment.spec._env_name
         self.save_path = f"./tmp/bco/{self.environment_name}/"
+        self.visual = False
 
         if config_file is None:
             config_file = CONFIG_FILE
@@ -67,6 +72,19 @@ class BCO(Method):
             self.idm = MLP(self.observation_size * 2, self.action_size)
         elif idm == 'MlpWithAttention':
             self.idm = MlpWithAttention(self.observation_size * 2, self.action_size)
+        elif idm in ['CnnPolicy', 'ResnetPolicy']:
+            self.visual = True
+            if idm == 'CnnPolicy':
+                encoder = CNN(self.observation_size)
+            elif idm == 'ResnetPolicy':
+                encoder = Resnet(self.observation_size)
+            else:
+                raise ValueError(f'Encoder {idm} not implemented, is it a typo?')
+
+            with torch.no_grad():
+                output = encoder(torch.zeros(1, *self.observation_size[::-1]))
+            linear = MLP(output.shape[-1], self.action_size)
+            self.idm = nn.Sequential(encoder, linear)
 
         self.idm_optimizer = optim.Adam(self.idm.parameters(), lr=self.hyperparameters['idm_lr'])
         self.idm_loss = nn.CrossEntropyLoss() if self.discrete else nn.MSELoss()

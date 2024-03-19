@@ -1,6 +1,6 @@
 """Module for base class for all methods."""
 from abc import ABC
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, Callable
 
 try:
     from typing import Self
@@ -19,12 +19,12 @@ from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from .policies import MLP, MlpWithAttention
+from .policies import CNN, Resnet
 
 
 Metrics = Dict[str, Any]
 
 
-# TODO adapt for visual
 class Method(ABC):
     """Base class for all methods."""
 
@@ -46,8 +46,11 @@ class Method(ABC):
         self.discrete = isinstance(environment.action_space, spaces.Discrete)
         self.discrete |= isinstance(environment.action_space, gym_spaces.Discrete)
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.visual = False
 
-        self.observation_size = environment.observation_space.shape[0]
+        self.observation_size = environment.observation_space.shape
+        if len(self.observation_size) == 1:
+            self.observation_size = self.observation_size[0]
 
         if self.discrete:
             self.action_size = environment.action_space.n
@@ -61,6 +64,19 @@ class Method(ABC):
             self.policy = MLP(self.observation_size, self.action_size)
         elif policy == 'MlpWithAttention':
             self.policy = MlpWithAttention(self.observation_size, self.action_size)
+        elif policy in ['CnnPolicy', 'ResnetPolicy']:
+            self.visual = True
+            if policy == 'CnnPolicy':
+                encoder = CNN(self.observation_size)
+            elif policy == 'ResnetPolicy':
+                encoder = Resnet(self.observation_size)
+            else:
+                raise ValueError(f"Encoder {policy} not implemented, is it a typo?")
+
+            with torch.no_grad():
+                output = encoder(torch.zeros(1, *self.observation_size[::-1]))
+            linear = MLP(output.shape[-1], self.action_size)
+            self.policy = nn.Sequential(encoder, linear)
 
         self.optimizer_fn = optimizer_fn(
             self.policy.parameters(),
@@ -78,11 +94,18 @@ class Method(ABC):
         """
         raise NotImplementedError()
 
-    def predict(self, obs: Union[np.ndarray, torch.Tensor]) -> Union[List[Number], Number]:
+    def predict(
+        self,
+        obs: Union[np.ndarray, torch.Tensor],
+        transforms: Callable[[torch.Tensor], torch.Tensor] = None
+    ) -> Union[List[Number], Number]:
         """Predict method.
 
         Args:
             obs (Union[np.ndarray, torch.Tensor]): input observation.
+            transforms (Callable[torch.Tensor, torch.Tensor]): transform function
+                to change data. If data is an image, the transforms parameter is
+                required. Defaults to None.
 
         Returns:
             action (Union[List[Number], Number): predicted action.
@@ -90,10 +113,18 @@ class Method(ABC):
         self.policy.eval()
 
         if isinstance(obs, np.ndarray):
-            obs = torch.from_numpy(obs)
-
-            if len(obs.shape) == 1:
-                obs = obs[None]
+            if not self.visual:
+                obs = torch.from_numpy(obs)
+                if transforms is not None:
+                    obs = transforms(obs)
+                if len(obs.shape) == 1:
+                    obs = obs[None]
+            else:
+                if transforms is None:
+                    raise ValueError("Visual information requires transforms parameter.")
+                obs = transforms(obs)
+                if len(obs.shape) == 3:
+                    obs = obs[None]
 
         obs = obs.to(self.device)
 
@@ -160,7 +191,9 @@ class Method(ABC):
         self,
         render: bool = False,
         teacher_reward: Number = None,
-        random_reward: Number = None
+        random_reward: Number = None,
+        gym_version: str = "newest",
+        transforms: Callable[[torch.Tensor], torch.Tensor] = None
     ) -> Metrics:
         """Function for evaluation of the policy in the environment
 
@@ -168,6 +201,11 @@ class Method(ABC):
             render (bool): Whether it should render. Defaults to False.
             teacher_reward (Number): reward for teacher policy.
             random_reward (Number): reward for a random policy.
+            gym_version (str): Which version of gym GymWrapper should use.
+                Defaults to "newest" (gymnasium).
+            transofrms (Callable[torch.Tensor, torch.Tensor]): torchvision
+                functions to transform the data (only required for visual
+                environments). Defaults to None.
 
         Returns:
             Metrics:
@@ -177,7 +215,7 @@ class Method(ABC):
                     informed than the performance metric is calculated.
                 perforamance_std (Number): standard deviation for performance.
         """
-        environment = GymWrapper(self.environment)
+        environment = GymWrapper(self.environment, gym_version)
         average_reward = []
         for _ in range(100):
             done = False
@@ -186,7 +224,7 @@ class Method(ABC):
             while not done:
                 if render:
                     environment.render()
-                action = self.predict(obs)
+                action = self.predict(obs, transforms)
                 obs, reward, done, *_ = environment.step(action)
                 accumulated_reward += reward
             average_reward.append(accumulated_reward)

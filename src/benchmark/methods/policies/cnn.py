@@ -93,7 +93,7 @@ class CNN(nn.Module):
 
     def __init__(
         self,
-        input_shape: Tuple[int] = (4, 84, 84),
+        input_shape: Tuple[int] = (84, 84, 4),
         activation: nn.Module = nn.LeakyReLU
     ):
         """Vanilla DQN CNN.
@@ -105,7 +105,7 @@ class CNN(nn.Module):
         super().__init__()
 
         self.block0 = nn.Sequential(
-            nn.Conv2d(in_channels=input_shape[0], out_channels=32, kernel_size=8, stride=4),
+            nn.Conv2d(in_channels=input_shape[-1], out_channels=32, kernel_size=8, stride=4),
             activation()
         )
 
