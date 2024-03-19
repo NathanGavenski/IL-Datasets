@@ -93,7 +93,7 @@ class CNN(nn.Module):
 
     def __init__(
         self,
-        input_shape: Tuple[int] = (4, 84, 84),
+        input_shape: Tuple[int] = (84, 84, 4),
         activation: nn.Module = nn.LeakyReLU
     ):
         """Vanilla DQN CNN.

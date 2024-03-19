@@ -50,6 +50,9 @@ class IUPE(ABCO):
 
         Args:
             obs (Union[np.ndarray, torch.Tensor]): input observation.
+            transforms (Callable[torch.Tensor, torch.Tensor]): torchvision
+                transforms functions (required only for visual environments).
+                Defaults to None.
 
         Returns:
             action (Union[List[Number], Number): predicted action.

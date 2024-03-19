@@ -105,7 +105,7 @@ class Method(ABC):
             obs (Union[np.ndarray, torch.Tensor]): input observation.
             transforms (Callable[torch.Tensor, torch.Tensor]): transform function
                 to change data. If data is an image, the transforms parameter is
-                required.
+                required. Defaults to None.
 
         Returns:
             action (Union[List[Number], Number): predicted action.
@@ -201,6 +201,11 @@ class Method(ABC):
             render (bool): Whether it should render. Defaults to False.
             teacher_reward (Number): reward for teacher policy.
             random_reward (Number): reward for a random policy.
+            gym_version (str): Which version of gym GymWrapper should use.
+                Defaults to "newest" (gymnasium).
+            transofrms (Callable[torch.Tensor, torch.Tensor]): torchvision
+                functions to transform the data (only required for visual
+                environments). Defaults to None.
 
         Returns:
             Metrics:
