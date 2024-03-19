@@ -22,7 +22,7 @@ class BaselineDataset(Dataset):
         source: str = "local",
         split: str = "train",
         n_episodes: int = None,
-        transform: Callable[torch.Tensor, torch.Tensor] = None
+        transform: Callable[[torch.Tensor], torch.Tensor] = None
     ) -> None:
         """Initialize dataset.
 

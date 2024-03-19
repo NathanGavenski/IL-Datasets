@@ -44,7 +44,7 @@ class IUPE(ABCO):
     def predict(
         self,
         obs: Union[np.ndarray, torch.Tensor],
-        transforms: Callable[torch.Tensor, torch.Tensor] = None
+        transforms: Callable[[torch.Tensor], torch.Tensor] = None
     ) -> Union[List[Number], Number]:
         """Predict method.
 

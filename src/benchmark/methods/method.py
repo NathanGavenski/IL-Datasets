@@ -97,7 +97,7 @@ class Method(ABC):
     def predict(
         self,
         obs: Union[np.ndarray, torch.Tensor],
-        transforms: Callable[torch.Tensor, torch.Tensor] = None
+        transforms: Callable[[torch.Tensor], torch.Tensor] = None
     ) -> Union[List[Number], Number]:
         """Predict method.
 
@@ -193,7 +193,7 @@ class Method(ABC):
         teacher_reward: Number = None,
         random_reward: Number = None,
         gym_version: str = "newest",
-        transforms: Callable[torch.Tensor, torch.Tensor] = None
+        transforms: Callable[[torch.Tensor], torch.Tensor] = None
     ) -> Metrics:
         """Function for evaluation of the policy in the environment
 
