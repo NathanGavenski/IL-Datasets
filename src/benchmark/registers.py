@@ -45,7 +45,12 @@ classic_control: Dict[str, Dict[str, Any]] = {
 
 
 benchmark_environments: List[Dict[str, Dict[str, Any]]] = [
-    classic_control
+    {
+        "LunarLander-v2": {
+            "path": "NathanGavenski/LunarLander-v2",
+            "random_reward": -175.65
+        }
+    }
 ]
 
 
