@@ -19,7 +19,7 @@ from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from .policies import MLP, MlpWithAttention
-from .policies import CNN, Resnet
+from .policies import CNN, Resnet, ResnetWithAttention
 
 
 Metrics = Dict[str, Any]
@@ -64,18 +64,29 @@ class Method(ABC):
             self.policy = MLP(self.observation_size, self.action_size)
         elif policy == 'MlpWithAttention':
             self.policy = MlpWithAttention(self.observation_size, self.action_size)
-        elif policy in ['CnnPolicy', 'ResnetPolicy']:
+        elif policy in ['CnnPolicy', 'ResnetPolicy', 'AttResnetPolicy']:
             self.visual = True
             if policy == 'CnnPolicy':
                 encoder = CNN(self.observation_size)
             elif policy == 'ResnetPolicy':
                 encoder = Resnet(self.observation_size)
+            elif policy == 'AttResnetPolicy':
+                encoder = ResnetWithAttention(self.observation_size)
             else:
                 raise ValueError(f"Encoder {policy} not implemented, is it a typo?")
 
             with torch.no_grad():
                 output = encoder(torch.zeros(1, *self.observation_size[::-1]))
-            linear = MLP(output.shape[-1], self.action_size)
+
+            linear = nn.Sequential(
+                nn.Linear(output.shape[-1], 512),
+                nn.LeakyReLU(),
+                nn.Dropout(0.3),
+                nn.Linear(512, 512),
+                nn.LeakyReLU(),
+                nn.Dropout(0.3),
+                nn.Linear(512, self.action_size)
+            )
             self.policy = nn.Sequential(encoder, linear)
 
         self.optimizer_fn = optimizer_fn(

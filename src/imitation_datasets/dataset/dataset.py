@@ -20,6 +20,7 @@ class BaselineDataset(Dataset):
         self,
         path: str,
         source: str = "local",
+        hf_split: str = "train",
         split: str = "train",
         n_episodes: int = None,
         transform: Callable[[torch.Tensor], torch.Tensor] = None
@@ -30,6 +31,10 @@ class BaselineDataset(Dataset):
             path (Str): path to the dataset.
             source (str): whether is a HuggingFace or a local dataset.
                 Defaults to 'local'.
+            hf_split (str): HuggingFace split to use. Defaults to 'train'.
+            split (str): split to use. Defaults to 'train'.
+            n_episodes (int): number of episodes to use. Defaults to None.
+            transform (Callable[[torch.Tensor], torch.Tensor]): transform to apply to the data. Defaults to None.
 
         Raises:
             ValueError: if path does not exist.
@@ -43,7 +48,7 @@ class BaselineDataset(Dataset):
             self.data = np.load(path, allow_pickle=True)
             self.average_reward = np.mean(self.data["episode_returns"])
         else:
-            dataset = load_dataset(path, split="train", trust_remote_code=True)
+            dataset = load_dataset(path, split=hf_split, trust_remote_code=True)
             self.data = huggingface_to_baseline(dataset)
             if len(self.data["obs"].shape) == 1:
                 self.data["obs"] = self.data["obs"].reshape((-1, 1))
