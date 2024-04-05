@@ -19,8 +19,8 @@ Development requirements are listed at [dev.txt](https://github.com/NathanGavens
 
 ## Install
 
-IL-Datasets doesn't download its **PyTorch** and **Gym** dependencies so it doesn't force users to use specific version.
-We test IL-Datasets using pytorch@latest, gymnasium@latest and gym@v0.21.0.
+IL-Datasets doesn't download its **PyTorch** and **Gym** dependencies so it doesn't force users to use any specific versions.
+We test IL-Datasets using `pytorch@latest`, `gymnasium@latest` and `gym@v0.21.0`.
 If there is any issue with a different version, please open an issue so we might take a look.
 
 The package is available on PyPi:
@@ -34,6 +34,17 @@ But if you prefer, you can install it from the source.
 git clone https://github.com/NathanGavenski/IL-Datasets.git
 cd IL-Datasets
 pip install -e .
+```
+
+## Docker image
+
+If you want to run IL-Datasets with a docker to test, this project has a `Dockerfile`.
+Currently, the files is configures for the AAMAS demonstration, which means that it instantiates the notebooks created to exemplify each part of the package (data creation, training assistance and benchmarking).
+
+To build and run the docker image:
+```bash
+docker build -t ildatasets:latest .
+docker run -p 127.0.0.1:8888:8888 ildatasets:latest
 ```
 
 ## How does it work?
