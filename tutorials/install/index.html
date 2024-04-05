@@ -61,6 +61,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#pypi">PyPi</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#local">Local</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#docker-image">Docker image</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#local-requirements">Local Requirements</a>
     </li>
@@ -120,11 +122,11 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="installing-il-datasets">Installing IL-Datasets</h1>
-<p>IL-Datasets install everythings it depends on, with the exception of PyTorch.
-We do this so we would not overide the current PyTorch version you use on yout local environment.
-Therefore, before running IL-Datasets don't forget to install the PyTorch version you need!</p>
+<p>IL-Datasets install everythings it depends on, with the exception of PyTorch and Gym/Gymnasium.
+We do this so we would not overide the current installed versions you use on yout local environment.
+Therefore, before running IL-Datasets don't forget to install the versions you need!</p>
 <h2 id="requirements">Requirements</h2>
-<p>The project supports Python versions <code>3.8</code>~<code>3.11</code>, and the latest PyTorch version.</p>
+<p>The project supports Python versions <code>3.8</code>~<code>3.11</code>, the latest PyTorch and Gymnasium versions, and <code>v0.21.0</code> of Gym.</p>
 <h2 id="pypi">PyPi</h2>
 <p>IL-Datasets is available on PyPi:</p>
 <pre><code># Stable version
@@ -139,6 +141,13 @@ pip install &quot;il-datasets[benchmark]&quot;
 <pre><code>git clone https://github.com/NathanGavenski/IL-Datasets.git
 cd IL-Datasets
 pip install -e .
+</code></pre>
+<h2 id="docker-image">Docker image</h2>
+<p>If you want to run IL-Datasets with a docker to test, this project has a <code>Dockerfile</code>.
+Currently, the files is configures for the AAMAS demonstration, which means that it instantiates the notebooks created to exemplify each part of the package (data creation, training assistance and benchmarking).</p>
+<p>To build and run the docker image:</p>
+<pre><code class="language-bash">docker build -t ildatasets:latest .
+docker run -p 127.0.0.1:8888:8888 ildatasets:latest
 </code></pre>
 <h3 id="local-requirements">Local Requirements</h3>
 <p>All requirements for the <code>imitation_datasets</code> module are listed in <a href="https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/requirements.txt">requirements.txt</a>.
