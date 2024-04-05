@@ -103,24 +103,24 @@ class TestCNN(TestCase):
 class TestResnet(TestCase):
 
     def test_resnet_modes(self) -> None:
-        bw_model = Resnet((1, 84, 84))
+        bw_model = Resnet((84, 84, 1))
         assert bw_model.model.conv1.in_channels == 1
 
-        rgb_model = Resnet((3, 84, 84))
+        rgb_model = Resnet((84, 84, 3))
         assert rgb_model.model.conv1.in_channels == 3
 
-        atari_model = Resnet((4, 84, 84))
+        atari_model = Resnet((84, 84, 4))
         assert atari_model.model.conv1.in_channels == 4
 
     def test_resnetattention_modes(self) -> None:
-        bw_model = ResnetWithAttention((1, 84, 84))
+        bw_model = ResnetWithAttention((84, 84, 1))
         assert bw_model.model.conv1.in_channels == 1
         assert isinstance(bw_model.model.layer1[-1], SelfAttn2D)
 
-        rgb_model = ResnetWithAttention((3, 84, 84))
+        rgb_model = ResnetWithAttention((84, 84, 3))
         assert rgb_model.model.conv1.in_channels == 3
         assert isinstance(rgb_model.model.layer1[-1], SelfAttn2D)
 
-        atari_model = ResnetWithAttention((4, 84, 84))
+        atari_model = ResnetWithAttention((84, 84, 4))
         assert atari_model.model.conv1.in_channels == 4
         assert isinstance(atari_model.model.layer1[-1], SelfAttn2D)

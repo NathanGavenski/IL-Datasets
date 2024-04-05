@@ -48,7 +48,7 @@ class BaselineDataset(Dataset):
             self.data = np.load(path, allow_pickle=True)
             self.average_reward = np.mean(self.data["episode_returns"])
         else:
-            dataset = load_dataset(path, split=hf_split, trust_remote_code=True)
+            dataset = load_dataset(path, split=hf_split)
             self.data = huggingface_to_baseline(dataset)
             if len(self.data["obs"].shape) == 1:
                 self.data["obs"] = self.data["obs"].reshape((-1, 1))
