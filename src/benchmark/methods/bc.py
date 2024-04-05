@@ -30,7 +30,13 @@ class BC(Method):
     __author__ = "Pomerleau"
     __method_name__ = "Behavioural Cloning"
 
-    def __init__(self, environment: Env, enjoy_criteria: int = 100, verbose: bool = False) -> None:
+    def __init__(
+        self,
+        environment: Env,
+        enjoy_criteria: int = 100,
+        verbose: bool = False,
+        config_file: str = None
+    ) -> None:
         """Initialize BC method."""
         self.enjoy_criteria = enjoy_criteria
         self.verbose = verbose
@@ -40,8 +46,11 @@ class BC(Method):
             self.environment_name = environment.spec._env_name
         self.save_path = f"./tmp/bc/{self.environment_name}/"
 
+        if config_file is None:
+            config_file = CONFIG_FILE
+
         self.hyperparameters = import_hyperparameters(
-            CONFIG_FILE,
+            config_file,
             self.environment_name,
         )
 

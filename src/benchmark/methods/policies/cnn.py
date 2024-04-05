@@ -165,18 +165,18 @@ class Resnet(nn.Module):
         self.normalize = normalize
 
         self.model = None
-        if input_shape[0] not in [1, 3]:
+        if input_shape[-1] not in [1, 3]:
             self.model = convert_to_n_channels(
                 models.resnet18(pretrained=False),
-                input_shape[0]
+                input_shape[-1]
             )
-        elif input_shape[0] == 1:
+        elif input_shape[-1] == 1:
             self.model = convert_to_bw(models.resnet18(pretrained=pretrained))
         else:
             self.model = models.resnet18(pretrained=pretrained)
         self.model.fc = Empty()
 
-        self.mode = "bw" if input_shape[0] else "rgb"
+        self.mode = "bw" if input_shape[-1] else "rgb"
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward of the model.
@@ -219,18 +219,18 @@ class ResnetWithAttention(nn.Module):
         self.normalize = normalize
 
         self.model = None
-        if input_shape[0] not in [1, 3]:
+        if input_shape[-1] not in [1, 3]:
             self.model = convert_to_n_channels(
                 models.resnet18(pretrained=False),
-                input_shape[0]
+                input_shape[-1]
             )
-        elif input_shape[0] == 1:
+        elif input_shape[-1] == 1:
             self.model = convert_to_bw(models.resnet18(pretrained=pretrained))
         else:
             self.model = models.resnet18(pretrained=pretrained)
         self.model.fc = Empty()
 
-        self.mode = "bw" if input_shape[0] else "rgb"
+        self.mode = "bw" if input_shape[-1] else "rgb"
 
         name = str(len(self.model.layer1))
         self.model.layer1.add_module(name, SelfAttn2D(64))
