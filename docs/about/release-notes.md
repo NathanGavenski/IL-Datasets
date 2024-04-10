@@ -1,5 +1,25 @@
 # Release Notes
 
+## v0.6.0
+### Support for Visual environments
+
+This version adds support for visual environments (e.g., Atari) to all methods, the BaselineDataset, and the benchmark feature.
+
+### Related issues:
+* Issue: [#7 [Feature] Support visual environments](https://github.com/NathanGavenski/IL-Datasets/issues/7)
+
+### Known bugs:
+* For some reason, even though packaging builds the benchmark folder, it is not packaging it. So, for now, if users want to use the benchmark feature, they should install it from the source.
+
+```bash
+git clone https://github.com/NathanGavenski/IL-Datasets.git
+cd IL-Datasets
+pip install -e .
+```
+
+## Next release plan
+The next release should deliver the LunarLander environment benchamrk (almost done) and [SAIL](https://github.com/NathanGavenski/SAIL)  (IJCNN 2023).
+
 ## v0.4.0
 ### Benchmarking
 
