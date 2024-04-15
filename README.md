@@ -208,7 +208,7 @@ Here is a list of the upcoming releases:
    - [x] CartPole-v1
    - [x] MountainCar-v0
    - [x] Acrobot-v1
-   - [ ] LunarLander-v2
+   - [X] LunarLander-v2
    - [ ] Ant-v3
    - [ ] Hopper-v3
    - [ ] HalfCheetah-v3
