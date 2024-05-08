@@ -223,10 +223,19 @@ Here is a list of the upcoming releases:
 If you used IL-Datasets on your research and would like to cite us:
 ```{bibtex}
 @inproceedings{gavenski2024ildatasets,
-  title={Imitation Learning Datasets: A Toolkit For Creating Datasets, Training Agents and Benchmarking},
-  author={Gavenski, Nathan and Luck, Michael and Rodrigues, Odinaldo},
-  booktitle={Proceedings of the 2024 International Conference on Autonomous Agents and Multiagent Systems},
-  year={2024}
+   author = {Gavenski, Nathan and Luck, Michael and Rodrigues, Odinaldo},
+   title = {Imitation Learning Datasets: A Toolkit For Creating Datasets, Training Agents and Benchmarking},
+   year = {2024},
+   isbn = {9798400704864},
+   publisher = {International Foundation for Autonomous Agents and Multiagent Systems},
+   address = {Richland, SC},
+   abstract = {Imitation learning field requires expert data to train agents in a task. Most often, this learning approach suffers from the absence of available data, which results in techniques being tested on its dataset. Creating datasets is a cumbersome process requiring researchers to train expert agents from scratch, record their interactions and test each benchmark method with newly created data. Moreover, creating new datasets for each new technique results in a lack of consistency in the evaluation process since each dataset can drastically vary in state and action distribution. In response, this work aims to address these issues by creating Imitation Learning Datasets, a toolkit that allows for: (i) curated expert policies with multithreaded support for faster dataset creation; (ii) readily available datasets and techniques with precise measurements; and (iii) sharing implementations of common imitation learning techniques. Demonstration link: https://nathangavenski.github.io/#/il-datasets-video},
+   booktitle = {Proceedings of the 23rd International Conference on Autonomous Agents and Multiagent Systems},
+   pages = {2800–2802},
+   numpages = {3},
+   keywords = {benchmarking, dataset, imitation learning},
+   location = {<conf-loc>, <city>Auckland</city>, <country>New Zealand</country>, </conf-loc>},
+   series = {AAMAS '24}
 }
 ```
 
