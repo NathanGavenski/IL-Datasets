@@ -125,6 +125,6 @@ class Experts:
             return None
 
     @classmethod
-    def get_register(cls) -> None:
+    def get_register(cls) -> Dict[str, Policy]:
         """Print entire register of expert policies."""
         return cls.experts
