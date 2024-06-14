@@ -1,6 +1,6 @@
 huggingface_sb3
-stable_baselines3
-sb3_contrib
+stable_baselines3==2.0.0
+sb3_contrib==2.0.0
 tqdm
 psutil
 gymnasium

@@ -76,8 +76,9 @@ class BaselineDataset(Dataset):
         for start, end in zip(episode_starts, tqdm(episode_starts[1:], desc="Creating dataset")):
             episode = self.data["obs"][start:end]
             actions = self.data["actions"][start:end]
-            if len(self.actions.shape) == 1:
-                actions = actions.reshape((-1, 1))
+            if len(self.actions.shape) != 1:
+                shape = 1 if len(actions.shape) == 1 else actions.shape[-1]
+                actions = actions.reshape((-1, shape))
             self.actions = np.append(self.actions, actions[:-1], axis=0)
             self.states = np.append(self.states, episode[:-1], axis=0)
             self.next_states = np.append(self.next_states, episode[1:], axis=0)
