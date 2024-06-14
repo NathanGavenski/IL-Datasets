@@ -1,6 +1,8 @@
 """Module for base class for all methods."""
 from abc import ABC
 from typing import List, Dict, Union, Any, Callable
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 try:
     from typing import Self

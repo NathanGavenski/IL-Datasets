@@ -1,5 +1,8 @@
 # Release Notes
 
+## Next release plan
+The next release should deliver the LunarLander environment benchamrk (almost done) and [SAIL](https://github.com/NathanGavenski/SAIL)  (IJCNN 2023).
+
 ## v0.6.0
 ### Support for Visual environments
 
@@ -17,8 +20,6 @@ cd IL-Datasets
 pip install -e .
 ```
 
-## Next release plan
-The next release should deliver the LunarLander environment benchamrk (almost done) and [SAIL](https://github.com/NathanGavenski/SAIL)  (IJCNN 2023).
 
 ## v0.4.0
 ### Benchmarking

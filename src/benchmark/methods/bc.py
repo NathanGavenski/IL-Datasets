@@ -1,6 +1,7 @@
 """Module for Behavioural Cloning"""
 import os
 from numbers import Number
+from typing import Callable
 
 try:
     from typing import Self
@@ -70,7 +71,7 @@ class BC(Method):
         """
         return self.policy(x)
 
-    def save(self, path: str = None) -> None:
+    def save(self, path: str = None, name: str = None) -> None:
         """Save all model weights.
 
         Args:
@@ -80,9 +81,11 @@ class BC(Method):
         if not os.path.exists(path):
             os.makedirs(path)
 
-        torch.save(self.policy.state_dict(), f"{path}/best_model.ckpt")
+        name = "best_model.ckpt" if name is None else f"{name}.ckpt"
 
-    def load(self, path: str = None) -> Self:
+        torch.save(self.policy.state_dict(), f"{path}/{name}")
+
+    def load(self, path: str = None, name: str = None) -> Self:
         """Load all model weights.
 
         Args:
@@ -92,13 +95,14 @@ class BC(Method):
             ValueError: if the path does not exist.
         """
         path = self.save_path if path is None else path
+        name = "best_model" if name is None else name
 
         if not os.path.exists(path):
             raise ValueError("Path does not exists.")
 
         self.policy.load_state_dict(
             torch.load(
-                f"{path}best_model.ckpt",
+                f"{path}{name}.ckpt",
                 map_location=torch.device(self.device)
             )
         )
@@ -110,6 +114,7 @@ class BC(Method):
         n_epochs: int,
         train_dataset: DataLoader,
         eval_dataset: DataLoader = None,
+        always_save: bool = False,
     ) -> Self:
         """Train process.
 
@@ -126,6 +131,7 @@ class BC(Method):
             os.makedirs(f"{folder}/")
 
         board = Tensorboard(path=folder)
+        board.add_hparams(self.hyperparameters)
         self.policy.to(self.device)
 
         best_model = -np.inf
@@ -144,12 +150,13 @@ class BC(Method):
             else:
                 board.step("train")
 
-            if epoch % self.enjoy_criteria == 0:
+            if epoch > 0 and epoch % self.enjoy_criteria == 0:
                 metrics = self._enjoy()
                 board.add_scalars("Enjoy", epoch="enjoy", **metrics)
                 board.step("enjoy")
-                if best_model < metrics["aer"]:
-                    self.save()
+                if best_model < metrics["aer"] or always_save:
+                    best_model = metrics["aer"]
+                    self.save(name=epoch if always_save else None)
 
         return self
 
