@@ -89,4 +89,8 @@ def accuracy(prediction: Tensor, ground_truth: Tensor) -> Number:
     if len(ground_truth.size()) != 1:
         raise ValueError("'ground truth' need to be 1 dimensional.")
 
+    if prediction.device != ground_truth.device:
+        prediction = prediction.detach().cpu()
+        ground_truth = ground_truth.detach().cpu()
+
     return ((argmax(prediction, 1) == ground_truth).sum().item() / ground_truth.size(0)) * 100
