@@ -246,3 +246,14 @@ class Method(ABC):
         if teacher_reward is not None and random_reward is not None:
             metrics.update(performance(average_reward, teacher_reward, random_reward))
         return metrics
+
+    def early_stop(self, metric: Metrics) -> bool:
+        """Function that tells the method if it should stop or not.
+
+        Args:
+            metric (Metrics): the metric to evaluate whether it should early stop.
+
+        Returns:
+            stop (bool): if it should stop or not.
+        """
+        raise NotImplementedError()

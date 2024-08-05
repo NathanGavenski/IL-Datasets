@@ -158,6 +158,9 @@ class BC(Method):
                     best_model = metrics["aer"]
                     self.save(name=epoch if always_save else None)
 
+                    if early_stop(metrics["aer"]):
+                        return self
+
         return self
 
     def _train(self, dataset: DataLoader) -> Metrics:
@@ -220,3 +223,14 @@ class BC(Method):
             accumulated_accuracy.append(accuracy)
 
         return {"accuracy": np.mean(accumulated_accuracy)}
+
+    def early_stop(self, metric: Metrics) -> bool:
+        """Function that tells the method if it should stop or not.
+
+        Args:
+            metric (Metrics): the metric to evaluate whether it should early stop.
+
+        Returns:
+            stop (bool): if it should stop or not.
+        """
+        return False
