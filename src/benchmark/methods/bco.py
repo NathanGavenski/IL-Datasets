@@ -146,6 +146,7 @@ class BCO(Method):
         n_epochs: int,
         train_dataset: Dict[str, DataLoader],
         eval_dataset: Dict[str, DataLoader] = None,
+        always_save: bool = False,
         folder: str = None
     ) -> Self:
         """Train process.
@@ -154,6 +155,8 @@ class BCO(Method):
             n_epochs (int): amount of epoch to run.
             train_dataset (DataLoader): data to train.
             eval_dataset (DataLoader): data to eval. Defaults to None.
+            always_save (bool): whether it should save all eval steps.
+            folder (str): a specific folder to save the benchmark results.
 
         Returns:
             method (Self): trained method.
@@ -209,12 +212,15 @@ class BCO(Method):
             if epoch % self.enjoy_criteria == 0:
                 train_dataset = self._append_samples(train_dataset)
 
-            if epoch % self.enjoy_criteria == 0 or epoch + 1 == n_epochs:
+            if epoch > 0 and epoch % self.enjoy_criteria == 0:
                 metrics = self._enjoy()
                 board.add_scalars("Enjoy", epoch="enjoy", **metrics)
                 board.step("enjoy")
-                if best_model < metrics["aer"]:
-                    self.save()
+                if best_model < metrics["aer"] or always_save:
+                    self.save(name=epoch if always_save else None)
+
+                    if self.early_stop(metrics["aer"]):
+                        return self
 
         return self
 
