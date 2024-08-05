@@ -93,6 +93,7 @@ class IUPE(ABCO):
         n_epochs: int,
         train_dataset: Dict[str, DataLoader],
         eval_dataset: Dict[str, DataLoader] = None,
+        always_save: bool = False,
         folder: str = None
     ) -> Self:
         if folder is None:

@@ -256,4 +256,4 @@ class Method(ABC):
         Returns:
             stop (bool): if it should stop or not.
         """
-        raise NotImplementedError()
+        raise False

@@ -115,6 +115,7 @@ class BC(Method):
         train_dataset: DataLoader,
         eval_dataset: DataLoader = None,
         always_save: bool = False,
+        folder: str = None
     ) -> Self:
         """Train process.
 
@@ -122,11 +123,14 @@ class BC(Method):
             n_epochs (int): amount of epoch to run.
             train_dataset (DataLoader): data to train.
             eval_dataset (DataLoader): data to eval. Defaults to None.
+            always_save (bool): whether it should save all eval steps.
+            folder (str): a specific folder to save the benchmark results.
 
         Returns:
             method (Self): trained method.
         """
-        folder = f"./benchmark_results/bc/{self.environment_name}"
+        if folder is None:
+            folder = f"./benchmark_results/bc/{self.environment_name}"
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
 
@@ -158,7 +162,7 @@ class BC(Method):
                     best_model = metrics["aer"]
                     self.save(name=epoch if always_save else None)
 
-                    if early_stop(metrics["aer"]):
+                    if self.early_stop(metrics["aer"]):
                         return self
 
         return self
