@@ -246,6 +246,7 @@ If you used IL-Datasets on your research and would like to cite us:
 - [A watcher for python to facilitate development of small projects](https://github.com/NathanGavenski/python-watcher)
 
 ### Academic
+- [Explorative Imitation Learning: A Path Signature Approach for Continuous Environments (ECAI)](https://arxiv.org/abs/2407.04856)
 - [Self-Supervised Adversarial Imitation Learning (IJCNN)](https://arxiv.org/pdf/2304.10914.pdf)
 - [How Resilient are Imitation Learning Methods to Sub-Optimal Experts? (BRACIS)](https://link.springer.com/chapter/10.1007/978-3-031-21689-3_32)
 - [Self-supervised imitation learning from observation (MSc dissertation)](https://repositorio.pucrs.br/dspace/bitstream/10923/17536/1/000500266-Texto%2Bcompleto-0.pdf)
