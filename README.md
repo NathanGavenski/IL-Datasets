@@ -209,12 +209,12 @@ Here is a list of the upcoming releases:
    - [x] MountainCar-v0
    - [x] Acrobot-v1
    - [X] LunarLander-v2
-   - [ ] Ant-v3
-   - [ ] Hopper-v3
-   - [ ] HalfCheetah-v3
-   - [ ] Walker-v3
-   - [ ] Humanoid-v3
-   - [ ] Swimmer-v3
+   - [ ] Ant-v4
+   - [X] Hopper-v4
+   - [X] HalfCheetah-v4
+   - [ ] Walker-v4
+   - [ ] Humanoid-v4
+   - [ ] Swimmer-v4
 
  Although there are a lot of environments and methods to go through, this repository will be considered done once the documentation and the installation of the benchmarks are done. We don't have a plan for releases for environments and methods yet.
 
