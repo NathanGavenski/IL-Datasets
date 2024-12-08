@@ -209,12 +209,12 @@ Here is a list of the upcoming releases:
    - [x] MountainCar-v0
    - [x] Acrobot-v1
    - [X] LunarLander-v2
-   - [ ] Ant-v3
-   - [ ] Hopper-v3
-   - [ ] HalfCheetah-v3
-   - [ ] Walker-v3
-   - [ ] Humanoid-v3
-   - [ ] Swimmer-v3
+   - [ ] Ant-v4
+   - [X] Hopper-v4
+   - [X] HalfCheetah-v4
+   - [ ] Walker-v4
+   - [ ] Humanoid-v4
+   - [ ] Swimmer-v4
 
  Although there are a lot of environments and methods to go through, this repository will be considered done once the documentation and the installation of the benchmarks are done. We don't have a plan for releases for environments and methods yet.
 
@@ -246,6 +246,7 @@ If you used IL-Datasets on your research and would like to cite us:
 - [A watcher for python to facilitate development of small projects](https://github.com/NathanGavenski/python-watcher)
 
 ### Academic
+- [Explorative Imitation Learning: A Path Signature Approach for Continuous Environments (ECAI)](https://arxiv.org/abs/2407.04856)
 - [Self-Supervised Adversarial Imitation Learning (IJCNN)](https://arxiv.org/pdf/2304.10914.pdf)
 - [How Resilient are Imitation Learning Methods to Sub-Optimal Experts? (BRACIS)](https://link.springer.com/chapter/10.1007/978-3-031-21689-3_32)
 - [Self-supervised imitation learning from observation (MSc dissertation)](https://repositorio.pucrs.br/dspace/bitstream/10923/17536/1/000500266-Texto%2Bcompleto-0.pdf)
