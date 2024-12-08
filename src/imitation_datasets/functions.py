@@ -126,13 +126,15 @@ def baseline_collate(path: str, data: List[str]) -> bool:
         rewards += episode['rewards'].tolist()
         episode_returns += episode['episode_returns'].tolist()
 
-        episode_starts = np.zeros(episode['actions'].shape)
+        episode_starts = np.zeros(episode['actions'].shape[0])
         episode_starts[0] = 1
         episodes_starts += episode_starts.tolist()
 
     states = states.reshape((-1, states.shape[-1]))
 
-    actions = np.array(actions).reshape(-1)
+    actions = np.array(actions)
+    if actions.shape[-1] == 1:
+        actions = actions.reshape(-1)
     episodes_starts = np.array(episodes_starts).reshape(-1)
 
     rewards = np.array(rewards).reshape(-1)

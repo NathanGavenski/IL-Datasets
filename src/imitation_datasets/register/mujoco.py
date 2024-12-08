@@ -1,9 +1,9 @@
 """Register of MuJoCo imitation learning teachers."""
-from stable_baselines3 import TD3, SAC
+from stable_baselines3 import TD3, SAC, PPO
 
 mujoco = {
     'ant': {
-        'name': 'Ant-v3',
+        'name': 'Ant-v4',
         'repo_id': "sb3/td3-Ant-v3",
         'filename': "td3-Ant-v3.zip",
         'threshold': 5822.,
@@ -11,10 +11,10 @@ mujoco = {
     },
     'ant-1': {
         'name': 'Ant-v3',
-        'repo_id': 'sb3/sac-Ant-v3',
-        'filename': 'sac-Ant-v3.zip',
+        'repo_id': 'sb3/td3-Ant-v3',
+        'filename': 'td3-Ant-v3.zip',
         'threshold': 5181,
-        'algo': SAC
+        'algo': TD3
     },
     'walker': {
         'name': 'Walker2d-v3',
@@ -31,17 +31,17 @@ mujoco = {
         'algo': TD3
     },
     'cheetah': {
-        'name': 'HalfCheetah-v3',
+        'name': 'HalfCheetah-v4',
         'repo_id': 'sb3/td3-HalfCheetah-v3',
         'filename': 'td3-HalfCheetah-v3.zip',
         'threshold': 9709.,
         'algo': TD3
     },
     'hopper': {
-        'name': 'Hopper-v3',
+        'name': 'Hopper-v4',
         'repo_id': 'sb3/td3-Hopper-v3',
         'filename': 'td3-Hopper-v3.zip',
-        'threshold': 3604.,
+        'threshold': 3500.,
         'algo': TD3
     },
     'humanoid': {
@@ -50,5 +50,12 @@ mujoco = {
         'filename': 'sac-Humanoid-v3.zip',
         'threshold': 6251.,
         'algo': SAC
+    },
+    'invertedpendulum': {
+        'name': 'InvertedPendulum-v2',
+        'repo_id': 'qgallouedec/ppo-InvertedPendulum-v2-288745441',
+        'filename': 'ppo-InvertedPendulum-v2.zip',
+        'threshold': 1000.,
+        'algo': PPO
     },
 }

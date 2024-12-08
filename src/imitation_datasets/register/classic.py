@@ -22,5 +22,12 @@ classic = {
         'filename': "dqn-Acrobot-v1.zip",
         'threshold': -75.,
         'algo': DQN
+    },
+    "pendulum": {
+        'name': 'Pendulum-v1',
+        'repo_id': "sb3/ppo-Pendulum-v1",
+        'filename': "ppo-Pendulum-v1.zip",
+        'threshold': -189.25,
+        'algo': PPO
     }
 }

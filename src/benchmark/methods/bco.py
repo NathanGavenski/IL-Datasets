@@ -100,42 +100,57 @@ class BCO(Method):
         """
         return self.policy(x)
 
-    def save(self, path: str = None) -> None:
+    def save(self, path: str = None, name: dict[str, str] = None) -> None:
         """Save all models weights.
 
         Args:
             path (str): where to save the models. Defaults to None.
+            name (dict[str, str]): name to give the model's weights. Defaults to None.
+                Keys have to be "policy" and "idm".
+
+        Raises:
+            ValueError: if name has no "idm" and "policy" keys.
         """
+        if name is not None and "idm" not in name or "policy" not in name:
+            raise ValueError("Name has to contain \"idm\" and \"policy\".")
+
         path = self.save_path if path is None else path
         if not os.path.exists(path):
             os.makedirs(path)
 
-        torch.save(self.policy.state_dict(), f"{path}/best_model.ckpt")
-        torch.save(self.idm.state_dict(), f"{path}/idm.ckpt")
+        policy_name = "best_model.ckpt" if name is None else name["policy"]
+        idm_name = "best_idm.ckpt" if name is None else name["idm"]
 
-    def load(self, path: str = None) -> Self:
+        torch.save(self.policy.state_dict(), f"{path}/{policy_name}.ckpt")
+        torch.save(self.idm.state_dict(), f"{path}/{idm_name}.ckpt")
+
+    def load(self, path: str = None, name: dict[str, str] = None) -> Self:
         """Load all model weights.
 
         Args:
             path (str): where to look for the model's weights. Defaults to None.
+            name (dict[str, str]): name to give the model's weights. Defaults to None.
+                Keys have to be "policy" and "idm".
 
         Raises:
             ValueError: if the path does not exist.
         """
         path = self.save_path if path is None else path
+        policy_name = "best_model.ckpt" if name is None else name["policy"]
+        idm_name = "best_idm.ckpt" if name is None else name["idm"]
 
         if not os.path.exists(path):
             raise ValueError("Path does not exists.")
 
         self.policy.load_state_dict(
             torch.load(
-                f"{path}best_model.ckpt",
+                f"{path}{policy_name}",
                 map_location=torch.device(self.device)
             )
         )
         self.idm.load_state_dict(
             torch.load(
-                f"{path}/idm.ckpt",
+                f"{path}/{idm_name}",
                 map_location=torch.device(self.device)
             )
         )
