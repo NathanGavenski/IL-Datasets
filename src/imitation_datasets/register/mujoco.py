@@ -1,5 +1,6 @@
 """Register of MuJoCo imitation learning teachers."""
 from stable_baselines3 import TD3, SAC, PPO
+from sb3_contrib import TRPO
 
 mujoco = {
     'ant': {
@@ -9,22 +10,15 @@ mujoco = {
         'threshold': 5822.,
         'algo': TD3
     },
-    'ant-1': {
-        'name': 'Ant-v3',
-        'repo_id': 'sb3/td3-Ant-v3',
-        'filename': 'td3-Ant-v3.zip',
-        'threshold': 5181,
-        'algo': TD3
-    },
     'walker': {
-        'name': 'Walker2d-v3',
-        'repo_id': 'sb3/td3-Walker2d-v3',
-        'filename': 'td3-Walker2d-v3.zip',
-        'threshold': 4703.,
-        'algo': TD3
+        'name': 'Walker2d-v4',
+        'repo_id': 'sb3/sac-Walker2d-v3',
+        'filename': 'sac-Walker2d-v3.zip',
+        'threshold': 3800.,
+        'algo': SAC
     },
     'swimmer': {
-        'name': 'Swimmer-v3',
+        'name': 'Swimmer-v4',
         'repo_id': 'sb3/td3-Swimmer-v3',
         'filename': 'td3-Swimmer-v3.zip',
         'threshold': 359.,
@@ -45,17 +39,17 @@ mujoco = {
         'algo': TD3
     },
     'humanoid': {
-        'name': 'Humanoid-v3',
+        'name': 'Humanoid-v4',
         'repo_id': 'sb3/sac-Humanoid-v3',
         'filename': 'sac-Humanoid-v3.zip',
-        'threshold': 6251.,
+        'threshold': 6000.,
         'algo': SAC
     },
     'invertedpendulum': {
-        'name': 'InvertedPendulum-v2',
-        'repo_id': 'qgallouedec/ppo-InvertedPendulum-v2-288745441',
-        'filename': 'ppo-InvertedPendulum-v2.zip',
+        'name': 'InvertedPendulum-v4',
+        'repo_id': 'fatcat22/td3-InvertedPendulum-v4',
+        'filename': 'td3-InvertedPendulum-v4.zip',
         'threshold': 1000.,
-        'algo': PPO
-    },
+        'algo': TD3
+    }
 }

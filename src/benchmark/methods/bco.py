@@ -30,6 +30,19 @@ PATH = "/".join(__file__.split("/")[:-1])
 CONFIG_FILE = f"{PATH}/config/bco.yaml"
 
 
+class IDM(nn.Module):
+    def __init__(self, encoder, classifier):
+        super().__init__()
+        self.encoder = encoder
+        self.classifier = classifier
+
+    def forward(self, state, next_state):
+        s = self.encoder(state)
+        nS = self.encoder(next_state)
+        x = self.classifier(torch.cat((s, nS), 1))
+        return x
+
+
 class BCO(Method):
     """Behavioural Cloning from Observation method based on (Torabi et. al., 2018)"""
 
@@ -83,8 +96,8 @@ class BCO(Method):
 
             with torch.no_grad():
                 output = encoder(torch.zeros(1, *self.observation_size[::-1]))
-            linear = MLP(output.shape[-1], self.action_size)
-            self.idm = nn.Sequential(encoder, linear)
+            linear = MLP(output.shape[-1] * 2, self.action_size)
+            self.idm = IDM(encoder, linear)
 
         self.idm_optimizer = optim.Adam(self.idm.parameters(), lr=self.hyperparameters['idm_lr'])
         self.idm_loss = nn.CrossEntropyLoss() if self.discrete else nn.MSELoss()

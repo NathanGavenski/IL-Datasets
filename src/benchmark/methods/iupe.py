@@ -137,7 +137,10 @@ class IUPE(ABCO):
             next_state = next_state.to(self.device)
 
             self.idm_optimizer.zero_grad()
-            predictions = self.idm(torch.cat((state, next_state), dim=1))
+            if not self.visual:
+                predictions = self.idm(torch.cat((state, next_state), dim=1))
+            else:
+                predictions = self.idm(state, next_state)
 
             loss = self.idm_loss(predictions, action.squeeze(1).long())
             loss.backward()
@@ -160,7 +163,10 @@ class IUPE(ABCO):
 
             with torch.no_grad():
                 if self.discrete:
-                    prediction = self.idm(torch.cat((state, next_state), dim=1))
+                    if not self.visual:
+                        prediction = self.idm(torch.cat((state, next_state), dim=1))
+                    else:
+                        prediction = self.idm(state, next_state)
                     # Compute probabilities to models logits
                     classes = np.arange(self.action_size)
                     prob = torch.nn.functional.softmax(prediction, dim=1).cpu().detach().numpy()
