@@ -60,7 +60,9 @@ class DAgger(BC):
 
         super().__init__(
             environment,
-            self.hyperparameters
+            enjoy_criteria,
+            verbose,
+            config_file
         )
 
     def train(
@@ -152,10 +154,9 @@ class DAgger(BC):
                 new_data["obs"].append(obs)
                 new_data["action"].append(expert_action)
                 new_data["next_obs"].append(next_obs)  # Mostly to satisfy the dataset
-
-        new_data["obs"] = torch.from_numpy(new_data["obs"])
-        new_data["action"] = torch.from_numpy(new_data["action"])
-        new_data["next_obs"] = torch.from_numpy(new_data["next_obs"])
+        new_data["obs"] = torch.from_numpy(np.array(new_data["obs"]))
+        new_data["action"] = torch.from_numpy(np.array(new_data["action"])).unsqueeze(1)
+        new_data["next_obs"] = torch.from_numpy(np.array(new_data["next_obs"]))
 
         self.dataset.states = torch.cat((self.dataset.states, new_data["obs"]), dim=0)
         self.dataset.actions = torch.cat((self.dataset.actions, new_data["action"]), dim=0)

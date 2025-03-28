@@ -248,12 +248,16 @@ class GAIL(Method):
             metrics["policy_acc"].append(accuracy)
 
             # Train Discriminator
+            if self.discrete:
+                action = nn.functional.one_hot(
+                    action.squeeze(1).long(),
+                    self.action_size
+                ).float()
             expert_labels = torch.ones((state.size(0), 1)).to(self.device)
             policy_labels = torch.zeros((state.size(0), 1)).to(self.device)
-
             self.discriminator_optimizer.zero_grad()
-            expert_outputs = self.discriminator(state, action)
-            policy_outputs = self.discriminator(state, policy_actions.detach())
+            expert_outputs = self.discriminator(state.float(), action)
+            policy_outputs = self.discriminator(state.float(), policy_actions.detach())
 
             expert_acc = accuracy_fn(expert_outputs, expert_labels.squeeze(1))
             policy_acc = accuracy_fn(policy_outputs, policy_labels.squeeze(1))
@@ -269,7 +273,7 @@ class GAIL(Method):
 
             # Train Policy
             self.optimizer_fn.zero_grad()
-            policy_outputs = self.discriminator(state, policy_actions)
+            policy_outputs = self.discriminator(state.float(), policy_actions)
             loss = self.bce_loss(policy_outputs, expert_labels)
             loss.backward()
             self.optimizer_fn.step()

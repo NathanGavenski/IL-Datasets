@@ -4,11 +4,55 @@
     convert_hyperparameters: convert string values into other typings
     import_hyperparameters: loads and converts string values.
 """
-from typing import Dict, Any, Tuple
+from collections import deque
+from typing import Dict, Any, Tuple, List
 import os
 
+import numpy as np
+import torch
 import yaml
 
+from imitation_datasets.dataset import BaselineDataset
+
+
+class ReplayBuffer:
+    def __init__(self, buffer_size: int, batch_size: int) -> None:
+        self.buffer_size = buffer_size
+        self.batch_size = batch_size
+        self.buffer = deque(maxlen=self.buffer_size)
+
+    def add(self, experience) -> None:
+        self.buffer.append(experience)
+
+    def size(self):
+        return len(self.buffer)
+
+    def sample(self) -> List[torch.Tensor]:
+        if self.batch_size > self.size():
+            raise ValueError("Replay buffer doesn't have enough experiences")
+
+        indexes = np.random.choice(np.arange(self.size()), size=self.batch_size, replace=False)
+        agent = [self.buffer[index] for index in indexes]
+        agent = [torch.from_numpy(np.array(x)) for x in zip(*agent)]
+
+        indexes = np.random.choice(
+            np.arange(len(self.dataset)),
+            size=self.batch_size,
+            replace=False
+        )
+        expert = self.dataset[indexes]
+        return agent, expert
+
+    def clear(self) -> None:
+        self.buffer.clear()
+
+    def save(self, path) -> None:
+        buffer = np.asarray(self.buffer)
+        np.save(path, buffer)
+
+    def load(self, dataset: BaselineDataset) -> None:
+        self.dataset = dataset
+        self.dataset.get_reward_and_done = True
 
 def load_hyperparameters(path: str, environment_name: str = None) -> Dict[str, Any]:
     """Load hyperparameters from YAML file.

@@ -40,6 +40,7 @@ class BaselineDataset(Dataset):
             ValueError: if path does not exist.
         """
         self.transform = transform
+        self.get_reward_and_done = False
 
         if source == "local" and not os.path.exists(path):
             raise ValueError(f"No dataset at: {path}")
@@ -73,6 +74,8 @@ class BaselineDataset(Dataset):
             else:
                 episode_starts = episode_starts[n_episodes:]
 
+        self.dones = []
+        self.rewards = []
         for start, end in zip(episode_starts, tqdm(episode_starts[1:], desc="Creating dataset")):
             episode = self.data["obs"][start:end]
             actions = self.data["actions"][start:end]
@@ -82,9 +85,16 @@ class BaselineDataset(Dataset):
             self.actions = np.append(self.actions, actions[:-1], axis=0)
             self.states = np.append(self.states, episode[:-1], axis=0)
             self.next_states = np.append(self.next_states, episode[1:], axis=0)
+            dones = [0] * (end - start)
+            dones[-1] = 1
+            self.dones.extend(dones)
+            self.rewards.extend(self.data["rewards"][start:end])
 
             if source != "local":
                 self.average_reward.append(self.data["rewards"][start:end].sum())
+
+        self.dones = np.array(self.dones)
+        self.rewards = np.array(self.rewards)
 
         if isinstance(self.average_reward, list):
             self.average_reward = np.mean(self.average_reward)
@@ -95,6 +105,8 @@ class BaselineDataset(Dataset):
             self.states = torch.from_numpy(self.states)
             self.next_states = torch.from_numpy(self.next_states)
         self.actions = torch.from_numpy(self.actions)
+        self.dones = torch.from_numpy(self.dones)
+        self.rewards = torch.from_numpy(self.rewards)
 
     def __len__(self) -> int:
         """Dataset length.
@@ -126,4 +138,9 @@ class BaselineDataset(Dataset):
             next_state = self.transform(next_state)
 
         action = self.actions[index]
+
+        if self.get_reward_and_done:
+            dones = self.dones[index]
+            rewards = self.rewards[index]
+            return state, action, next_state, dones, rewards
         return state, action, next_state

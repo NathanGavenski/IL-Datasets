@@ -1,7 +1,6 @@
 """Module for Behavioural Cloning"""
 import os
 from numbers import Number
-from typing import Callable
 
 try:
     from typing import Self

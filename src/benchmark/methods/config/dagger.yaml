@@ -1,0 +1,4 @@
+Default:
+  lr: 5e-4
+  policy: 'MlpPolicy'
+  n_rollouts: 10
