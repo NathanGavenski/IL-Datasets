@@ -35,6 +35,25 @@ class Discriminator(nn.Module):
             hidden_size (int, optional): Size of the hidden layer. Defaults to 256.
         """
         super().__init__()
+
+        self.state_encoder = None
+        if isinstance(input_size, tuple):
+            self.state_encoder = nn.Sequential(
+                nn.Conv2d(input_size[0][-1], 32, kernel_size=8, stride=4),
+                nn.LeakyReLU(),
+                nn.Conv2d(32, 64, kernel_size=4, stride=2),
+                nn.LeakyReLU(), 
+                nn.Conv2d(64, 64, kernel_size=3, stride=1),
+                nn.LeakyReLU(),
+                nn.Flatten(),
+            )
+
+            with torch.no_grad():
+                state = torch.zeros(1, *input_size[0][::-1])
+                n_flatten = self.state_encoder(state).size(1)
+
+            input_size = n_flatten + input_size[1]
+
         self.net = nn.Sequential(
             nn.Linear(input_size, hidden_size),
             nn.LeakyReLU(),
@@ -54,6 +73,9 @@ class Discriminator(nn.Module):
         Returns:
             torch.Tensor: Discriminator output tensor. 0 for policy actions and 1 for expert actions.
         """
+        if self.state_encoder is not None:
+            state = self.state_encoder(state)
+
         input_tensor = torch.cat([state, action], dim=-1)
         return self.net(input_tensor)
 
@@ -99,7 +121,11 @@ class GAIL(Method):
 
         super().__init__(environment, self.hyperparameters)
 
-        self.discriminator = Discriminator(input_size=self.observation_size + self.action_size)
+        if self.visual:
+            self.discriminator = Discriminator(input_size=(self.observation_size, self.action_size))
+        else:
+            self.discriminator = Discriminator(input_size=self.observation_size + self.action_size)
+
         self.discriminator.to(self.device)
         self.discriminator_optimizer = optim.Adam(
             self.discriminator.parameters(),
