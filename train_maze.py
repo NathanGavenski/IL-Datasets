@@ -17,7 +17,7 @@ from torchvision import transforms
 from tqdm import tqdm
 
 from src.imitation_datasets.experts import Policy
-from src.benchmark.methods.bc import BC
+from src.benchmark.methods.gail import GAIL as Method
 
 FILE_PATH = "/home/nathan/Documents/git/maze-gym/src/"
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     env = gym.make("Maze-v0", screen_width=64, screen_height=64, shape=(5, 5))
     custom_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize(64)])
 
-    method = BC(env, enjoy_criteria=100, verbose=True)
+    method = Method(env, enjoy_criteria=100, verbose=True)
     maze_function = partial(
         maze_function, self=method,
         policy=method, folder="eval",
