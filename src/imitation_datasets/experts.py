@@ -44,12 +44,15 @@ class Policy:
         custom_objects = {
             "learning_rate": 0.0,
             "lr_schedule": lambda _: 0.0,
-            "clip_range": lambda _: 0.0
+            "clip_range": lambda _: 0.0,
+            "replay_buffer_kwargs": {
+                "handle_timeout_termination": False,
+            }
         }
 
         self.policy = self.algo.load(
             checkpoint,
-            custom_objects=custom_objects
+            custom_objects=custom_objects,
         )
         return self.policy
 

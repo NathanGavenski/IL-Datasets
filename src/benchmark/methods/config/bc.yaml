@@ -14,6 +14,6 @@ Acrobot-v1:
   lr: 1.6e-3 
   policy: 'MlpPolicy'
 
-Maze-v0:
+Maze:
   lr: 5e-4
   policy: 'CnnPolicy'

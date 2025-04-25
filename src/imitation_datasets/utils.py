@@ -9,6 +9,12 @@ from weakref import WeakValueDictionary
 import random
 from typing_extensions import Self
 
+try:
+    from gymnasium.wrappers.frame_stack import LazyFrames
+    gymnasium = True
+except ImportError:
+    gymnasium = False
+
 import numpy as np
 import torch
 
@@ -201,9 +207,16 @@ class GymWrapper:
 
         self.env = environment
         state = environment.reset()
+
+        if version == "newest":
+            compare_type = [np.ndarray]
+            if gymnasium:
+                compare_type.append(LazyFrames)
+            compare_type = tuple(compare_type)
+
         if version == "older" and not isinstance(state[0], np.floating):
             raise WrapperException("Incopatible environment version and wrapper version.")
-        if version == "newest" and not isinstance(state[0], np.ndarray):
+        if version == "newest" and not isinstance(state[0], compare_type):
             raise WrapperException("Incopatible environment version and wrapper version.")
 
         self.version = version
