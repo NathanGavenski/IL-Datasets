@@ -25,3 +25,10 @@ Acrobot-v1:
   idm: 'MlpPolicy'
   policy: 'MlpPolicy'
   random_episodes: 10
+
+Default:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'CnnPolicy'
+  policy: 'CnnPolicy'
+  random_episodes: 10000

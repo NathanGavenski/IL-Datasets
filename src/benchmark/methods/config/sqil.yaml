@@ -5,3 +5,11 @@ Default:
   buffer_size: 50000
   update_steps: 4
   gamma: 0.99
+
+Maze:
+  lr: 5e-4
+  policy: 'CnnPolicy'
+  alpha: 4
+  buffer_size: 50000
+  update_steps: 4
+  gamma: 0.99

@@ -304,7 +304,10 @@ class BCO(Method):
             next_state = next_state.to(self.device)
 
             self.idm_optimizer.zero_grad()
-            predictions = self.idm(torch.cat((state, next_state), dim=1))
+            if self.visual:
+                predictions = self.idm(state, next_state)
+            else:
+                predictions = self.idm(torch.cat((state, next_state), dim=1))
 
             loss = self.idm_loss(predictions, action.squeeze(1).long())
             loss.backward()
