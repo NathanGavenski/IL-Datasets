@@ -32,7 +32,7 @@ from src.benchmark.methods.bco import BCO
 from src.benchmark.methods.sqil import SQIL
 from src.benchmark.methods.iupe import IUPE
 
-FILE_PATH = "/home/nathan/Documents/git/maze-gym/src/"
+FILE_PATH = "/benchmarking/nathan/github/maze-gym/src/"
 
 methods = {
     "bc": BC,
@@ -126,17 +126,17 @@ class BCOExpertDataset(Dataset):
         self.next_states = []
         self.actions = []
         for start, end in zip(starts, tqdm(ends, desc="BCO Dataset")):
-            self.states += observations[start:end-1]
-            self.next_states += observations[start+1:end]
-            self.actions += actions[start:end-1]
+            self.states += observations[start:end - 1]
+            self.next_states += observations[start + 1:end]
+            self.actions += actions[start:end - 1]
         self.actions = torch.tensor(self.actions)
 
         self.transforms = custom_transforms
         self.device = "cpu" if not torch.cuda.is_available() else "cuda"
-    
+
     def __len__(self) -> int:
         return len(self.states)
-    
+
     def __getitem__(self, index):
         obs = self.states[index]
         if self.transforms is not None:
@@ -167,17 +167,17 @@ class RandomDataset(Dataset):
                 transforms.ToTensor(),
             ])
         self.device = "cpu" if not torch.cuda.is_available() else "cuda"
-    
+
     def __len__(self) -> int:
         return len(self.dataset["obs"])
-    
+
     def __getitem__(self, index) -> tuple[torch.Tensor]:
         obs = self.dataset["obs"][index]
         if self.transforms is not None:
             obs = self.transforms(Image.open(obs)).to(self.device)
         else:
             obs = torch.from_numpy(obs).to(self.device)
-        
+
         next_obs = self.dataset["next_obs"][index]
         if self.transforms is not None:
             next_obs = self.transforms(Image.open(next_obs)).to(self.device)
@@ -374,7 +374,7 @@ if __name__ == "__main__":
     custom_transforms = transforms.Compose([transforms.ToTensor(), transforms.Resize(64)])
 
     Method = methods[args.method]
-    method = Method(env, enjoy_criteria=1, verbose=True)
+    method = Method(env, enjoy_criteria=100, verbose=True)
     env = gym.make("Maze-v0", screen_width=600, screen_height=600, shape=(5, 5), render_mode="rgb_array")
     method.environment = env
 
@@ -424,7 +424,7 @@ if __name__ == "__main__":
             eval_model = partial(eval_model, self=method, dataset=eval_dataloader)
             setattr(method, "_enjoy", eval_model)
 
-    epochs = 10000
+    epochs = 5000
     if args.method == "dagger":
         method.train(epochs, train_dataloader, None, eval_dataloader)
     if args.method in ["bco", "iupe"]:
@@ -451,6 +451,16 @@ if __name__ == "__main__":
         )
         train_dataloader = DataLoader(
             dataset=train_dataset,
+            batch_size=args.batch_size,
+            shuffle=True,
+        )
+
+        eval_dataset = BCOExpertDataset(
+            load_dataset("NathanGavenski/Maze-v0_5x5", split="validation"),
+            custom_transforms=custom_transforms
+        )
+        eval_dataloader = DataLoader(
+            dataset=eval_dataset,
             batch_size=args.batch_size,
             shuffle=True,
         )

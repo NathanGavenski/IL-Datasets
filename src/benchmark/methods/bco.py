@@ -330,7 +330,10 @@ class BCO(Method):
 
             with torch.no_grad():
                 if self.discrete:
-                    action = self.idm(torch.cat((state, next_state), dim=1))
+                    if self.visual:
+                        action = self.idm(state, next_state)
+                    else:
+                        action = self.idm(torch.cat((state, next_state), dim=1))
                     action = torch.argmax(action, dim=1)
                 else:
                     action = self.idm(torch.cat((state, next_state), dim=1))
@@ -338,14 +341,14 @@ class BCO(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            loss = self.loss_fn(predictions, action.squeeze(1).long())
+            loss = self.loss_fn(predictions, action.squeeze().long())
             loss.backward()
             accumulated_loss.append(loss.item())
             self.optimizer_fn.step()
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze(1))
+                accuracy = accuracy_fn(predictions, action.squeeze())
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
