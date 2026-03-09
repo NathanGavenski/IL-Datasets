@@ -1,15 +1,19 @@
 Default:
   lr: 5e-4
   policy: 'MlpPolicy'
+  vectorized: False
 
 CartPole:
   lr: 6e-4 
   policy: 'MlpPolicy'
+  vectprozed: True
 
 MountainCar:
   lr: 1.3e-3
   policy: 'MlpPolicy'
+  vectprozed: True
 
 Acrobot:
   lr: 1.6e-3 
   policy: 'MlpPolicy'
+  vectprozed: True

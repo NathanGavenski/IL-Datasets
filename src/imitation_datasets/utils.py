@@ -188,7 +188,7 @@ class GymWrapper:
         will always work with the version the user wants.
     """
 
-    def __init__(self, environment: Any, version: str = "newest") -> None:
+    def __init__(self, environment: Any, version: str = "newest", vectorized: bool = False) -> None:
         """
         Args:
             name: gym environment name
@@ -207,6 +207,7 @@ class GymWrapper:
             raise WrapperException("Incopatible environment version and wrapper version.")
 
         self.version = version
+        self.vectorized = vectorized
 
     @property
     def action_space(self):
@@ -218,6 +219,23 @@ class GymWrapper:
         """Map gym env_space attribute to wrapper."""
         return self.env.observation_space
 
+    @property
+    def metadata(self):
+        return getattr(self.env, "metadata", {})
+
+    @property
+    def spec(self):
+        return getattr(self.env, "spec", None)
+
+    @property
+    def render_mode(self):
+        return getattr(self.env, "render_mode", None)
+
+    @property
+    def np_random(self):
+        return getattr(self.env, "np_random", None)
+
+
     def set_seed(self, seed: int) -> None:
         """Set seed for all packages (Pytorch, Numpy and Python).
 
@@ -228,9 +246,16 @@ class GymWrapper:
         np.random.seed(seed)
         random.seed(seed)
 
-    def reset(self) -> Union[Tuple[List[float], Dict[str, Any]], List[float]]:
+    def reset(self, seed=None, options=None) -> Union[Tuple[List[float], Dict[str, Any]], List[float]]:
         """Resets the framework and return the appropriate return."""
-        state = self.env.reset()
+        if seed is not None:
+            state = self.env.reset(seed=seed)
+        else:
+            state = self.env.reset()
+
+        if self.vectorized:
+            return state
+
         if self.version == "newest":
             return state[0]
         return state
@@ -247,6 +272,8 @@ class GymWrapper:
         according to version.
         """
         gym_return = self.env.step(action)
+        if self.vectorized:
+            return gym_return
         if self.version == "newest":
             state, reward, terminated, truncated, info = gym_return
             return state, reward, terminated or truncated, info

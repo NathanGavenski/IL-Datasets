@@ -134,7 +134,12 @@ class BC(Method):
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
 
-        board = Tensorboard(path=folder)
+        board = Tensorboard(path=folder)        
+        hparams = {}
+        for key, value in self.hyperparameters.items():
+            if isinstance(value, list):
+                value = ",".join([str(v) for v in value])
+            hparams[key] = value
         board.add_hparams(self.hyperparameters)
         self.policy.to(self.device)
 
@@ -180,7 +185,7 @@ class BC(Method):
             self.policy.train()
 
         for batch in dataset:
-            state, action, _ = batch
+            state, action, *_ = batch
             state = state.to(self.device)
             action = action.to(self.device)
 
@@ -213,7 +218,7 @@ class BC(Method):
             self.policy.eval()
 
         for batch in dataset:
-            state, action, _ = batch
+            state, action, *_ = batch
             state = state.to(self.device)
             action = action.to(self.device)
 

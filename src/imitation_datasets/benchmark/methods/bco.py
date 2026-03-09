@@ -100,7 +100,7 @@ class BCO(Method):
         """
         return self.policy(x)
 
-    def save(self, path: str = None) -> None:
+    def save(self, path: str = None, name: str = None) -> None:
         """Save all models weights.
 
         Args:
@@ -110,8 +110,11 @@ class BCO(Method):
         if not os.path.exists(path):
             os.makedirs(path)
 
-        torch.save(self.policy.state_dict(), f"{path}/best_model.ckpt")
-        torch.save(self.idm.state_dict(), f"{path}/idm.ckpt")
+        name = "best_model.ckpt" if name is None else f"{name}.ckpt"
+        idm_name = "best_idm.ckpt" if name is None else f"{name}_idm.ckpt"
+
+        torch.save(self.policy.state_dict(), f"{path}/{name}")
+        torch.save(self.idm.state_dict(), f"{path}/{idm_name}")
 
     def load(self, path: str = None) -> Self:
         """Load all model weights.
@@ -249,6 +252,11 @@ class BCO(Method):
             torch.from_numpy(i_pos['actions'].reshape((-1, 1)))),
             dim=0
         )
+        train_dataset['idm_dataset'].dataset.dones = torch.cat((
+            train_dataset['idm_dataset'].dataset.dones,
+            torch.from_numpy(i_pos['dones'])),
+            dim=0
+        )
         return train_dataset
 
     def _train(self, idm_dataset: DataLoader, expert_dataset: DataLoader) -> Metrics:
@@ -270,7 +278,7 @@ class BCO(Method):
         accumulated_accuracy = []
 
         for batch in idm_dataset:
-            state, action, next_state = batch
+            state, action, next_state, *_ = batch
             state = state.to(self.device)
             action = action.to(self.device)
             next_state = next_state.to(self.device)
@@ -293,7 +301,7 @@ class BCO(Method):
         self.idm.eval()
 
         for batch in expert_dataset:
-            state, _, next_state = batch
+            state, _, next_state, *_ = batch
             state = state.to(self.device)
             next_state = next_state.to(self.device)
 
@@ -307,14 +315,14 @@ class BCO(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            loss = self.loss_fn(predictions, action.squeeze(1).long())
+            loss = self.loss_fn(predictions, action.long())
             loss.backward()
             accumulated_loss.append(loss.item())
             self.optimizer_fn.step()
 
             accuracy: Number = None
             if self.discrete:
-                accuracy = accuracy_fn(predictions, action.squeeze(1))
+                accuracy = accuracy_fn(predictions, action)
             else:
                 accuracy = (action - predictions).pow(2).sum(1).sqrt().mean().item()
             accumulated_accuracy.append(accuracy)
@@ -339,7 +347,7 @@ class BCO(Method):
         accumulated_accuracy = []
 
         for batch in dataset:
-            state, action, _ = batch
+            state, action, *_ = batch
             state = state.to(self.device)
 
             with torch.no_grad():
@@ -380,6 +388,7 @@ class BCO(Method):
                 states (List[Number]): states before action.
                 actions (List[Number]): action given states.
                 next_states (List[Number]): next state given states and actions.
+                dones (List[Number]): whether the episode ended after taking the action.
         """
         environment = GymWrapper(self.environment)
         average_reward = []
@@ -400,6 +409,7 @@ class BCO(Method):
                 obs, reward, done, *_ = environment.step(action)
                 accumulated_reward += reward
                 i_pos['next_states'].append(obs)
+                i_pos['dones'].append(done)
             average_reward.append(accumulated_reward)
 
         metrics = average_episodic_reward(average_reward)
