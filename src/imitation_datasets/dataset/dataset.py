@@ -2,6 +2,7 @@
 import io
 import os
 from typing import Tuple, Callable, Dict
+import warnings
 
 from datasets import load_dataset
 import numpy as np
@@ -70,6 +71,15 @@ def fn_create_dataset(
     return states, actions, next_states
 
 
+def fn_compute_reward(data: Dict[str, np.ndarray]) -> float:
+    if "rewards" not in data.keys():
+        warnings.warn("No 'rewards' key found, no average reward computed")
+        return None
+
+    episodes = len(list(np.where(data.get("episode_starts") == 1)[0]))
+    return data.get("rewards").sum() / episodes
+
+
 class BaselineDataset(Dataset):
     """Teacher dataset for IL methods."""
 
@@ -120,6 +130,8 @@ class BaselineDataset(Dataset):
             self.states, self.actions, self.next_states = fn_create_dataset(
                 self.data, n_episodes, split
             )
+            if source != "local":
+                self.average_reward = fn_compute_reward(self.data)
 
     def __len__(self) -> int:
         """Dataset length.
@@ -170,6 +182,8 @@ class IRLDataset(BaselineDataset):
         self.states, self.actions, self.next_states, self.rewards = fn_create_dataset(
             self.data, n_episodes, split, get_reward=True
         )
+        if source != "local":
+            self.average_reward = fn_compute_reward(self.data)
 
     def __getitem__(self, index: int) -> Tuple[torch.Tensor]:
         """Get item from dataset.
@@ -184,5 +198,4 @@ class IRLDataset(BaselineDataset):
             reward (torch.Tensor): reward for timestep t.
         """
         state, action, next_state = super().__getitem__(index)
-        reward = self.rewards[index]
-        return state, action, next_state, reward
+        return state, action, next_state, self.rewards[index]

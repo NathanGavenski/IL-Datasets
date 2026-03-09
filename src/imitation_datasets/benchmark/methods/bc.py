@@ -215,6 +215,7 @@ class BC(Method):
         for batch in dataset:
             state, action, _ = batch
             state = state.to(self.device)
+            action = action.to(self.device)
 
             with torch.no_grad():
                 predictions = self.policy(state)

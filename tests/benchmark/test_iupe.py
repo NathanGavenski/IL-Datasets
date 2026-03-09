@@ -3,10 +3,10 @@ from unittest import TestCase
 import gymnasium as gym
 from torch import nn, optim
 
-from src.benchmark.methods import IUPE
+from src.imitation_datasets.benchmark.methods import IUPE
 
 
-class TestABCO(TestCase):
+class TestIUPE(TestCase):
 
     def test_init_discrete(self) -> None:
         env = gym.make("CartPole-v1")

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from src.benchmark.methods.policies.attention import SelfAttn1D
-from src.benchmark.methods.policies.mlp import MLP, MlpWithAttention, MlpAttention
+from src.imitation_datasets.benchmark.methods.policies.attention import SelfAttn1D
+from src.imitation_datasets.benchmark.methods.policies.mlp import MLP, MlpWithAttention, MlpAttention
 
 
 class TestMLP(TestCase):
