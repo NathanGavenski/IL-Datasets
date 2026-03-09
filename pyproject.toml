@@ -36,7 +36,9 @@ benchmark = [
     "tabulate",
     "pyyaml",
     "gym",
-    "gymnasium"
+    "gymnasium",
+    "gymnasium-robotics",
+    "mujoco-py"
 ]
 
 [build-system]

@@ -1,6 +1,4 @@
-setuptools==65.5.0
 pyglet==1.5.27
-gymnasium[classic-control]
 pytest
 pylint
 pytest-asyncio
