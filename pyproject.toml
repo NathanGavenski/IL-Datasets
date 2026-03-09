@@ -38,7 +38,8 @@ benchmark = [
     "gym",
     "gymnasium",
     "gymnasium-robotics",
-    "mujoco-py"
+    "mujoco-py",
+    "gymnasium[classic-control]"
 ]
 
 [build-system]
