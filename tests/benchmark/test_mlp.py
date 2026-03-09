@@ -27,6 +27,17 @@ class TestMLP(TestCase):
         assert model.layers[6].in_features == 30 * 2
         assert model.layers[6].out_features == 2
 
+    def test_custom_hidden_dim(self) -> None:
+        model = MLP(2, 2, hidden_dim=[16, 16])
+        assert model.layers[0].in_features == 2
+        assert model.layers[0].out_features == 16
+        assert model.layers[2].in_features == 16
+        assert model.layers[2].out_features == 16
+        assert model.layers[4].in_features == 16
+        assert model.layers[4].out_features == 16
+        assert model.layers[6].in_features == 16
+        assert model.layers[6].out_features == 2
+
 
 class TestMlpWithAttention(TestCase):
 
@@ -57,6 +68,19 @@ class TestMlpWithAttention(TestCase):
 
         assert isinstance(model.layers[2], SelfAttn1D)
         assert isinstance(model.layers[5], SelfAttn1D)
+
+    def test_custom_hidden_dim(self) -> None:
+        model = MlpWithAttention(2, 2, hidden_dim=[16, 16, 16])
+        assert model.layers[0].in_features == 2
+        assert model.layers[0].out_features == 16
+        assert model.layers[3].in_features == 16
+        assert model.layers[3].out_features == 16
+        assert model.layers[6].in_features == 16
+        assert model.layers[6].out_features == 16
+        assert model.layers[8].in_features == 16
+        assert model.layers[8].out_features == 16
+        assert model.layers[10].in_features == 16
+        assert model.layers[10].out_features == 2
 
 
 class TestMlpAttention(TestCase):

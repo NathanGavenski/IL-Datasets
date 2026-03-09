@@ -1,14 +1,60 @@
 """Module for mlp policies"""
+from typing import List
+
 import torch
 from torch import nn
 
 from .attention import SelfAttn1D
 
 
+def create_layers(
+    in_dim: int,
+    out_dim: int,
+    hidden_dim: List,
+    activation: nn.Module = nn.LeakyReLU,
+    self_attention: bool = False,
+    only_attention: bool = False
+) -> nn.Sequential:
+    """Create layers for MLP.
+
+    Args:
+        in_dim (int): input dimension.
+        out_dim (int): output dimensions.
+        hidden_dim (List, optional): list of hidden dimensions. Defaults to None.
+        activation (nn.Module, optional): activation for the MLP. Defaults to nn.LeakyReLU.
+        self_attention (bool, optional): whether to include self-attention layers. Defaults to False.
+        only_attention (bool, optional): whether to include only attention layers. Defaults to False.
+
+    Returns:
+        nn.Sequential: sequential of layers for MLP.
+    """
+    layers = nn.Sequential(
+        nn.Linear(in_dim, hidden_dim[0]),
+        activation()
+    )
+    for idx, dim in enumerate(hidden_dim):
+        if self_attention:
+            if not only_attention and idx <= len(hidden_dim) - 2:
+                layers.add_module(f"attention_{idx}", SelfAttn1D(hidden_dim[idx-1]))
+            elif only_attention:
+                layers.add_module(f"attention_{idx}", SelfAttn1D(hidden_dim[idx-1]))
+        if not only_attention:
+            layers.add_module(f"linear_{idx}", nn.Linear(hidden_dim[idx-1], dim))
+        layers.add_module(f"activation_{idx}", activation())
+    layers.add_module("output", nn.Linear(hidden_dim[-1], out_dim))
+    return layers
+
+
 class MLP(nn.Module):
     """Default Multi Layer Perceptron"""
 
-    def __init__(self, in_dim: int, out_dim: int, activation: nn.Module = nn.LeakyReLU) -> None:
+    def __init__(
+        self, 
+        in_dim: int, 
+        out_dim: int, 
+        hidden_dim: List = None,
+        activation: nn.Module = nn.LeakyReLU
+    ) -> None:
         """Initialize MLP class.
 
         Args:
@@ -18,19 +64,11 @@ class MLP(nn.Module):
         """
         super().__init__()
 
-        out = max(32, in_dim * 2)
-        self.layers = nn.Sequential(
-            nn.Linear(in_dim, out),
-            activation(),
-
-            nn.Linear(out, out),
-            activation(),
-
-            nn.Linear(out, out),
-            activation(),
-
-            nn.Linear(out, out_dim)
-        )
+        if hidden_dim is not None:
+            self.layers = create_layers(in_dim, out_dim, hidden_dim, activation)
+        else:
+            out = max(32, in_dim * 2)
+            self.layers = create_layers(in_dim, out_dim, [out, out], activation)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward for default MLP
@@ -48,7 +86,13 @@ class MLP(nn.Module):
 class MlpWithAttention(nn.Module):
     """Default Multi Layer Perceptron with attention after first two layers."""
 
-    def __init__(self, in_dim: int, out_dim: int, activation: nn.Module = nn.LeakyReLU):
+    def __init__(
+        self,
+        in_dim: int,
+        out_dim: int,
+        hidden_dim: List = None,
+        activation: nn.Module = nn.LeakyReLU
+    ):
         """Initialize MlpWithAttention class.
 
         Args:
@@ -58,24 +102,11 @@ class MlpWithAttention(nn.Module):
         """
         super().__init__()
 
-        out = max(8, in_dim * 2)
-        self.layers = nn.Sequential(
-            nn.Linear(in_dim, out),
-            activation(),
-
-            SelfAttn1D(out),
-            nn.Linear(out, out),
-            activation(),
-
-            SelfAttn1D(out),
-            nn.Linear(out, out),
-            activation(),
-
-            nn.Linear(out, out),
-            activation(),
-
-            nn.Linear(out, out_dim)
-        )
+        if hidden_dim is not None:
+            self.layers = create_layers(in_dim, out_dim, hidden_dim, activation, self_attention=True)
+        else:
+            out = max(8, in_dim * 2)
+            self.layers = create_layers(in_dim, out_dim, [out, out, out], activation, self_attention=True)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward function for the method.
@@ -93,7 +124,13 @@ class MlpWithAttention(nn.Module):
 class MlpAttention(nn.Module):
     """Default Multi Layer Perceptron with attention as hidden layers."""
 
-    def __init__(self, in_dim: int, out_dim: int, activation: nn.Module = nn.LeakyReLU):
+    def __init__(
+        self,
+        in_dim: int,
+        out_dim: int,
+        hidden_dim: List = None,
+        activation: nn.Module = nn.LeakyReLU
+    ):
         """Initialize MlpAttention class.
 
         Args:
@@ -103,19 +140,17 @@ class MlpAttention(nn.Module):
         """
         super().__init__()
 
-        out = max(8, in_dim * 2)
-        self.layers = nn.Sequential(
-            nn.Linear(in_dim, out),
-            activation(),
-
-            SelfAttn1D(out),
-            activation(),
-
-            SelfAttn1D(out),
-            activation(),
-
-            nn.Linear(out, out_dim)
-        )
+        if hidden_dim is not None:
+            self.layers = create_layers(
+                in_dim, out_dim, hidden_dim, activation,
+                self_attention=True, only_attention=True
+            )
+        else:
+            out = max(8, in_dim * 2)
+            self.layers = create_layers(
+                in_dim, out_dim, [out, out], activation,
+                self_attention=True, only_attention=True
+            )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward function for the method.
