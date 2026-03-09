@@ -34,6 +34,7 @@ jobs:
         uv pip install pylint==2.17.5 pytest
         uv pip install -r ./requirements/dev.txt
         uv pip install -e ".[benchmark]"
+        source .venv/bin/activate
 
     - name: Analysing the code with pylint
       run: |
