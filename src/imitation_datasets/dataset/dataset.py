@@ -1,6 +1,7 @@
 """Module for datasets"""
+import io
 import os
-from typing import Tuple, Callable
+from typing import Tuple, Callable, Dict
 
 from datasets import load_dataset
 import numpy as np
@@ -13,6 +14,62 @@ from PIL import Image
 from .huggingface import huggingface_to_baseline
 
 
+def fn_create_dataset(
+    data: Dict[str, np.ndarray],
+    n_episodes: int = None,
+    split: str = "train",
+    get_reward: bool = False,
+) -> Tuple[torch.Tensor]:
+    try:
+        action_shape = 1
+        if len(data.get("actions").shape) > 1:
+            action_shape = data.get("actions").shape[-1]
+    except KeyError:
+        raise AttributeError("Dataset should contain 'actions' key")
+
+    states = []
+    next_states = []
+    actions = []
+    if get_reward:
+        rewards = []
+
+    try:
+        episode_starts = list(np.where(data.get("episode_starts") == 1)[0])
+        episode_starts.append(len(data.get("episode_starts")))
+    except KeyError:
+        raise AttributeError("Dataset should contain 'episode_starts' key")
+
+    if n_episodes is not None:
+        episode_starts = episode_starts[:n_episodes + 1]
+        if split != "train":
+            episode_starts = episode_starts[n_episodes:]
+
+    episode_end = tqdm(episode_starts[1:], desc="Creating dataset")
+    for start, end in zip(episode_starts, episode_end):
+        episode = data.get("obs")[start:end]
+        ep_actions = data.get("actions")[start:end][:-1]
+        ep_actions = ep_actions.reshape((-1, action_shape))
+
+        states.append(episode[:-1])
+        next_states.append(episode[1:])
+        actions.append(ep_actions)
+        if get_reward:
+            ep_rewards = data.get("rewards")[start:end][:-1]
+            rewards.append(ep_rewards)
+
+    states = np.concatenate(states, axis=0)
+    next_states = np.concatenate(next_states, axis=0)
+    if not isinstance(states[0][0], (str, dict)):
+        states = torch.from_numpy(states)
+        next_states = torch.from_numpy(next_states)
+    actions = torch.from_numpy(np.concatenate(actions, axis=0))
+
+    if get_reward:
+        rewards = torch.from_numpy(np.concatenate(rewards, axis=0))
+        return states, actions, next_states, rewards
+    return states, actions, next_states
+
+
 class BaselineDataset(Dataset):
     """Teacher dataset for IL methods."""
 
@@ -23,7 +80,8 @@ class BaselineDataset(Dataset):
         hf_split: str = "train",
         split: str = "train",
         n_episodes: int = None,
-        transform: Callable[[torch.Tensor], torch.Tensor] = None
+        transform: Callable[[torch.Tensor], torch.Tensor] = None,
+        create_dataset: bool = True
     ) -> None:
         """Initialize dataset.
 
@@ -34,12 +92,16 @@ class BaselineDataset(Dataset):
             hf_split (str): HuggingFace split to use. Defaults to 'train'.
             split (str): split to use. Defaults to 'train'.
             n_episodes (int): number of episodes to use. Defaults to None.
-            transform (Callable[[torch.Tensor], torch.Tensor]): transform to apply to the data. Defaults to None.
+            transform (Callable[[torch.Tensor], torch.Tensor]): transform to apply to the data.
+                Defaults to None.
 
         Raises:
             ValueError: if path does not exist.
         """
-        self.transform = transform
+        if transform is not None:
+            self.transform = transform
+        else:
+            self.transform = ToTensor()
 
         if source == "local" and not os.path.exists(path):
             raise ValueError(f"No dataset at: {path}")
@@ -54,47 +116,10 @@ class BaselineDataset(Dataset):
                 self.data["obs"] = self.data["obs"].reshape((-1, 1))
             self.average_reward = []
 
-        shape = [1] if isinstance(self.data["obs"][0], str) else self.data["obs"].shape[1:]
-        self.states = np.ndarray(shape=(0, *shape))
-        self.next_states = np.ndarray(shape=(0, *shape))
-
-        if len(self.data["actions"].shape) == 1:
-            action_size = 1
-        else:
-            action_size = self.data["actions"].shape[-1]
-        self.actions = np.ndarray(shape=(0, action_size))
-
-        episode_starts = list(np.where(self.data["episode_starts"] == 1)[0])
-        episode_starts.append(len(self.data["episode_starts"]))
-
-        if n_episodes is not None:
-            if split == "train":
-                episode_starts = episode_starts[:n_episodes + 1]
-            else:
-                episode_starts = episode_starts[n_episodes:]
-
-        for start, end in zip(episode_starts, tqdm(episode_starts[1:], desc="Creating dataset")):
-            episode = self.data["obs"][start:end]
-            actions = self.data["actions"][start:end]
-            if len(self.actions.shape) != 1:
-                shape = 1 if len(actions.shape) == 1 else actions.shape[-1]
-                actions = actions.reshape((-1, shape))
-            self.actions = np.append(self.actions, actions[:-1], axis=0)
-            self.states = np.append(self.states, episode[:-1], axis=0)
-            self.next_states = np.append(self.next_states, episode[1:], axis=0)
-
-            if source != "local":
-                self.average_reward.append(self.data["rewards"][start:end].sum())
-
-        if isinstance(self.average_reward, list):
-            self.average_reward = np.mean(self.average_reward)
-
-        assert self.states.shape[0] == self.actions.shape[0] == self.next_states.shape[0]
-
-        if not isinstance(self.states[0, 0], str):
-            self.states = torch.from_numpy(self.states)
-            self.next_states = torch.from_numpy(self.next_states)
-        self.actions = torch.from_numpy(self.actions)
+        if create_dataset:
+            self.states, self.actions, self.next_states = fn_create_dataset(
+                self.data, n_episodes, split
+            )
 
     def __len__(self) -> int:
         """Dataset length.
@@ -118,12 +143,46 @@ class BaselineDataset(Dataset):
         state = self.states[index]
         next_state = self.next_states[index]
         if isinstance(state[0], str):
-            state = ToTensor()(Image.open(state[0]))
-            next_state = ToTensor()(Image.open(next_state[0]))
-
-        if self.transform is not None:
-            state = self.transform(state)
-            next_state = self.transform(next_state)
+            state = self.transform(Image.open(state[0]))
+            next_state = self.transform(Image.open(next_state[0]))
+        elif isinstance(state[0], dict):
+            state = self.transform(Image.open(io.BytesIO(state[0]["bytes"])))
+            next_state = self.transform(Image.open(io.BytesIO(next_state[0]["bytes"])))
 
         action = self.actions[index]
         return state, action, next_state
+
+
+class IRLDataset(BaselineDataset):
+    def __init__(
+        self,
+        path: str,
+        source: str = "local",
+        hf_split: str = "train",
+        split: str = "train",
+        n_episodes: int = None,
+        transform: Callable[[torch.Tensor], torch.Tensor] = None
+    ) -> None:
+        super().__init__(path, source, hf_split, split, n_episodes, transform, False)
+        if "rewards" not in self.data.keys():
+            raise AttributeError("IRLDataset requires 'rewards' key to be present")
+
+        self.states, self.actions, self.next_states, self.rewards = fn_create_dataset(
+            self.data, n_episodes, split, get_reward=True
+        )
+
+    def __getitem__(self, index: int) -> Tuple[torch.Tensor]:
+        """Get item from dataset.
+
+        Args:
+            index (int): index.
+
+        Returns:
+            state (torch.Tensor): state for timestep t.
+            action (torch.Tensor): action for timestep t.
+            next_state (torch.Tensor): state for timestep t + 1.
+            reward (torch.Tensor): reward for timestep t.
+        """
+        state, action, next_state = super().__getitem__(index)
+        reward = self.rewards[index]
+        return state, action, next_state, reward

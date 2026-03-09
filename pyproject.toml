@@ -1,3 +1,45 @@
+[project]
+name = "IL-Datasets"
+version = "0.6.1"
+authors = [
+    { name = "Nathan Gavenski", email = "nathangavenski@gmail.com" }
+]
+description = "A package for creating datasets for IL and IRL, training agents and benchmarking"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "MIT" }
+requires-python = ">=3.9.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "huggingface_sb3",
+    "stable_baselines3",
+    "sb3_contrib",
+    "tqdm",
+    "psutil",
+    "shimmy>=0.2.1",
+    "datasets==3.4.1",
+    "pandas",
+    "torchvision",
+]
+
+[project.urls]
+Homepage = "https://github.com/NathanGavenski/IL-Datasets"
+"Bug Tracker" = "https://github.com/NathanGavenski/IL-Datasets/issues"
+
+[project.optional-dependencies]
+benchmark = [
+    "tensorboard-wrapper",
+    "tensorboard",
+    "tabulate",
+    "pyyaml",
+]
+
 [build-system]
 requires = ["setuptools==66", "wheel==0.38.4"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
