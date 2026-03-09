@@ -35,6 +35,8 @@ benchmark = [
     "tensorboard",
     "tabulate",
     "pyyaml",
+    "gym",
+    "gymnasium"
 ]
 
 [build-system]
