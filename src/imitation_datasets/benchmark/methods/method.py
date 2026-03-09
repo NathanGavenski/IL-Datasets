@@ -20,7 +20,7 @@ import numpy as np
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
-from .policies import MLP, MlpWithAttention
+from .policies import MLP, MlpWithAttention, MlpAttention
 from .policies import CNN, Resnet, ResnetWithAttention
 
 
@@ -41,6 +41,7 @@ class Method(ABC):
         discrete_loss: nn.Module = nn.CrossEntropyLoss,
         continuous_loss: nn.Module = nn.MSELoss,
         optimizer_fn: optim.Optimizer = optim.Adam,
+        activation: Callable[[torch.Tensor], torch.Tensor] = nn.LeakyReLU,
     ) -> None:
         """Initialize base class."""
         super().__init__()
@@ -63,9 +64,24 @@ class Method(ABC):
 
         policy = self.hyperparameters.get('policy', 'MlpPolicy')
         if policy == 'MlpPolicy':
-            self.policy = MLP(self.observation_size, self.action_size)
+            self.policy = MLP(
+                self.observation_size, self.action_size,
+                self.hyperparameters.get('hidden_dim', None),
+                activation=activation
+            )
         elif policy == 'MlpWithAttention':
-            self.policy = MlpWithAttention(self.observation_size, self.action_size)
+            self.policy = MlpWithAttention(
+                self.observation_size,
+                self.action_size,
+                self.hyperparameters.get('hidden_dim', None),
+                activation=activation
+            )
+        elif policy == 'MlpAttention':
+            self.policy = MlpAttention(
+                self.observation_size, self.action_size,
+                self.hyperparameters.get('hidden_dim', None),
+                activation=activation
+            )
         elif policy in ['CnnPolicy', 'ResnetPolicy', 'AttResnetPolicy']:
             self.visual = True
             if policy == 'CnnPolicy':

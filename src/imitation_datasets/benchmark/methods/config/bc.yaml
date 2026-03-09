@@ -13,7 +13,3 @@ MountainCar:
 Acrobot:
   lr: 1.6e-3 
   policy: 'MlpPolicy'
-
-Maze:
-  lr: 5e-4
-  policy: 'CnnPolicy'
