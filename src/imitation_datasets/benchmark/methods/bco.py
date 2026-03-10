@@ -20,7 +20,7 @@ from imitation_datasets.dataset.metrics import accuracy as accuracy_fn
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import get_random_dataset, BaselineDataset
-from .policies.mlp import MLP, MlpWithAttention
+from .policies.mlp import MLP, MlpWithAttention, MlpAttention
 from .policies.cnn import CNN, Resnet
 from .method import Metrics, Method
 from .utils import import_hyperparameters
@@ -69,9 +69,20 @@ class BCO(Method):
 
         idm = self.hyperparameters.get('idm', 'MlpPolicy')
         if idm == 'MlpPolicy':
-            self.idm = MLP(self.observation_size * 2, self.action_size)
+            self.idm = MLP(
+                self.observation_size * 2, self.action_size,
+                self.hyperparameters.get("idm_hidden_dim", None),
+            )
         elif idm == 'MlpWithAttention':
-            self.idm = MlpWithAttention(self.observation_size * 2, self.action_size)
+            self.idm = MlpWithAttention(
+                self.observation_size * 2, self.action_size,
+                self.hyperparameters.get("idm_hidden_dim", None),
+            )
+        elif idm == 'MlpAttention':
+            self.idm = MlpAttention(
+                self.observation_size, self.action_size,
+                self.hyperparameters.get("idm_hidden_dim", None),
+            )
         elif idm in ['CnnPolicy', 'ResnetPolicy']:
             self.visual = True
             if idm == 'CnnPolicy':
@@ -165,7 +176,7 @@ class BCO(Method):
             method (Self): trained method.
         """
         if folder is None:
-            folder = f"../benchmark_results/bco/{self.environment_name}"
+            folder = f"./benchmark_results/bco/{self.environment_name}"
         if not os.path.exists(folder):
             os.makedirs(f"{folder}/")
         board = Tensorboard(path=folder)
