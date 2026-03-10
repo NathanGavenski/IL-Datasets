@@ -119,9 +119,9 @@ class TestBaselineDataset(TestCase):
             split="eval"
         )
         assert len(dataset) == 499
-        assert dataset.states.shape[0] == 500 * 2 - 2
-        assert dataset.next_states.shape[0] == 500 * 2 - 2
-        assert dataset.actions.shape[0] == 500 * 2 - 2
+        assert dataset.states.shape[0] == 499
+        assert dataset.next_states.shape[0] == 499
+        assert dataset.actions.shape[0] == 499
         assert dataset.average_reward == 500
 
         state, action, next_state, done = dataset[0]
