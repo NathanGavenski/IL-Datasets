@@ -6,4 +6,4 @@ from .utils import EnjoyFunction, CollateFunction
 from .utils import Experiment, Context
 from .utils import GymWrapper
 from .functions import *
-from .benchmark import *
+from .baselines import *

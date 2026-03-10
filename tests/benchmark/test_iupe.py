@@ -3,7 +3,7 @@ from unittest import TestCase
 import gymnasium as gym
 from torch import nn, optim
 
-from src.imitation_datasets.benchmark.methods import IUPE
+from src.imitation_datasets.baselines.methods import IUPE
 
 
 class TestIUPE(TestCase):

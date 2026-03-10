@@ -3,7 +3,7 @@ from unittest import TestCase
 import gymnasium as gym
 from torch import nn, optim
 
-from src.imitation_datasets.benchmark.methods import BCO
+from src.imitation_datasets.baselines.methods import BCO
 
 
 class TestBCO(TestCase):

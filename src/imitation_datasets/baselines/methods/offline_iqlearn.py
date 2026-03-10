@@ -9,9 +9,9 @@ try:
 except ImportError:
     from typing_extensions import Self
 
-from imitation_datasets.benchmark.methods.method import Method, Metrics
-from imitation_datasets.benchmark.methods.method import MLP, CNN, Resnet
-from imitation_datasets.benchmark.methods.utils import import_hyperparameters
+from imitation_datasets.baselines.methods.method import Method, Metrics
+from imitation_datasets.baselines.methods.method import MLP, CNN, Resnet
+from imitation_datasets.baselines.methods.utils import import_hyperparameters
 from gymnasium import Env
 import numpy as np
 from tensorboard_wrapper import Tensorboard
