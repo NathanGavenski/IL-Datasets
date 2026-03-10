@@ -37,14 +37,15 @@ class TestExperts(TestCase):
 
     @pytest.mark.skipif(github, reason="to not take a lot of time server wise")
     def test_experts_performance(self) -> None:
+        import gymnasium_robotics
         for environment in Experts.experts.keys():
             results = []
             for _ in range(10):
                 result, reward = enjoy(
-                        Experts.get_expert(environment),
-                        self.data_folder,
-                        self.context
-                    )
+                    Experts.get_expert(environment),
+                    self.data_folder,
+                    self.context
+                )
                 results.append(result)
                 if result:
                     break

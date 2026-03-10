@@ -3,6 +3,7 @@ import os
 import shutil
 
 from pytest import raises
+import torch
 
 from src.imitation_datasets.experts import Experts
 from src.imitation_datasets.functions import baseline_enjoy, baseline_collate
@@ -37,13 +38,15 @@ class TestBaselineDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 5 - 5
         assert dataset.average_reward == 500
 
-        state, action, next_state = dataset[0]
+        state, action, next_state, done = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
+        assert done.dtype == torch.bool
 
         dataset = BaselineDataset('./tmp/data/teacher.npz', n_episodes=2)
         assert len(dataset) == 500 * 2 - 2
@@ -52,13 +55,15 @@ class TestBaselineDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 2 - 2
         assert dataset.average_reward == 500
 
-        state, action, next_state = dataset[0]
+        state, action, next_state, done = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
+        assert done.dtype == torch.bool
 
         with raises(ValueError):
             BaselineDataset('./tmp/teacher.npz')
@@ -75,13 +80,15 @@ class TestBaselineDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 10 - 10
         assert dataset.average_reward == 500
 
-        state, action, next_state = dataset[0]
+        state, action, next_state, done = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
+        assert done.dtype == torch.bool
 
         dataset = BaselineDataset(
             'NathanGavenski/CartPole-v1',
@@ -94,13 +101,15 @@ class TestBaselineDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 2 - 2
         assert dataset.average_reward == 500
 
-        state, action, next_state = dataset[0]
+        state, action, next_state, done = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
+        assert done.dtype == torch.bool
 
 
 class TestIRLDataset(TestCase):
@@ -130,15 +139,17 @@ class TestIRLDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 5 - 5
         assert dataset.average_reward == 500
 
-        state, action, next_state, reward = dataset[0]
+        state, action, next_state, done, reward = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
         assert len(reward.size()) == 0
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
         assert reward == 1
+        assert done.dtype == torch.bool
 
         dataset = IRLDataset('./tmp/data/teacher.npz', n_episodes=2)
         assert len(dataset) == 500 * 2 - 2
@@ -147,15 +158,17 @@ class TestIRLDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 2 - 2
         assert dataset.average_reward == 500
 
-        state, action, next_state, reward = dataset[0]
+        state, action, next_state, done, reward = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
         assert len(reward.size()) == 0
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
         assert reward == 1
+        assert done.dtype == torch.bool
 
         with raises(ValueError):
             IRLDataset('./tmp/teacher.npz')
@@ -172,15 +185,17 @@ class TestIRLDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 10 - 10
         assert dataset.average_reward == 500
 
-        state, action, next_state, reward = dataset[0]
+        state, action, next_state, done, reward = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
         assert len(reward.size()) == 0
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
         assert reward == 1
+        assert done.dtype == torch.bool
 
         dataset = IRLDataset(
             'NathanGavenski/CartPole-v1',
@@ -193,12 +208,14 @@ class TestIRLDataset(TestCase):
         assert dataset.actions.shape[0] == 500 * 2 - 2
         assert dataset.average_reward == 500
 
-        state, action, next_state, reward = dataset[0]
+        state, action, next_state, done, reward = dataset[0]
         assert len(state.size()) == 1
         assert len(action.size()) == 1
         assert len(next_state.size()) == 1
         assert len(reward.size()) == 0
+        assert len(done.size()) == 0
         assert state.size(0) == 4
         assert action.size(0) == 1
         assert next_state.size(0) == 4
         assert reward == 1
+        assert done.dtype == torch.bool
