@@ -111,6 +111,29 @@ class TestBaselineDataset(TestCase):
         assert next_state.size(0) == 4
         assert done.dtype == torch.bool
 
+    def test_eval_split(self) -> None:
+        dataset = BaselineDataset(
+            'NathanGavenski/CartPole-v1',
+            source='huggingface',
+            n_episodes=999,
+            split="eval"
+        )
+        assert len(dataset) == 499
+        assert dataset.states.shape[0] == 500 * 2 - 2
+        assert dataset.next_states.shape[0] == 500 * 2 - 2
+        assert dataset.actions.shape[0] == 500 * 2 - 2
+        assert dataset.average_reward == 500
+
+        state, action, next_state, done = dataset[0]
+        assert len(state.size()) == 1
+        assert len(action.size()) == 1
+        assert len(next_state.size()) == 1
+        assert len(done.size()) == 0
+        assert state.size(0) == 4
+        assert action.size(0) == 1
+        assert next_state.size(0) == 4
+        assert done.dtype == torch.bool
+
 
 class TestIRLDataset(TestCase):
 
