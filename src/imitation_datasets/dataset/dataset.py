@@ -44,7 +44,7 @@ def fn_create_dataset(
     if n_episodes is not None:
         if split == "train":
             episode_starts = episode_starts[:n_episodes + 1]
-        if split != "train":
+        elif split != "train":
             episode_starts = episode_starts[n_episodes:]
 
     episode_end = tqdm(episode_starts[1:], desc=f"Creating dataset {split.upper()}")
