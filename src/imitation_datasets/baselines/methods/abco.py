@@ -52,13 +52,13 @@ class ABCO(BCO):
         folder: str = None
     ) -> Self:
         if folder is None:
-            folder = f"../benchmark_results/abco/{self.environment_name}"
+            folder = f"./benchmark_results/abco/{self.environment_name}"
 
         super().train(
-            n_epochs,
-            train_dataset,
-            eval_dataset,
-            folder
+            n_epochs=n_epochs,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+            folder=folder
         )
         return self
 
@@ -102,6 +102,11 @@ class ABCO(BCO):
         train_dataset['idm_dataset'].dataset.actions = torch.cat((
             train_dataset['idm_dataset'].dataset.actions[idm_idx],
             torch.from_numpy(i_pos['actions'].reshape((-1, 1)))[i_pos_idx]),
+            dim=0
+        )
+        train_dataset['idm_dataset'].dataset.dones = torch.cat((
+            train_dataset['idm_dataset'].dataset.dones,
+            torch.from_numpy(i_pos['dones'])[i_pos_idx]),
             dim=0
         )
         return train_dataset
@@ -158,6 +163,7 @@ class ABCO(BCO):
                 goal |= reached_goal(self.environment_name, gym_return, accumulated_reward)
 
                 i_pos['next_states'].append(obs)
+                i_pos['dones'].append(done)
             average_reward.append(accumulated_reward)
             success_rate.append(goal)
 

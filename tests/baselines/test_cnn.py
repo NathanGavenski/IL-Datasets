@@ -5,8 +5,8 @@ import pytest
 import torch
 from torchvision import models, transforms
 
-from src.benchmark.methods.policies.attention import SelfAttn2D
-from src.benchmark.methods.policies.cnn import (
+from src.imitation_datasets.baselines.methods.policies.attention import SelfAttn2D
+from src.imitation_datasets.baselines.methods.policies.cnn import (
     Empty,
     convert_to_bw,
     convert_to_n_channels,

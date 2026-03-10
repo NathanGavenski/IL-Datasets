@@ -2,6 +2,7 @@
 import io
 import os
 from typing import Tuple, Callable, Dict
+import warnings
 
 from datasets import load_dataset
 import numpy as np
@@ -30,6 +31,7 @@ def fn_create_dataset(
     states = []
     next_states = []
     actions = []
+    dones = []
     if get_reward:
         rewards = []
 
@@ -45,15 +47,18 @@ def fn_create_dataset(
         elif split != "train":
             episode_starts = episode_starts[n_episodes:]
 
-    episode_end = tqdm(episode_starts[1:], desc="Creating dataset")
+    episode_end = tqdm(episode_starts[1:], desc=f"Creating dataset {split.upper()}")
     for start, end in zip(episode_starts, episode_end):
         episode = data.get("obs")[start:end]
         ep_actions = data.get("actions")[start:end][:-1]
         ep_actions = ep_actions.reshape((-1, action_shape))
+        ep_dones = np.zeros(len(ep_actions), dtype=bool).tolist()
+        ep_dones[-1] = True
 
         states.append(episode[:-1])
         next_states.append(episode[1:])
         actions.append(ep_actions)
+        dones.append(ep_dones)
         if get_reward:
             ep_rewards = data.get("rewards")[start:end][:-1]
             rewards.append(ep_rewards)
@@ -64,11 +69,21 @@ def fn_create_dataset(
         states = torch.from_numpy(states)
         next_states = torch.from_numpy(next_states)
     actions = torch.from_numpy(np.concatenate(actions, axis=0))
+    dones = torch.from_numpy(np.concatenate(dones, axis=0))
 
     if get_reward:
         rewards = torch.from_numpy(np.concatenate(rewards, axis=0))
-        return states, actions, next_states, rewards
-    return states, actions, next_states
+        return states, actions, next_states, dones, rewards
+    return states, actions, next_states, dones
+
+
+def fn_compute_reward(data: Dict[str, np.ndarray]) -> float:
+    if "rewards" not in data.keys():
+        warnings.warn("No 'rewards' key found, no average reward computed")
+        return None
+
+    episodes = len(list(np.where(data.get("episode_starts") == 1)[0]))
+    return data.get("rewards").sum() / episodes
 
 
 class BaselineDataset(Dataset):
@@ -118,9 +133,11 @@ class BaselineDataset(Dataset):
             self.average_reward = []
 
         if create_dataset:
-            self.states, self.actions, self.next_states = fn_create_dataset(
+            self.states, self.actions, self.next_states, self.dones = fn_create_dataset(
                 self.data, n_episodes, split
             )
+            if source != "local":
+                self.average_reward = fn_compute_reward(self.data)
 
     def __len__(self) -> int:
         """Dataset length.
@@ -151,7 +168,8 @@ class BaselineDataset(Dataset):
             next_state = self.transform(Image.open(io.BytesIO(next_state[0]["bytes"])))
 
         action = self.actions[index]
-        return state, action, next_state
+        done = self.dones[index]
+        return state, action, next_state, done
 
 
 class IRLDataset(BaselineDataset):
@@ -168,9 +186,11 @@ class IRLDataset(BaselineDataset):
         if "rewards" not in self.data.keys():
             raise AttributeError("IRLDataset requires 'rewards' key to be present")
 
-        self.states, self.actions, self.next_states, self.rewards = fn_create_dataset(
+        self.states, self.actions, self.next_states, self.dones, self.rewards = fn_create_dataset(
             self.data, n_episodes, split, get_reward=True
         )
+        if source != "local":
+            self.average_reward = fn_compute_reward(self.data)
 
     def __getitem__(self, index: int) -> Tuple[torch.Tensor]:
         """Get item from dataset.
@@ -184,6 +204,5 @@ class IRLDataset(BaselineDataset):
             next_state (torch.Tensor): state for timestep t + 1.
             reward (torch.Tensor): reward for timestep t.
         """
-        state, action, next_state = super().__getitem__(index)
-        reward = self.rewards[index]
-        return state, action, next_state, reward
+        state, action, next_state, done = super().__getitem__(index)
+        return state, action, next_state, done, self.rewards[index]
