@@ -40,8 +40,9 @@ def fn_create_dataset(
         raise AttributeError("Dataset should contain 'episode_starts' key")
 
     if n_episodes is not None:
-        episode_starts = episode_starts[:n_episodes + 1]
-        if split != "train":
+        if split == "train":
+            episode_starts = episode_starts[:n_episodes + 1]
+        elif split != "train":
             episode_starts = episode_starts[n_episodes:]
 
     episode_end = tqdm(episode_starts[1:], desc="Creating dataset")
