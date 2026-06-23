@@ -1,5 +1,10 @@
 # IL Datasets
 
+[![AAMAS 2024](https://img.shields.io/badge/AAMAS-2024%20Demonstration%20Track-blue)](https://attend.ieee.org/wcci-2026/)
+[![arXiv](https://img.shields.io/badge/arXiv-2403.00550-b31b1b.svg)](https://arxiv.org/abs/2403.00550)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/il-datasets?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/il-datasets)
+
 ![cover](./assets/IL-Datasets.png)
 
 Hi, welcome to the Imitation Learning (IL) Datasets.
