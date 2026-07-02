@@ -14,13 +14,14 @@ from numbers import Number
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
+import gymnasium
 from gymnasium import Env, spaces
 from gym import spaces as gym_spaces
 import numpy as np
 from imitation_datasets.utils import GymWrapper
 from imitation_datasets.dataset import BaselineDataset
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
-from .policies import MLP, MlpWithAttention
+from .policies import MLP, MlpWithAttention, MlpAttention
 from .policies import CNN, Resnet, ResnetWithAttention
 
 
@@ -41,6 +42,7 @@ class Method(ABC):
         discrete_loss: nn.Module = nn.CrossEntropyLoss,
         continuous_loss: nn.Module = nn.MSELoss,
         optimizer_fn: optim.Optimizer = optim.Adam,
+        activation: Callable[[torch.Tensor], torch.Tensor] = nn.LeakyReLU,
     ) -> None:
         """Initialize base class."""
         super().__init__()
@@ -63,9 +65,24 @@ class Method(ABC):
 
         policy = self.hyperparameters.get('policy', 'MlpPolicy')
         if policy == 'MlpPolicy':
-            self.policy = MLP(self.observation_size, self.action_size)
+            self.policy = MLP(
+                self.observation_size, self.action_size,
+                self.hyperparameters.get('hidden_dim', None),
+                activation=activation
+            )
         elif policy == 'MlpWithAttention':
-            self.policy = MlpWithAttention(self.observation_size, self.action_size)
+            self.policy = MlpWithAttention(
+                self.observation_size,
+                self.action_size,
+                self.hyperparameters.get('hidden_dim', None),
+                activation=activation
+            )
+        elif policy == 'MlpAttention':
+            self.policy = MlpAttention(
+                self.observation_size, self.action_size,
+                self.hyperparameters.get('hidden_dim', None),
+                activation=activation
+            )
         elif policy in ['CnnPolicy', 'ResnetPolicy', 'AttResnetPolicy']:
             self.visual = True
             if policy == 'CnnPolicy':
@@ -80,15 +97,15 @@ class Method(ABC):
             with torch.no_grad():
                 output = encoder(torch.zeros(1, *self.observation_size[::-1]))
 
-            linear = nn.Sequential(
-                nn.Linear(output.shape[-1], 512),
-                nn.LeakyReLU(),
-                nn.Dropout(0.3),
-                nn.Linear(512, 512),
-                nn.LeakyReLU(),
-                nn.Dropout(0.3),
-                nn.Linear(512, self.action_size)
-            )
+            linear = []
+            in_dim = output.shape[-1]
+            for hidden_dim in self.hyperparameters.get("hidden_dim", []):
+                linear.append(nn.Linear(in_dim, hidden_dim))
+                linear.append(activation())
+                linear.append(nn.Dropout(0.3))
+                in_dim = hidden_dim
+            linear.append(nn.Linear(in_dim, self.action_size))
+            linear = nn.Sequential(*linear)
             self.policy = nn.Sequential(encoder, linear)
 
         self.optimizer_fn = optimizer_fn(
@@ -228,6 +245,50 @@ class Method(ABC):
                     informed than the performance metric is calculated.
                 perforamance_std (Number): standard deviation for performance.
         """
+        if self.hyperparameters.get("vectorized_enjoy", False):
+            return self._vector_enjoy(
+                teacher_reward=teacher_reward,
+                random_reward=random_reward,
+                gym_version=gym_version,
+                transforms=transforms
+            )
+        return self._sequential_enjoy(
+            render=render,
+            teacher_reward=teacher_reward,
+            random_reward=random_reward,
+            gym_version=gym_version,
+            transforms=transforms
+        )
+
+
+    def _sequential_enjoy(
+        self,
+        render: bool = False,
+        teacher_reward: Number = None,
+        random_reward: Number = None,
+        gym_version: str = "newest",
+        transforms: Callable[[torch.Tensor], torch.Tensor] = None
+    ) -> Metrics:
+        """Function for evaluation of the policy in the environment
+
+        Args:
+            render (bool): Whether it should render. Defaults to False.
+            teacher_reward (Number): reward for teacher policy.
+            random_reward (Number): reward for a random policy.
+            gym_version (str): Which version of gym GymWrapper should use.
+                Defaults to "newest" (gymnasium).
+            transofrms (Callable[torch.Tensor, torch.Tensor]): torchvision
+                functions to transform the data (only required for visual
+                environments). Defaults to None.
+
+        Returns:
+            Metrics:
+                aer (Number): average reward for 100 episodes.
+                aer_std (Number): standard deviation for aer.
+                performance (Number): if teacher_reward and random_reward are
+                    informed than the performance metric is calculated.
+                perforamance_std (Number): standard deviation for performance.
+        """
         environment = GymWrapper(self.environment, gym_version)
         average_reward = []
         for _ in range(100):
@@ -247,6 +308,65 @@ class Method(ABC):
             metrics.update(performance(average_reward, teacher_reward, random_reward))
         return metrics
 
+    def _vector_enjoy(
+        self,
+        teacher_reward: Number = None,
+        random_reward: Number = None,
+        gym_version: str = "newest",
+        transforms: Callable[[torch.Tensor], torch.Tensor] = None,
+        n_envs: int = 10,
+    ) -> Metrics:
+        """Function for evaluation of the policy in the environment
+
+        Args:
+            render (bool): Whether it should render. Defaults to False.
+            teacher_reward (Number): reward for teacher policy.
+            random_reward (Number): reward for a random policy.
+            gym_version (str): Which version of gym GymWrapper should use.
+                Defaults to "newest" (gymnasium).
+            transforms (Callable[torch.Tensor, torch.Tensor]): torchvision
+                functions to transform the data (only required for visual
+                environments). Defaults to None.
+            n_envs (int): number of parallel environments. Defaults to 10.
+
+        Returns:
+            Metrics:
+                aer (Number): average reward for 100 episodes.
+                aer_std (Number): standard deviation for aer.
+                performance (Number): if teacher_reward and random_reward are
+                    informed than the performance metric is calculated.
+                performance_std (Number): standard deviation for performance.
+        """
+        from gymnasium.vector import SyncVectorEnv
+
+        n_episodes = 100
+        make_env = lambda: gymnasium.make(self.environment.spec.id)
+        vec_env = SyncVectorEnv([make_env for _ in range(n_envs)])
+
+        average_reward = []
+        accumulated_rewards = np.zeros(n_envs)
+        episodes_done = 0
+
+        obs, _ = vec_env.reset()
+        while episodes_done < n_episodes:
+            actions = np.array([self.predict(o, transforms) for o in obs])
+            obs, rewards, terminated, truncated, _ = vec_env.step(actions)
+            accumulated_rewards += rewards
+
+            done = terminated | truncated
+            for i, d in enumerate(done):
+                if d and episodes_done < n_episodes:
+                    average_reward.append(accumulated_rewards[i])
+                    accumulated_rewards[i] = 0
+                    episodes_done += 1
+
+        vec_env.close()
+
+        metrics = average_episodic_reward(average_reward)
+        if teacher_reward is not None and random_reward is not None:
+            metrics.update(performance(average_reward, teacher_reward, random_reward))
+        return metrics
+
     def early_stop(self, metric: Metrics) -> bool:
         """Function that tells the method if it should stop or not.
 
@@ -256,4 +376,4 @@ class Method(ABC):
         Returns:
             stop (bool): if it should stop or not.
         """
-        raise False
+        return False

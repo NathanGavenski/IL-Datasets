@@ -12,6 +12,9 @@ dev.py
 dist/
 src/il_datasets.egg-info
 
+# Test 
+!tests/
+
 # Project folders
 dataset/
 !src/imitation_datasets/dataset/

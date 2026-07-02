@@ -2,46 +2,55 @@ name: PR Action
 
 on:
   pull_request:
-    branches: 
-      main
+    branches:
+      - main
 
-env: 
+env:
   SERVER: 1
+  MUJOCO_GL: osmesa
+  LD_LIBRARY_PATH: ${{ github.workspace }}/.mujoco/mujoco210/bin:/usr/lib/x86_64-linux-gnu
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/checkout@v3
 
-    - name: Setup OpenGL
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-opengl mesa-utils xvfb
-        xvfb-run glxinfo
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools==65.5.0 pip==21
-        pip install pylint==2.17.5 pytest
-        pip install torch gymnasium
-        pip install -r ./requirements/requirements.txt
-        pip install -r ./requirements/benchmark.txt
-        pip install -r ./requirements/dev.txt
-        pip install -e .
+      - name: Setup OpenGL and MuJoCo system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-opengl mesa-utils xvfb \
+            libosmesa6-dev libgl1 libglfw3 \
+            patchelf gcc
 
-    - name: Analysing the code with pylint
-      run: |
-        pylint --fail-under=9 $(git ls-files '*.py') --ignore-paths=./tests/,./docs/
+      - name: Install MuJoCo 2.1.0
+        run: |
+          mkdir -p ${{ github.workspace }}/.mujoco
+          wget -q https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz -O mujoco210.tar.gz
+          tar -xzf mujoco210.tar.gz -C ${{ github.workspace }}/.mujoco
+          rm mujoco210.tar.gz
 
-    - name: Unit testing 
-      run: |
-        xvfb-run -s "-screen 0 1400x900x24" pytest 
+      - name: Install dependencies
+        run: |
+          uv sync
+          uv pip install "cython<3"
+          uv pip install pylint==2.17.5 pytest
+          uv pip install -r ./requirements/dev.txt
+          uv pip install -e ".[benchmark]"
+
+      - name: Analysing the code with pylint
+        run: |
+          uv run pylint --fail-under=9 $(git ls-files '*.py') --ignore-paths=./tests/,./docs/
+
+      - name: Unit testing
+        run: |
+          xvfb-run -s "-screen 0 1400x900x24" uv run pytest

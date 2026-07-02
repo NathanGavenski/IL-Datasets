@@ -1,0 +1,59 @@
+Default:
+  lr: 1e-4
+  temperature: 0.2
+  gamma: 0.99
+  tau: 0.005
+  alpha: 0.5
+  update_frequency: 4
+  regularize: True
+  hidden_dim: [64]
+  policy: 'MlpPolicy'
+  vectorized_enjoy: False
+
+CartPole:
+  lr: 1e-4
+  temperature: 0.2
+  gamma: 0.99
+  tau: 0.005
+  alpha: 0.5
+  update_frequency: 4
+  regularize: True
+  hidden_dim: [64]
+  policy: 'MlpPolicy'
+  vectorized_enjoy: True
+
+Acrobot:
+  lr: 1e-4
+  temperature: 0.2
+  gamma: 0.99
+  tau: 0.005
+  alpha: 0.5
+  update_frequency: 4
+  regularize: True
+  hidden_dim: [64]
+  policy: 'MlpPolicy'
+  vectorized_enjoy: True
+
+LunarLander:
+  lr: 1e-4
+  temperature: 0.2
+  gamma: 0.99
+  tau: 0.005
+  alpha: 0.5
+  update_frequency: 4
+  regularize: True
+  hidden_dim: [64]
+  policy: 'MlpPolicy'
+  vectorized_enjoy: True
+
+MountainCar:
+  lr: 1e-4
+  temperature: 0.2
+  gamma: 0.99
+  tau: 0.005
+  alpha: 0.5
+  update_frequency: 4
+  regularize: True
+  hidden_dim: [64]
+  policy: 'MlpPolicy'
+  vectorized_enjoy: True
