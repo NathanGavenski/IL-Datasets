@@ -97,16 +97,16 @@ class IUPE(ABCO):
         folder: str = None
     ) -> Self:
         if folder is None:
-            folder = f"../benchmark_results/iupe/{self.environment_name}"
+            folder = f"./benchmark_results/iupe/{self.environment_name}"
 
         self.is_training = True
 
         try:
             super().train(
-                n_epochs,
-                train_dataset,
-                eval_dataset,
-                folder
+                n_epochs=n_epochs,
+                train_dataset=train_dataset,
+                eval_dataset=eval_dataset,
+                folder=folder
             )
             return self
         finally:
@@ -131,7 +131,7 @@ class IUPE(ABCO):
         accumulated_accuracy = []
 
         for batch in idm_dataset:
-            state, action, next_state = batch
+            state, action, next_state, *_ = batch
             state = state.to(self.device)
             action = action.to(self.device)
             next_state = next_state.to(self.device)
@@ -154,7 +154,7 @@ class IUPE(ABCO):
         self.idm.eval()
 
         for batch in expert_dataset:
-            state, _, next_state = batch
+            state, _, next_state, *_ = batch
             state = state.to(self.device)
             next_state = next_state.to(self.device)
 

@@ -36,7 +36,7 @@ def enjoy(expert: Policy, path: str, context: Context) -> bool:
     if acc_reward >= expert.threshold:
         np.savez(f'{path}{context.index}', **episode)
         context.add_log(f'Accumulated reward {acc_reward}')
-    return acc_reward >= expert.threshold
+    return acc_reward >= expert.threshold, acc_reward
 
 
 def collate(path, data) -> bool:

@@ -3,7 +3,7 @@ from unittest import TestCase
 import torch
 from torch import nn
 
-from src.benchmark.methods.policies.attention import SelfAttn1D, SelfAttn2D
+from src.imitation_datasets.baselines.methods.policies.attention import SelfAttn1D, SelfAttn2D
 
 
 class TestSelfAtten2D(TestCase):

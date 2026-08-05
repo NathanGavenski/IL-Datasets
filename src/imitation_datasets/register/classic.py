@@ -20,7 +20,7 @@ classic = {
         'name': 'Acrobot-v1',
         'repo_id': "sb3/dqn-Acrobot-v1",
         'filename': "dqn-Acrobot-v1.zip",
-        'threshold': -75.,
+        'threshold': -80.,
         'algo': DQN
     }
 }
