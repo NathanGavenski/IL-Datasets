@@ -26,7 +26,7 @@ from .method import Metrics, Method
 from .utils import import_hyperparameters
 
 
-PATH = "/".join(__file__.split("/")[:-1])
+PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = f"{PATH}/config/bco.yaml"
 
 

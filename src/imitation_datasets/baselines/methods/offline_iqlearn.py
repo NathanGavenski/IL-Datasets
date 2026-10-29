@@ -22,7 +22,7 @@ from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 
 
-PATH = "/".join(__file__.split("/")[:-1])
+PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = f"{PATH}/config/offline_iqlearn.yaml"
 
 
@@ -100,14 +100,14 @@ class OfflineIQLearn(Method):
 
         if self.policy:
             state_dict = torch.load(
-                f"{path}{name}_q_network.ckpt",
+                f"{path}/{name}_q_network.ckpt",
                 map_location=torch.device(self.device)
             )
             self.policy.load_state_dict(state_dict)
 
         if self.q_target:
             state_dict = torch.load(
-                f"{path}{name}_q_target.ckpt",
+                f"{path}/{name}_q_target.ckpt",
                 map_location=torch.device(self.device)
             )
             self.q_target.load_state_dict(state_dict)

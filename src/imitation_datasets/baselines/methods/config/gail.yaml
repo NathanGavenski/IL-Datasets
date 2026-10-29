@@ -1,0 +1,65 @@
+Default:
+  lr: 3e-4
+  critic_lr: 1e-3
+  discriminator_lr: 3e-4
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  batch_size: 64
+  ppo_epochs: 10
+  discriminator_epochs: 1
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  entropy_coef: 0.0
+  # 'logit': log D - log(1 - D), negative while the discriminator wins, so it
+  #   biases the policy towards short episodes (fails where termination is failure).
+  # 'gail': -log(1 - D), always positive, so it biases the policy towards long
+  #   episodes (fails where termination is the goal, e.g., MountainCar, Acrobot).
+  reward: 'logit'
+
+# Environments that terminate when the agent fails use the positive reward. With
+# 'logit', the policy learns to end episodes early (e.g., Ant-v4 after ~0.5M steps).
+InvertedPendulum:
+  lr: 3e-4
+  critic_lr: 1e-3
+  discriminator_lr: 3e-4
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  batch_size: 64
+  ppo_epochs: 10
+  discriminator_epochs: 1
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  entropy_coef: 0.0
+  reward: 'gail'
+
+Hopper:
+  lr: 3e-4
+  critic_lr: 1e-3
+  discriminator_lr: 3e-4
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  batch_size: 64
+  ppo_epochs: 10
+  discriminator_epochs: 1
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  entropy_coef: 0.0
+  reward: 'gail'
+
+Ant:
+  lr: 3e-4
+  critic_lr: 1e-3
+  discriminator_lr: 3e-4
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  batch_size: 64
+  ppo_epochs: 10
+  discriminator_epochs: 1
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  entropy_coef: 0.0
+  reward: 'gail'

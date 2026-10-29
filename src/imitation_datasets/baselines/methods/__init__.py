@@ -4,3 +4,5 @@ from .bco import BCO
 from .abco import ABCO
 from .iupe import IUPE
 from .offline_iqlearn import OfflineIQLearn
+from .gail import GAIL
+from .iqlearn import IQLearn

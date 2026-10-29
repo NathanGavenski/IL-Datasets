@@ -1,5 +1,6 @@
 """Module for Augmented Behavioural Cloning from Observation"""
 from collections import defaultdict
+import os
 from numbers import Number
 from typing import List, Union, Dict, Tuple
 
@@ -20,7 +21,7 @@ from .method import Metrics
 from .utils import reached_goal
 
 
-PATH = "/".join(__file__.split("/")[:-1])
+PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = f"{PATH}/config/abco.yaml"
 
 

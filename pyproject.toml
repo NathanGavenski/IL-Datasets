@@ -43,7 +43,7 @@ benchmark = [
 ]
 
 [build-system]
-requires = ["setuptools==65.0", "wheel==0.38.4", "pip==21"]
+requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]

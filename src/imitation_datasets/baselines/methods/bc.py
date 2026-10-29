@@ -20,7 +20,7 @@ from .method import Method, Metrics
 from .utils import import_hyperparameters
 
 
-PATH = "/".join(__file__.split("/")[:-1])
+PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = f"{PATH}/config/bc.yaml"
 
 
@@ -192,7 +192,10 @@ class BC(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            loss = self.loss_fn(predictions, action.squeeze(1).long())
+            if self.discrete:
+                loss = self.loss_fn(predictions, action.squeeze(1).long())
+            else:
+                loss = self.loss_fn(predictions, action.float())
             loss.backward()
             self.optimizer_fn.step()
             accumulated_loss.append(loss.item())

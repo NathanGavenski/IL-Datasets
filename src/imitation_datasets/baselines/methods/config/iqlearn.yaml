@@ -1,0 +1,55 @@
+# Online IQ-Learn (continuous actions), values from the official MuJoCo experiments
+# (Div99/IQ-Learn, scripts/run_mujoco.sh and conf/agent/sac.yaml). 'lr' is the actor
+# learning rate, 'alpha' the entropy temperature and 'chi2_alpha' the chi-squared
+# regularization coefficient. Each training epoch is 'steps_per_epoch' environment steps
+# and the best checkpoint is selected with 'eval_episodes' episodes (official: 10 every 5k).
+Default:
+  lr: 3e-5
+  critic_lr: 3e-4
+  alpha: 0.01
+  chi2_alpha: 0.5
+  gamma: 0.99
+  tau: 0.005
+  batch_size: 256
+  replay_mem: 1000000
+  initial_mem: 1280
+  steps_per_epoch: 5000
+  eval_episodes: 10
+  loss: 'value'
+  regularize: True
+  hidden_dim: [256, 256]
+  policy: 'MlpPolicy'
+
+Hopper:
+  lr: 3e-5
+  critic_lr: 3e-4
+  alpha: 0.01
+  chi2_alpha: 0.5
+  gamma: 0.99
+  tau: 0.005
+  batch_size: 256
+  replay_mem: 1000000
+  initial_mem: 1280
+  steps_per_epoch: 5000
+  eval_episodes: 10
+  loss: 'v0'
+  regularize: True
+  hidden_dim: [256, 256]
+  policy: 'MlpPolicy'
+
+Ant:
+  lr: 3e-5
+  critic_lr: 3e-4
+  alpha: 0.001
+  chi2_alpha: 0.5
+  gamma: 0.99
+  tau: 0.005
+  batch_size: 256
+  replay_mem: 1000000
+  initial_mem: 1280
+  steps_per_epoch: 5000
+  eval_episodes: 10
+  loss: 'value'
+  regularize: True
+  hidden_dim: [256, 256]
+  policy: 'MlpPolicy'

@@ -1,4 +1,5 @@
 """Module for Augmented Behavioural Cloning from Observation"""
+import os
 from numbers import Number
 from typing import List, Union, Dict, Callable
 
@@ -17,7 +18,7 @@ from .abco import ABCO
 from .method import Metrics
 
 
-PATH = "/".join(__file__.split("/")[:-1])
+PATH = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = f"{PATH}/config/iupe.yaml"
 
 

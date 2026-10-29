@@ -20,7 +20,7 @@ Environments: each environment should be in one Dict[str, Dict[str, Any], where
 """
 from typing import Any, Dict, List
 
-from .methods import BC, BCO, ABCO, IUPE
+from .methods import BC, BCO, ABCO, IUPE, GAIL, OfflineIQLearn, IQLearn
 from .methods.method import Method
 
 
@@ -44,8 +44,33 @@ classic_control: Dict[str, Dict[str, Any]] = {
 }
 
 
+mujoco: Dict[str, Dict[str, Any]] = {
+    "InvertedPendulum-v4": {
+        "path": "NathanGavenski/InvertedPendulum-v4",
+        "random_reward": 6.2
+    },
+    "Swimmer-v4": {
+        "path": "NathanGavenski/Swimmer-v4",
+        "random_reward": -0.3349
+    },
+    "HalfCheetah-v4": {
+        "path": "NathanGavenski/HalfCheetah-v4",
+        "random_reward": -277.6804
+    },
+    "Hopper-v4": {
+        "path": "NathanGavenski/Hopper-v4",
+        "random_reward": 19.3446
+    },
+    "Ant-v4": {
+        "path": "NathanGavenski/Ant-v4",
+        "random_reward": -43.7051
+    }
+}
+
+
 benchmark_environments: List[Dict[str, Dict[str, Any]]] = [
-    classic_control
+    classic_control,
+    mujoco
 ]
 
 
