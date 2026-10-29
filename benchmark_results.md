@@ -6,6 +6,9 @@
 | LunarLander-v2      | Behavioural Cloning                            | 246.9683 ± 23.3822    | 0.9763 ± 0.054  |
 | InvertedPendulum-v4 | Behavioural Cloning                            | 1000.0 ± 0.0          | 1.0 ± 0.0       |
 | Swimmer-v4          | Behavioural Cloning                            | 354.7016 ± 2.019      | 0.985 ± 0.0056  |
+| HalfCheetah-v4      | Behavioural Cloning                            | 9373.5435 ± 839.6505  | 0.9567 ± 0.0832 |
+| Hopper-v4           | Behavioural Cloning                            | 3521.1692 ± 15.2098   | 0.9971 ± 0.0043 |
+| Ant-v4              | Behavioural Cloning                            | 5884.2144 ± 110.3338  | 0.9951 ± 0.0185 |
 | CartPole-v1         | Behavioural Cloning from Observation           | 500.0 ± 0.0           | 1.0 ± 0.0       |
 | MountainCar-v0      | Behavioural Cloning from Observation           | -99.5 ± 9.0923        | 0.9932 ± 0.0899 |
 | Acrobot-v1          | Behavioural Cloning from Observation           | -75.2 ± 12.0383       | 0.9875 ± 0.0281 |
