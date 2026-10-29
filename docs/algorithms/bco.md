@@ -1,3 +1,3 @@
 # Behavioural Cloning from Observation
 
-::: benchmark.methods.bco.BCO
+::: imitation_datasets.baselines.methods.bco.BCO

@@ -1,3 +1,3 @@
 # Method
 
-::: benchmark.methods.method.Method
+::: imitation_datasets.baselines.methods.method.Method

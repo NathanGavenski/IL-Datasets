@@ -35,6 +35,9 @@ nav:
     - 'Behavioural Cloning from Observation': 'algorithms/bco.md'
     - 'Augmented Behavioural Cloning from Observation': 'algorithms/abco.md'
     - 'Imitating Unknown Policies via Exploration': 'algorithms/iupe.md'
+    - 'Generative Adversarial Imitation Learning': 'algorithms/gail.md'
+    - 'Inverse soft-Q Learning': 'algorithms/iqlearn.md'
+    - 'Offline Inverse soft-Q Learning': 'algorithms/offline_iqlearn.md'
   - 'API Reference':
     - 'Benchmark': 'api/benchmark.md'
     - 'Imitation Datasets': 'api/imitation.md'

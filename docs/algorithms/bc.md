@@ -1,3 +1,3 @@
 # Behavioural Cloning
 
-::: benchmark.methods.bc.BC
+::: imitation_datasets.baselines.methods.bc.BC

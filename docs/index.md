@@ -13,3 +13,8 @@ IL-Datasets provides teacher weights for different environments, a multi-threadi
 * Dataset creation with user custom policies.
 * Readily available datasets for common benchmark environments.
 * Benchmark results for all implemented methods in the published datasets.
+
+## Benchmark
+
+IL-Datasets implements BC, BCO, ABCO, IUPE, GAIL and IQ-Learn, benchmarked on classic control (CartPole, MountainCar, Acrobot and LunarLander) and MuJoCo (InvertedPendulum, Swimmer, HalfCheetah, Hopper and Ant) environments.
+See [Benchmarking](tutorials/benchmark.md) for how to run them and the [results](https://github.com/NathanGavenski/IL-Datasets/blob/main/benchmark_results.md).

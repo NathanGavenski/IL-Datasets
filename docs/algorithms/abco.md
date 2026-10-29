@@ -1,3 +1,3 @@
 # Augmented Behavioural Cloning from Observation
 
-::: benchmark.methods.abco.ABCO
+::: imitation_datasets.baselines.methods.abco.ABCO

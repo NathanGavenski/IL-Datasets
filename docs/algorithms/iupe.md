@@ -1,3 +1,3 @@
 # Imitating Unknown Policies via Exploration
 
-::: benchmark.methods.iupe.IUPE
+::: imitation_datasets.baselines.methods.iupe.IUPE

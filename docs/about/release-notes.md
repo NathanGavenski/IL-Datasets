@@ -1,7 +1,25 @@
 # Release Notes
 
 ## Next release plan
-The next release should deliver the LunarLander environment benchamrk (almost done) and [SAIL](https://github.com/NathanGavenski/SAIL)  (IJCNN 2023).
+The next release should deliver [SAIL](https://github.com/NathanGavenski/SAIL)  (IJCNN 2023).
+
+## Unreleased
+### New methods
+* [Generative Adversarial Imitation Learning](../algorithms/gail.md) (`GAIL`), with a PPO generator.
+* [Inverse soft-Q Learning](../algorithms/iqlearn.md) (`IQLearn`), the online version for continuous actions.
+* [Offline Inverse soft-Q Learning](../algorithms/offline_iqlearn.md) (`OfflineIQLearn`), for discrete actions.
+
+### New environments
+* LunarLander-v2 and the MuJoCo environments InvertedPendulum-v4, Swimmer-v4, HalfCheetah-v4, Hopper-v4 and Ant-v4 are now part of the benchmark.
+
+### Changes
+* The `benchmark` module is now `imitation_datasets.baselines`, packaged with IL-Datasets.
+* The project is configured only with `pyproject.toml` (no `setup.cfg`) and requires Python `3.9` or above.
+* `BaselineDataset` returns `(state, action, next_state, done)`.
+
+### Fixes
+* Method configuration files are found on Windows.
+* Behavioural Cloning uses the right loss for continuous actions.
 
 ## v0.6.0
 ### Support for Visual environments

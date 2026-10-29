@@ -7,13 +7,13 @@ The dataset list for benchmarking is under development, so to check all new vers
 ## BaselineDataset
 To use the Baseline dataset, you can use a **local file**:
 ```python
-from src.imitation_datasets.dataset import BaselineDataset
+from imitation_datasets.dataset import BaselineDataset
 BaselineDataset(f"./dataset/cartpole/teacher.npz")
 ```
 
 Or a **HuggingFace** path:
 ```python
-from src.imitation_datasets.dataset import BaselineDataset
+from imitation_datasets.dataset import BaselineDataset
 BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingface")
 ```
 
@@ -22,7 +22,7 @@ BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingface")
 BaselineDataset allows for fewer episodes and splitting for `evaluation` and `train`.
 
 ```python
-from src.imitation_datasets.dataset import BaselineDataset
+from imitation_datasets.dataset import BaselineDataset
 dataset_train = BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingface", n_episodes=100)
 dataset_eval = BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingface", n_episodes=100, split="eval")
 ```

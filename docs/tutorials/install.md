@@ -5,7 +5,15 @@ We do this so we would not overide the current installed versions you use on you
 Therefore, before running IL-Datasets don't forget to install the versions you need!
 
 ## Requirements
-The project supports Python versions `3.8`~`3.11`, the latest PyTorch and Gymnasium versions, and `v0.21.0` of Gym.
+The project supports Python versions `3.9` and above, the latest PyTorch and Gymnasium versions, and `v0.21.0` of Gym.
+
+### Benchmark environments
+The benchmark datasets were created with the `-v4` MuJoCo environments and `LunarLander-v2`, which are not available in Gymnasium `1.0`.
+To run the benchmark on them, use:
+```{bash}
+pip install "gymnasium[box2d]==0.29.1" "mujoco==2.3.7"
+```
+`mujoco==2.3.7` requires `numpy<2`.
 
 
 ## PyPi

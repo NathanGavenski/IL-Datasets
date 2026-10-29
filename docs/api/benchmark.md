@@ -4,19 +4,19 @@
 
 </bl>
 ### create_dataloader
-::: benchmark.benchmark.create_dataloader
+::: imitation_datasets.baselines.benchmark.create_dataloader
 
 </bl>
 ### benchmark_method
-::: benchmark.benchmark.benchmark_method
+::: imitation_datasets.baselines.benchmark.benchmark_method
 
 </bl>
 ### benchmark
-::: benchmark.benchmark.benchmark
+::: imitation_datasets.baselines.benchmark.benchmark
 
 </bl>
 ## registers
 
 </bl>
 ### get_methods
-::: benchmark.registers.get_methods
+::: imitation_datasets.baselines.registers.get_methods
