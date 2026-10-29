@@ -15,7 +15,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "Benchmarking";
-        var mkdocs_page_input_path = "tutorials/benchmark.md";
+        var mkdocs_page_input_path = "tutorials\\benchmark.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -60,8 +60,18 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../datasets/">Using available datasets</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Benchmarking</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Benchmarking</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#environments">Environments</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#metrics">Metrics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-the-benchmark">Running the benchmark</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#logs-and-checkpoints">Logs and checkpoints</a>
+    </li>
     </ul>
                   </li>
               </ul>
@@ -76,6 +86,12 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/abco/">Augmented Behavioural Cloning from Observation</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iupe/">Imitating Unknown Policies via Exploration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/gail/">Generative Adversarial Imitation Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iqlearn/">Inverse soft-Q Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/offline_iqlearn/">Offline Inverse soft-Q Learning</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -111,18 +127,110 @@
               
                 <h1 id="benchmarking">Benchmarking</h1>
 <p>All benchmark results are available in the <a href="https://github.com/NathanGavenski/IL-Datasets/blob/main/benchmark_results.md">benchmark_results.md</a>.
-If you wish to run all benchmarks locally, feel free to run them with:</p>
-<pre><code>$ python src/bencmark/benchmark.py
+The benchmark module requires the <code>benchmark</code> extras (see <a href="../install/">Installation</a>).</p>
+<h2 id="methods">Methods</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Class</th>
+<th>Action space</th>
+<th>Interacts with the environment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../algorithms/bc/">Behavioural Cloning</a></td>
+<td><code>BC</code></td>
+<td>Discrete and continuous</td>
+<td>No</td>
+</tr>
+<tr>
+<td><a href="../../algorithms/bco/">Behavioural Cloning from Observation</a></td>
+<td><code>BCO</code></td>
+<td>Discrete and continuous</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a href="../../algorithms/abco/">Augmented Behavioural Cloning from Observation</a></td>
+<td><code>ABCO</code></td>
+<td>Discrete and continuous</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a href="../../algorithms/iupe/">Imitating Unknown Policies via Exploration</a></td>
+<td><code>IUPE</code></td>
+<td>Discrete and continuous</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a href="../../algorithms/gail/">Generative Adversarial Imitation Learning</a></td>
+<td><code>GAIL</code></td>
+<td>Discrete and continuous</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a href="../../algorithms/iqlearn/">Inverse soft-Q Learning</a></td>
+<td><code>IQLearn</code></td>
+<td>Continuous</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a href="../../algorithms/offline_iqlearn/">Offline Inverse soft-Q Learning</a></td>
+<td><code>OfflineIQLearn</code></td>
+<td>Discrete</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>Every method follows its original paper (or official implementation) and is not tuned per environment beyond what the authors report.
+Any unavoidable difference is listed in the method's page.</p>
+<h2 id="environments">Environments</h2>
+<p>Environments are registered in <a href="https://github.com/NathanGavenski/IL-Datasets/blob/main/src/imitation_datasets/baselines/registers.py">registers.py</a>, each with its <a href="https://huggingface.co/collections/NathanGavenski/imitation-learning-datasets-6542982072defaf65937432d">HuggingFace dataset</a> and the reward of a random agent:</p>
+<ul>
+<li><strong>Classic control</strong>: <code>CartPole-v1</code>, <code>MountainCar-v0</code>, <code>Acrobot-v1</code> and <code>LunarLander-v2</code>.</li>
+<li><strong>MuJoCo</strong>: <code>InvertedPendulum-v4</code>, <code>Swimmer-v4</code>, <code>HalfCheetah-v4</code>, <code>Hopper-v4</code> and <code>Ant-v4</code>.</li>
+</ul>
+<p>The <code>-v4</code> MuJoCo environments require <code>gymnasium==0.29.1</code> and <code>mujoco&lt;3</code> (e.g., <code>2.3.7</code>); <code>LunarLander-v2</code> also requires <code>gymnasium&lt;1.0</code> and <code>box2d</code>.</p>
+<h2 id="metrics">Metrics</h2>
+<p>Each result is the evaluation of the best checkpoint over 100 episodes:</p>
+<ul>
+<li><strong>AER</strong>: average episodic reward (± standard deviation).</li>
+<li><strong>Performance</strong>: reward normalized between the random agent (0) and the expert (1), $\frac{r - r_{random}}{r_{expert} - r_{random}}$.</li>
+</ul>
+<p>The best checkpoint is selected during training every <code>enjoy_criteria</code> epochs.</p>
+<h2 id="running-the-benchmark">Running the benchmark</h2>
+<p>To run all benchmarks locally, use:</p>
+<pre><code>$ python -m imitation_datasets.baselines.benchmark
 </code></pre>
-<p>This command will run all implemented methods with all available <a href="https://huggingface.co/collections/NathanGavenski/imitation-learning-datasets-6542982072defaf65937432d">datasets</a>.
+<p>This command will run all methods listed in <code>benchmark_methods</code> (<code>registers.py</code>) with all registered environments, and write the results to <code>benchmark_results_&lt;METHODS&gt;.md</code>.
 Be careful, it will take a long time!
 If you wish to run a single method or run them in parallel, use:</p>
-<pre><code>$ python src/bencmark/benchmark.py --methods &lt;METHOD NAME&gt;
+<pre><code>$ python -m imitation_datasets.baselines.benchmark --methods &lt;METHOD NAME&gt;
 </code></pre>
 <p>For example:</p>
-<pre><code>$ python src/bencmark/benchmark.py --methods bc,bco
+<pre><code>$ python -m imitation_datasets.baselines.benchmark --methods bc,bco
 </code></pre>
-<p>will run Behavioural Cloning and Behavioural Clonning from Observation.</p>
+<p>will run Behavioural Cloning and Behavioural Cloning from Observation.</p>
+<p>The command-line benchmark trains each method for 5000 epochs, evaluating every 100 epochs.
+For the online methods, where an epoch is a number of environment steps, train them directly instead (see the usage examples in <a href="../../algorithms/gail/">GAIL</a> and <a href="../../algorithms/iqlearn/">Inverse soft-Q Learning</a>):</p>
+<pre><code class="language-python">import gymnasium as gym
+from imitation_datasets.baselines.benchmark import create_dataloader
+from imitation_datasets.baselines.methods import IQLearn
+from imitation_datasets.baselines.registers import mujoco
+
+info = mujoco[&quot;Hopper-v4&quot;]
+dataloader = create_dataloader(info[&quot;path&quot;])
+metrics = IQLearn(gym.make(&quot;Hopper-v4&quot;), enjoy_criteria=1) \
+    .train(100, train_dataset=dataloader) \
+    .load() \
+    ._enjoy(teacher_reward=dataloader.dataset.average_reward, random_reward=info[&quot;random_reward&quot;])
+</code></pre>
+<h2 id="logs-and-checkpoints">Logs and checkpoints</h2>
+<p>Training curves are written to TensorBoard under <code>./benchmark_results/&lt;method&gt;/&lt;environment&gt;/</code> and checkpoints under <code>./tmp/&lt;method&gt;/&lt;environment&gt;/</code>.
+To follow training, run:</p>
+<pre><code>$ tensorboard --logdir benchmark_results
+</code></pre>
               
             </div>
           </div><footer>

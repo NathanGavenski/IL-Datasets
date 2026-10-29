@@ -42,9 +42,11 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Home</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#main-features">Main Features</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#benchmark">Benchmark</a>
     </li>
     </ul>
                 </li>
@@ -78,6 +80,12 @@
                   <li class="toctree-l1"><a class="reference internal" href="algorithms/abco/">Augmented Behavioural Cloning from Observation</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="algorithms/iupe/">Imitating Unknown Policies via Exploration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="algorithms/gail/">Generative Adversarial Imitation Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="algorithms/iqlearn/">Inverse soft-Q Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="algorithms/offline_iqlearn/">Offline Inverse soft-Q Learning</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -123,6 +131,9 @@ IL-Datasets provides teacher weights for different environments, a multi-threadi
 <li>Readily available datasets for common benchmark environments.</li>
 <li>Benchmark results for all implemented methods in the published datasets.</li>
 </ul>
+<h2 id="benchmark">Benchmark</h2>
+<p>IL-Datasets implements BC, BCO, ABCO, IUPE, GAIL and IQ-Learn, benchmarked on classic control (CartPole, MountainCar, Acrobot and LunarLander) and MuJoCo (InvertedPendulum, Swimmer, HalfCheetah, Hopper and Ant) environments.
+See <a href="tutorials/benchmark/">Benchmarking</a> for how to run them and the <a href="https://github.com/NathanGavenski/IL-Datasets/blob/main/benchmark_results.md">results</a>.</p>
               
             </div>
           </div><footer>
@@ -170,6 +181,6 @@ IL-Datasets provides teacher weights for different environments, a multi-threadi
 </html>
 
 <!--
-MkDocs version : 1.5.3
-Build Date UTC : 2024-04-05 22:43:58.975086+00:00
+MkDocs version : 1.6.1
+Build Date UTC : 2026-10-29 18:36:25.267309+00:00
 -->

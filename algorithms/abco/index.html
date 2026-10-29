@@ -15,7 +15,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "Augmented Behavioural Cloning from Observation";
-        var mkdocs_page_input_path = "algorithms/abco.md";
+        var mkdocs_page_input_path = "algorithms\\abco.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -71,15 +71,21 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../bco/">Behavioural Cloning from Observation</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Augmented Behavioural Cloning from Observation</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Augmented Behavioural Cloning from Observation</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#benchmark.methods.abco.ABCO._append_samples">_append_samples()</a>
+    <li class="toctree-l2"><a class="reference internal" href="#imitation_datasets.baselines.methods.abco.ABCO._append_samples">_append_samples</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#benchmark.methods.abco.ABCO._enjoy">_enjoy()</a>
+    <li class="toctree-l2"><a class="reference internal" href="#imitation_datasets.baselines.methods.abco.ABCO._enjoy">_enjoy</a>
     </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../iupe/">Imitating Unknown Policies via Exploration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gail/">Generative Adversarial Imitation Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../iqlearn/">Inverse soft-Q Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../offline_iqlearn/">Offline Inverse soft-Q Learning</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -121,17 +127,23 @@
 
 
 
-  <div class="doc doc-contents first">
-          <p class="doc doc-class-bases">
-            Bases: <code><span title="benchmark.methods.bco.BCO">BCO</span></code></p>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="imitation_datasets.baselines.methods.bco.BCO">BCO</span></code></p>
 
-  
-      <p>Augmented Behavioural Cloning from Observation method based on (Monteiro et. al., 2020)</p>
 
-            <details class="quote">
-              <summary>Source code in <code>src/benchmark/methods/abco.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 27</span>
-<span class="normal"> 28</span>
+
+        <p>Augmented Behavioural Cloning from Observation method based on (Monteiro et. al., 2020)</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src\imitation_datasets\baselines\methods\abco.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 28</span>
 <span class="normal"> 29</span>
 <span class="normal"> 30</span>
 <span class="normal"> 31</span>
@@ -276,14 +288,22 @@
 <span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
-<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ABCO</span><span class="p">(</span><span class="n">BCO</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Augmented Behavioural Cloning from Observation method based on (Monteiro et. al., 2020)&quot;&quot;&quot;</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ABCO</span><span class="p">(</span><span class="n">BCO</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Augmented Behavioural Cloning from Observation method based on (Monteiro et. al., 2020)"""</span>
 
-    <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
-    <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Monteiro et. al.&quot;</span>
-    <span class="n">__method_name__</span> <span class="o">=</span> <span class="s2">&quot;Augmented Behavioural Cloning from Observation&quot;</span>
+    <span class="n">__version__</span> <span class="o">=</span> <span class="s2">"1.0.0"</span>
+    <span class="n">__author__</span> <span class="o">=</span> <span class="s2">"Monteiro et. al."</span>
+    <span class="n">__method_name__</span> <span class="o">=</span> <span class="s2">"Augmented Behavioural Cloning from Observation"</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">environment</span><span class="p">:</span> <span class="n">Env</span><span class="p">,</span>
         <span class="n">enjoy_criteria</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
@@ -293,44 +313,45 @@
         <span class="k">if</span> <span class="n">config_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config_file</span> <span class="o">=</span> <span class="n">CONFIG_FILE</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">enjoy_criteria</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;./tmp/abco/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span><span class="si">}</span><span class="s2">/&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"./tmp/abco/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span><span class="si">}</span><span class="s2">/"</span>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">n_epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">train_dataset</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataLoader</span><span class="p">],</span>
         <span class="n">eval_dataset</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataLoader</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">always_ave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;../benchmark_results/abco/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"./benchmark_results/abco/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
-            <span class="n">n_epochs</span><span class="p">,</span>
-            <span class="n">train_dataset</span><span class="p">,</span>
-            <span class="n">eval_dataset</span><span class="p">,</span>
-            <span class="n">folder</span>
+            <span class="n">n_epochs</span><span class="o">=</span><span class="n">n_epochs</span><span class="p">,</span>
+            <span class="n">train_dataset</span><span class="o">=</span><span class="n">train_dataset</span><span class="p">,</span>
+            <span class="n">eval_dataset</span><span class="o">=</span><span class="n">eval_dataset</span><span class="p">,</span>
+            <span class="n">folder</span><span class="o">=</span><span class="n">folder</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">_append_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_dataset</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append samples to DataLoader.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_append_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_dataset</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Append samples to DataLoader.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            train_dataset (DataLoader): current train dataset.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            train_dataset (DataLoader): new train dataset.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">metrics</span><span class="p">,</span> <span class="n">i_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enjoy</span><span class="p">(</span><span class="n">return_ipos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">i_pos_ratio</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success_rate&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">i_pos_ratio</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'success_rate'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">idm_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i_pos_ratio</span>
 
         <span class="k">if</span> <span class="n">i_pos_ratio</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">train_dataset</span>
 
-        <span class="n">i_pos_size</span> <span class="o">=</span> <span class="n">i_pos</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">idm_size</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">i_pos_size</span> <span class="o">=</span> <span class="n">i_pos</span><span class="p">[</span><span class="s2">"states"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">idm_size</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">i_pos_k</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">i_pos_size</span> <span class="o">*</span> <span class="n">i_pos_ratio</span><span class="p">))</span>
         <span class="n">idm_k</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">idm_size</span> <span class="o">*</span> <span class="n">idm_ratio</span><span class="p">))</span>
 
@@ -340,31 +361,36 @@
         <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
             <span class="n">idm_idx</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
-            <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+            <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'states'</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
             <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
         <span class="p">)</span>
-        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
-            <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;next_states&#39;</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+            <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'next_states'</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
             <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
         <span class="p">)</span>
-        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
-            <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+            <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'actions'</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+            <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">dones</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+            <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">dones</span><span class="p">,</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'dones'</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
             <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">train_dataset</span>
 
-    <span class="k">def</span> <span class="nf">_enjoy</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enjoy</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">render</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">teacher_reward</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">random_reward</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">return_ipos</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Metrics</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Metrics</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function for evaluation of the policy in the environment</span>
+<span class="w">        </span><span class="sd">"""Function for evaluation of the policy in the environment</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            render (bool): Whether it should render. Defaults to False.</span>
@@ -384,7 +410,7 @@
 <span class="sd">                states (List[Number]): states before action.</span>
 <span class="sd">                actions (List[Number]): action given states.</span>
 <span class="sd">                next_states (List[Number]): next state given states and actions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">environment</span> <span class="o">=</span> <span class="n">GymWrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span>
         <span class="n">average_reward</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">i_pos</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
@@ -400,15 +426,16 @@
                     <span class="n">environment</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
                 <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
-                <span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-                <span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="n">i_pos</span><span class="p">[</span><span class="s1">'states'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+                <span class="n">i_pos</span><span class="p">[</span><span class="s1">'actions'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
                 <span class="n">gym_return</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
                 <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">gym_return</span>
                 <span class="n">accumulated_reward</span> <span class="o">+=</span> <span class="n">reward</span>
                 <span class="n">goal</span> <span class="o">|=</span> <span class="n">reached_goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span><span class="p">,</span> <span class="n">gym_return</span><span class="p">,</span> <span class="n">accumulated_reward</span><span class="p">)</span>
 
-                <span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;next_states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+                <span class="n">i_pos</span><span class="p">[</span><span class="s1">'next_states'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+                <span class="n">i_pos</span><span class="p">[</span><span class="s1">'dones'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
             <span class="n">average_reward</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accumulated_reward</span><span class="p">)</span>
             <span class="n">success_rate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">goal</span><span class="p">)</span>
 
@@ -416,7 +443,7 @@
         <span class="k">if</span> <span class="n">teacher_reward</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">random_reward</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">metrics</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">performance</span><span class="p">(</span>
                 <span class="n">average_reward</span><span class="p">,</span> <span class="n">teacher_reward</span><span class="p">,</span> <span class="n">random_reward</span><span class="p">))</span>
-        <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;success_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">success_rate</span><span class="p">)</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s1">'success_rate'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">success_rate</span><span class="p">)</span>
 
         <span class="n">i_pos</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">i_pos</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
@@ -424,11 +451,11 @@
             <span class="k">return</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">i_pos</span>
         <span class="k">return</span> <span class="n">metrics</span>
 </code></pre></div></td></tr></table></div>
-            </details>
+              </details>
 
-  
 
-  <div class="doc doc-children">
+
+<div class="doc doc-children">
 
 
 
@@ -442,18 +469,15 @@
 <div class="doc doc-object doc-function">
 
 
-
-
-<h3 id="benchmark.methods.abco.ABCO._append_samples" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">_append_samples</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">)</span></code>
+<h3 id="imitation_datasets.baselines.methods.abco.ABCO._append_samples" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">_append_samples</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">)</span></code>
 
 </h3>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Append samples to DataLoader.</p>
+    <div class="doc doc-contents ">
 
+        <p>Append samples to DataLoader.</p>
 
 
 <table class="field-list">
@@ -480,7 +504,6 @@
   </tbody>
 </table>
 
-
 <table class="field-list">
   <colgroup>
     <col class="field-name" />
@@ -488,26 +511,25 @@
   </colgroup>
   <tbody valign="top">
     <tr class="field">
-    <th class="field-name">Returns:</th>
-    <td class="field-body">
-      <ul class="first simple">
-          <li>
-<b><code>train_dataset</code></b>(                <code><span title="torch.utils.data.DataLoader">DataLoader</span></code>
-)            –
-            <div class="doc-md-description">
-              <p>new train dataset.</p>
-            </div>
-          </li>
-      </ul>
-    </td>
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>train_dataset</code></b>(                  <code><span title="torch.utils.data.DataLoader">DataLoader</span></code>
+)              –
+              <div class="doc-md-description">
+                <p>new train dataset.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
     </tr>
   </tbody>
 </table>
-          <details class="quote">
-            <summary> <code>src/benchmark/methods/abco.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\imitation_datasets\baselines\methods\abco.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
 <span class="normal"> 67</span>
 <span class="normal"> 68</span>
 <span class="normal"> 69</span>
@@ -547,24 +569,31 @@
 <span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
-<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">_append_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_dataset</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Append samples to DataLoader.</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_append_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_dataset</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Append samples to DataLoader.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        train_dataset (DataLoader): current train dataset.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        train_dataset (DataLoader): new train dataset.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">metrics</span><span class="p">,</span> <span class="n">i_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enjoy</span><span class="p">(</span><span class="n">return_ipos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">i_pos_ratio</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success_rate&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">i_pos_ratio</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'success_rate'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">idm_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i_pos_ratio</span>
 
     <span class="k">if</span> <span class="n">i_pos_ratio</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">train_dataset</span>
 
-    <span class="n">i_pos_size</span> <span class="o">=</span> <span class="n">i_pos</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">idm_size</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">i_pos_size</span> <span class="o">=</span> <span class="n">i_pos</span><span class="p">[</span><span class="s2">"states"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">idm_size</span> <span class="o">=</span> <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">i_pos_k</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">i_pos_size</span> <span class="o">*</span> <span class="n">i_pos_ratio</span><span class="p">))</span>
     <span class="n">idm_k</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">idm_size</span> <span class="o">*</span> <span class="n">idm_ratio</span><span class="p">))</span>
 
@@ -574,44 +603,45 @@
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="n">idm_idx</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
-        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+    <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'states'</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
         <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">)</span>
-    <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
-        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;next_states&#39;</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+    <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">next_states</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'next_states'</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
         <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">)</span>
-    <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
-        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">&#39;idm_dataset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+    <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">idm_idx</span><span class="p">],</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'actions'</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
+        <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+    <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">dones</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span>
+        <span class="n">train_dataset</span><span class="p">[</span><span class="s1">'idm_dataset'</span><span class="p">]</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">dones</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">i_pos</span><span class="p">[</span><span class="s1">'dones'</span><span class="p">])[</span><span class="n">i_pos_idx</span><span class="p">]),</span>
         <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">train_dataset</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
-
-<h3 id="benchmark.methods.abco.ABCO._enjoy" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">_enjoy</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">teacher_reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_ipos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<h3 id="imitation_datasets.baselines.methods.abco.ABCO._enjoy" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">_enjoy</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">teacher_reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_ipos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
 
-  <div class="doc doc-contents ">
-  
-      <p>Function for evaluation of the policy in the environment</p>
+    <div class="doc doc-contents ">
 
+        <p>Function for evaluation of the policy in the environment</p>
 
 
 <table class="field-list">
@@ -626,7 +656,7 @@
         <ul class="first simple">
             <li>
               <b><code>render</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -656,7 +686,7 @@
             </li>
             <li>
               <b><code>return_ipos</code></b>
-                  (<code>bool</code>, default:
+                  (<code><span title="bool">bool</span></code>, default:
                       <code>False</code>
 )
               –
@@ -670,7 +700,6 @@
   </tbody>
 </table>
 
-
 <table class="field-list">
   <colgroup>
     <col class="field-name" />
@@ -678,45 +707,39 @@
   </colgroup>
   <tbody valign="top">
     <tr class="field">
-    <th class="field-name">Returns:</th>
-    <td class="field-body">
-      <ul class="first simple">
-          <li>
-<b><code>Metrics</code></b>(                <code><span title="typing.Union">Union</span>[<span title="benchmark.methods.method.Metrics">Metrics</span>, <span title="typing.Tuple">Tuple</span>[<span title="benchmark.methods.method.Metrics">Metrics</span>, <span title="typing.Dict">Dict</span>[str, <span title="typing.List">List</span>[float]]]]</code>
-)            –
-            <div class="doc-md-description">
-              <p>aer (Number): average reward for 100 episodes.
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>Metrics</code></b>(                  <code><span title="typing.Union">Union</span>[<span title="imitation_datasets.baselines.methods.method.Metrics">Metrics</span>, <span title="typing.Tuple">Tuple</span>[<span title="imitation_datasets.baselines.methods.method.Metrics">Metrics</span>, <span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.List">List</span>[<span title="float">float</span>]]]]</code>
+)              –
+              <div class="doc-md-description">
+                <p>aer (Number): average reward for 100 episodes.
 aer_std (Number): standard deviation for aer.
 performance (Number): if teacher_reward and random_reward are
     informed than the performance metric is calculated.
 perforamance_std (Number): standard deviation for performance.
 success_rate (float): percentage that the agent reached the goal.</p>
-            </div>
-          </li>
-          <li>
-<b><code>I_pos</code></b>(                <code><span title="typing.Union">Union</span>[<span title="benchmark.methods.method.Metrics">Metrics</span>, <span title="typing.Tuple">Tuple</span>[<span title="benchmark.methods.method.Metrics">Metrics</span>, <span title="typing.Dict">Dict</span>[str, <span title="typing.List">List</span>[float]]]]</code>
-)            –
-            <div class="doc-md-description">
-              <p>states (List[Number]): states before action.
+              </div>
+            </li>
+            <li>
+<b><code>I_pos</code></b>(                  <code><span title="typing.Union">Union</span>[<span title="imitation_datasets.baselines.methods.method.Metrics">Metrics</span>, <span title="typing.Tuple">Tuple</span>[<span title="imitation_datasets.baselines.methods.method.Metrics">Metrics</span>, <span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.List">List</span>[<span title="float">float</span>]]]]</code>
+)              –
+              <div class="doc-md-description">
+                <p>states (List[Number]): states before action.
 actions (List[Number]): action given states.
 next_states (List[Number]): next state given states and actions.</p>
-            </div>
-          </li>
-      </ul>
-    </td>
+              </div>
+            </li>
+        </ul>
+      </td>
     </tr>
   </tbody>
 </table>
-          <details class="quote">
-            <summary> <code>src/benchmark/methods/abco.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\imitation_datasets\baselines\methods\abco.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
@@ -774,14 +797,22 @@ next_states (List[Number]): next state given states and actions.</p>
 <span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
-<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">_enjoy</span><span class="p">(</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_enjoy</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">render</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">teacher_reward</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">random_reward</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">return_ipos</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Metrics</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Metrics</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function for evaluation of the policy in the environment</span>
+<span class="w">    </span><span class="sd">"""Function for evaluation of the policy in the environment</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        render (bool): Whether it should render. Defaults to False.</span>
@@ -801,7 +832,7 @@ next_states (List[Number]): next state given states and actions.</p>
 <span class="sd">            states (List[Number]): states before action.</span>
 <span class="sd">            actions (List[Number]): action given states.</span>
 <span class="sd">            next_states (List[Number]): next state given states and actions.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">environment</span> <span class="o">=</span> <span class="n">GymWrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span>
     <span class="n">average_reward</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">i_pos</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
@@ -817,15 +848,16 @@ next_states (List[Number]): next state given states and actions.</p>
                 <span class="n">environment</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
             <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
-            <span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-            <span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="n">i_pos</span><span class="p">[</span><span class="s1">'states'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+            <span class="n">i_pos</span><span class="p">[</span><span class="s1">'actions'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
             <span class="n">gym_return</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
             <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">gym_return</span>
             <span class="n">accumulated_reward</span> <span class="o">+=</span> <span class="n">reward</span>
             <span class="n">goal</span> <span class="o">|=</span> <span class="n">reached_goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environment_name</span><span class="p">,</span> <span class="n">gym_return</span><span class="p">,</span> <span class="n">accumulated_reward</span><span class="p">)</span>
 
-            <span class="n">i_pos</span><span class="p">[</span><span class="s1">&#39;next_states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+            <span class="n">i_pos</span><span class="p">[</span><span class="s1">'next_states'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+            <span class="n">i_pos</span><span class="p">[</span><span class="s1">'dones'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
         <span class="n">average_reward</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accumulated_reward</span><span class="p">)</span>
         <span class="n">success_rate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">goal</span><span class="p">)</span>
 
@@ -833,7 +865,7 @@ next_states (List[Number]): next state given states and actions.</p>
     <span class="k">if</span> <span class="n">teacher_reward</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">random_reward</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">metrics</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">performance</span><span class="p">(</span>
             <span class="n">average_reward</span><span class="p">,</span> <span class="n">teacher_reward</span><span class="p">,</span> <span class="n">random_reward</span><span class="p">))</span>
-    <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;success_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">success_rate</span><span class="p">)</span>
+    <span class="n">metrics</span><span class="p">[</span><span class="s1">'success_rate'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">success_rate</span><span class="p">)</span>
 
     <span class="n">i_pos</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">i_pos</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
@@ -841,8 +873,8 @@ next_states (List[Number]): next state given states and actions.</p>
         <span class="k">return</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">i_pos</span>
     <span class="k">return</span> <span class="n">metrics</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
 
@@ -850,7 +882,8 @@ next_states (List[Number]): next state given states and actions.</p>
 
   </div>
 
-  </div>
+    </div>
+
 
 </div>
               

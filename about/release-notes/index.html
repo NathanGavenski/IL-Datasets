@@ -15,7 +15,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "Release Notes";
-        var mkdocs_page_input_path = "about/release-notes.md";
+        var mkdocs_page_input_path = "about\\release-notes.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -49,9 +49,21 @@
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Release Notes</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Release Notes</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#next-release-plan">Next release plan</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#unreleased">Unreleased</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#new-methods">New methods</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#new-environments">New environments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fixes">Fixes</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#v060">v0.6.0</a>
         <ul>
@@ -117,6 +129,12 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iupe/">Imitating Unknown Policies via Exploration</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/gail/">Generative Adversarial Imitation Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iqlearn/">Inverse soft-Q Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/offline_iqlearn/">Offline Inverse soft-Q Learning</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
               <ul>
@@ -151,7 +169,29 @@
               
                 <h1 id="release-notes">Release Notes</h1>
 <h2 id="next-release-plan">Next release plan</h2>
-<p>The next release should deliver the LunarLander environment benchamrk (almost done) and <a href="https://github.com/NathanGavenski/SAIL">SAIL</a>  (IJCNN 2023).</p>
+<p>The next release should deliver <a href="https://github.com/NathanGavenski/SAIL">SAIL</a>  (IJCNN 2023).</p>
+<h2 id="unreleased">Unreleased</h2>
+<h3 id="new-methods">New methods</h3>
+<ul>
+<li><a href="../../algorithms/gail/">Generative Adversarial Imitation Learning</a> (<code>GAIL</code>), with a PPO generator.</li>
+<li><a href="../../algorithms/iqlearn/">Inverse soft-Q Learning</a> (<code>IQLearn</code>), the online version for continuous actions.</li>
+<li><a href="../../algorithms/offline_iqlearn/">Offline Inverse soft-Q Learning</a> (<code>OfflineIQLearn</code>), for discrete actions.</li>
+</ul>
+<h3 id="new-environments">New environments</h3>
+<ul>
+<li>LunarLander-v2 and the MuJoCo environments InvertedPendulum-v4, Swimmer-v4, HalfCheetah-v4, Hopper-v4 and Ant-v4 are now part of the benchmark.</li>
+</ul>
+<h3 id="changes">Changes</h3>
+<ul>
+<li>The <code>benchmark</code> module is now <code>imitation_datasets.baselines</code>, packaged with IL-Datasets.</li>
+<li>The project is configured only with <code>pyproject.toml</code> (no <code>setup.cfg</code>) and requires Python <code>3.9</code> or above.</li>
+<li><code>BaselineDataset</code> returns <code>(state, action, next_state, done)</code>.</li>
+</ul>
+<h3 id="fixes">Fixes</h3>
+<ul>
+<li>Method configuration files are found on Windows.</li>
+<li>Behavioural Cloning uses the right loss for continuous actions.</li>
+</ul>
 <h2 id="v060">v0.6.0</h2>
 <h3 id="support-for-visual-environments">Support for Visual environments</h3>
 <p>This version adds support for visual environments (e.g., Atari) to all methods, the BaselineDataset, and the benchmark feature.</p>

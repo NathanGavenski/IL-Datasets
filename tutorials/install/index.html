@@ -15,7 +15,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "Installation";
-        var mkdocs_page_input_path = "tutorials/install.md";
+        var mkdocs_page_input_path = "tutorials\\install.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -54,9 +54,13 @@
               </ul>
               <p class="caption"><span class="caption-text">Tutorials</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Installation</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Installation</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#benchmark-environments">Benchmark environments</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#pypi">PyPi</a>
     </li>
@@ -88,6 +92,12 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/abco/">Augmented Behavioural Cloning from Observation</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iupe/">Imitating Unknown Policies via Exploration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/gail/">Generative Adversarial Imitation Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iqlearn/">Inverse soft-Q Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/offline_iqlearn/">Offline Inverse soft-Q Learning</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -126,7 +136,13 @@
 We do this so we would not overide the current installed versions you use on yout local environment.
 Therefore, before running IL-Datasets don't forget to install the versions you need!</p>
 <h2 id="requirements">Requirements</h2>
-<p>The project supports Python versions <code>3.8</code>~<code>3.11</code>, the latest PyTorch and Gymnasium versions, and <code>v0.21.0</code> of Gym.</p>
+<p>The project supports Python versions <code>3.9</code> and above, the latest PyTorch and Gymnasium versions, and <code>v0.21.0</code> of Gym.</p>
+<h3 id="benchmark-environments">Benchmark environments</h3>
+<p>The benchmark datasets were created with the <code>-v4</code> MuJoCo environments and <code>LunarLander-v2</code>, which are not available in Gymnasium <code>1.0</code>.
+To run the benchmark on them, use:</p>
+<pre><code>pip install &quot;gymnasium[box2d]==0.29.1&quot; &quot;mujoco==2.3.7&quot;
+</code></pre>
+<p><code>mujoco==2.3.7</code> requires <code>numpy&lt;2</code>.</p>
 <h2 id="pypi">PyPi</h2>
 <p>IL-Datasets is available on PyPi:</p>
 <pre><code># Stable version

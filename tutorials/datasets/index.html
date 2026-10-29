@@ -15,7 +15,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "Using available datasets";
-        var mkdocs_page_input_path = "tutorials/datasets.md";
+        var mkdocs_page_input_path = "tutorials\\datasets.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -58,7 +58,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../creation/">Creating a new dataset</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Using available datasets</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Using available datasets</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#baselinedataset">BaselineDataset</a>
     </li>
@@ -80,6 +80,12 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/abco/">Augmented Behavioural Cloning from Observation</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iupe/">Imitating Unknown Policies via Exploration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/gail/">Generative Adversarial Imitation Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/iqlearn/">Inverse soft-Q Learning</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../algorithms/offline_iqlearn/">Offline Inverse soft-Q Learning</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -119,16 +125,16 @@ It uses the pattern set by the <code>baseline_collate</code> function, and it al
 The dataset list for benchmarking is under development, so to check all new versions, you can visit our collection on <a href="https://huggingface.co/collections/NathanGavenski/imitation-learning-datasets-6542982072defaf65937432d">HuggingFace</a>.</p>
 <h2 id="baselinedataset">BaselineDataset</h2>
 <p>To use the Baseline dataset, you can use a <strong>local file</strong>:</p>
-<pre><code class="language-python">from src.imitation_datasets.dataset import BaselineDataset
+<pre><code class="language-python">from imitation_datasets.dataset import BaselineDataset
 BaselineDataset(f&quot;./dataset/cartpole/teacher.npz&quot;)
 </code></pre>
 <p>Or a <strong>HuggingFace</strong> path:</p>
-<pre><code class="language-python">from src.imitation_datasets.dataset import BaselineDataset
+<pre><code class="language-python">from imitation_datasets.dataset import BaselineDataset
 BaselineDataset(f&quot;NathanGavenski/CartPole-v1&quot;, source=&quot;huggingface&quot;)
 </code></pre>
 <h2 id="train-and-evaluation-splits">Train and Evaluation splits</h2>
 <p>BaselineDataset allows for fewer episodes and splitting for <code>evaluation</code> and <code>train</code>.</p>
-<pre><code class="language-python">from src.imitation_datasets.dataset import BaselineDataset
+<pre><code class="language-python">from imitation_datasets.dataset import BaselineDataset
 dataset_train = BaselineDataset(f&quot;NathanGavenski/CartPole-v1&quot;, source=&quot;huggingface&quot;, n_episodes=100)
 dataset_eval = BaselineDataset(f&quot;NathanGavenski/CartPole-v1&quot;, source=&quot;huggingface&quot;, n_episodes=100, split=&quot;eval&quot;)
 </code></pre>
