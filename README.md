@@ -17,9 +17,10 @@ We hope that by releasing these features, we can make the barrier to learning an
 
 ## Requirements
 
-The project supports Python versions `3.8`~`3.11`.
+The project supports Python versions `3.9` and above.
 All requirements for the `imitation_datasets` package are listed in [requirements.txt](https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/requirements.txt). These requirements are required by the package and are installed together with the `IL-Datasets`.
-For requirements to use the `benchmark` package, use both the `imitation_datasets` requirements and the ones listed in [benchmark.txt](https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/benchmark.txt).
+For requirements to use the benchmark (`imitation_datasets.baselines`), use both the `imitation_datasets` requirements and the ones listed in [benchmark.txt](https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/benchmark.txt), or install `pip install "il-datasets[benchmark]"`.
+The benchmark datasets for MuJoCo use the `-v4` environments and `LunarLander-v2`, which require `gymnasium==0.29.1` and `mujoco==2.3.7` (with `numpy<2`).
 Development requirements are listed at [dev.txt](https://github.com/NathanGavenski/IL-Datasets/blob/main/requirements/dev.txt). We do not recommend using these dependencies outside development. They use an outdated version from gym `v0.21.0` to test the `GymWrapper` class.
 
 ## Install
@@ -121,11 +122,11 @@ This script will use the pre-registered `CartPole-v1` environment with the Huggi
 ## Registered environments
 
 IL-Datasets comes with some already registered weights from HuggingFace.
-To check which environments are already registered, check under the `src.imitation_datasets.registers` folder.
+To check which environments are already registered, check under the [`src/imitation_datasets/register`](./src/imitation_datasets/register) folder.
 
 ## Registering new experts
 
-If you would like to add new experts locally, you can call the [Experts](./utils/experts.py) class. It uses the following structure:
+If you would like to add new experts locally, you can call the [Experts](./src/imitation_datasets/experts.py) class. It uses the following structure:
 
 ```python
 """
@@ -159,19 +160,19 @@ The dataset list for benchmarking is under development, so to check all new vers
 
 To use the Baseline dataset, you can use a local file:
 ```python
-from src.imitation_datasets.dataset import BaselineDataset
+from imitation_datasets.dataset import BaselineDataset
 BaselineDataset(f"./dataset/cartpole/teacher.npz")
 ```
 
 Or a HuggingFace path:
 ```python
-from src.imitation_datasets.dataset import BaselineDataset
+from imitation_datasets.dataset import BaselineDataset
 BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingface")
 ```
 
 Finally, the dataset allows for fewer episodes and splitting for `evaluation` and `train`.
 ```python
-from src.imitation_datasets.dataset import BaselineDataset
+from imitation_datasets.dataset import BaselineDataset
 dataset_train = BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingface", n_episodes=100)
 dataset_eval = BaselineDataset(f"NathanGavenski/CartPole-v1", source="huggingface", n_episodes=100, split="eval")
 ```
@@ -184,10 +185,23 @@ Currently, we support:
    
 | Algorithm | Implementation | Benchmark
 | --- | --- | :---: |
-| Behavioural Cloning | [`benchmark.methods.bc`](./src/benchmark/methods/bc.py) | ✅ |
-| Behavioural Cloning from Observation | [`benchmark.methods.bco`](./src/benchmark/methods/bco.py) | ✅ |
-| Augmented Behavioural Cloning from Observation | [`benchmark.methods.abco`](./src/benchmark/methods/abco.py) | ✅ |
-| Imitating Unknown Policies via Exploration | [`benchmark.methods.iupe`](./src/benchmark/methods/iupe.py) | ✅ |
+| Behavioural Cloning | [`baselines.methods.bc`](./src/imitation_datasets/baselines/methods/bc.py) | ✅ |
+| Behavioural Cloning from Observation | [`baselines.methods.bco`](./src/imitation_datasets/baselines/methods/bco.py) | ✅ |
+| Augmented Behavioural Cloning from Observation | [`baselines.methods.abco`](./src/imitation_datasets/baselines/methods/abco.py) | ✅ |
+| Imitating Unknown Policies via Exploration | [`baselines.methods.iupe`](./src/imitation_datasets/baselines/methods/iupe.py) | ✅ |
+| Generative Adversarial Imitation Learning | [`baselines.methods.gail`](./src/imitation_datasets/baselines/methods/gail.py) | ✅ |
+| Inverse soft-Q Learning (online, continuous actions) | [`baselines.methods.iqlearn`](./src/imitation_datasets/baselines/methods/iqlearn.py) | ✅ |
+| Inverse soft-Q Learning (offline, discrete actions) | [`baselines.methods.offline_iqlearn`](./src/imitation_datasets/baselines/methods/offline_iqlearn.py) | ✅ |
+
+The benchmark environments are:
+
+| Domain | Environments |
+| --- | --- |
+| Classic control | `CartPole-v1`, `MountainCar-v0`, `Acrobot-v1`, `LunarLander-v2` |
+| MuJoCo | `InvertedPendulum-v4`, `Swimmer-v4`, `HalfCheetah-v4`, `Hopper-v4`, `Ant-v4` |
+
+Each method follows its original paper (or official implementation), with any differences listed in its [documentation page](https://nathangavenski.github.io/IL-Datasets/), and every result is the best checkpoint evaluated over 100 episodes.
+To run the benchmark, check the [documentation](https://nathangavenski.github.io/IL-Datasets/tutorials/benchmark/).
 
 However, our plan is to implement more state-of-the-art methods.
 
@@ -204,7 +218,8 @@ Here is a list of the upcoming releases:
    - [ ] Imitating Latent Policies from Observation
    - [x] Augmented Behavioural Cloning from Observation
    - [X] Imitating Unkown Policies via Exploration
-   - [ ] Generative Adversarial Imitation Learning
+   - [x] Generative Adversarial Imitation Learning
+   - [x] Inverse soft-Q Learning
    - [ ] Generative Adversarial Imitation Learning from Observation
    - [ ] Off-Policy Imitation Learning from Observations
    - [ ] Model-Based Imitation Learning From Observation Alone
@@ -214,12 +229,13 @@ Here is a list of the upcoming releases:
    - [x] MountainCar-v0
    - [x] Acrobot-v1
    - [X] LunarLander-v2
-   - [ ] Ant-v4
+   - [X] InvertedPendulum-v4
+   - [X] Ant-v4
    - [X] Hopper-v4
    - [X] HalfCheetah-v4
+   - [X] Swimmer-v4
    - [ ] Walker-v4
    - [ ] Humanoid-v4
-   - [ ] Swimmer-v4
 
  Although there are a lot of environments and methods to go through, this repository will be considered done once the documentation and the installation of the benchmarks are done. We don't have a plan for releases for environments and methods yet.
 
