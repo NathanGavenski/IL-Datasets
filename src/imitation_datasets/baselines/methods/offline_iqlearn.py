@@ -29,7 +29,7 @@ CONFIG_FILE = f"{PATH}/config/offline_iqlearn.yaml"
 class OfflineIQLearn(Method):
     __version__ = "1.0.0"
     __author__ = "Garg et. al."
-    __method_name__ = "Inverse Q-Learn"
+    __method_name__ = "Inverse soft-Q Learning"
 
     def __init__(
         self,
