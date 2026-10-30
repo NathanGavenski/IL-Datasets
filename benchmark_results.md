@@ -13,6 +13,11 @@
 | MountainCar-v0      | Behavioural Cloning from Observation           | -99.5 ± 9.0923        | 0.9932 ± 0.0899 |
 | Acrobot-v1          | Behavioural Cloning from Observation           | -75.2 ± 12.0383       | 0.9875 ± 0.0281 |
 | LunarLander-v2      | Behavioural Cloning from Observation           | 241.5896 ± 39.8227    | 0.9639 ± 0.092  |
+| InvertedPendulum-v4 | Behavioural Cloning from Observation           | 1000.0 ± 0.0          | 1.0 ± 0.0       |
+| Swimmer-v4          | Behavioural Cloning from Observation           | 355.8709 ± 2.1322     | 0.9882 ± 0.0059 |
+| HalfCheetah-v4      | Behavioural Cloning from Observation           | 9092.2556 ± 1713.7939 | 0.9289 ± 0.1699 |
+| Hopper-v4           | Behavioural Cloning from Observation           | 3404.2612 ± 526.7823  | 0.9639 ± 0.15   |
+| Ant-v4              | Behavioural Cloning from Observation           | 5897.0685 ± 544.0122  | 0.9973 ± 0.0913 |
 | CartPole-v1         | Augmented Behavioural Cloning from Observation | 500.0 ± 0.0           | 1.0 ± 0.0       |
 | MountainCar-v0      | Augmented Behavioural Cloning from Observation | -100.83 ± 8.4948      | 0.9801 ± 0.084  |
 | Acrobot-v1          | Augmented Behavioural Cloning from Observation | -76.53 ± 12.3462      | 0.9844 ± 0.0288 |
@@ -29,9 +34,9 @@
 | HalfCheetah-v4      | Generative Adversarial Imitation Learning      | 3435.1342 ± 989.5829  | 0.3681 ± 0.0981 |
 | Hopper-v4           | Generative Adversarial Imitation Learning      | 3561.7139 ± 3.8635    | 1.0087 ± 0.0011 |
 | Ant-v4              | Generative Adversarial Imitation Learning      | 1506.9226 ± 844.8904  | 0.2603 ± 0.1418 |
-| MountainCar-v0      | Inverse Q-Learn                                | -98.91 ± 8.8849       | 0.9991 ± 0.0878 |
-| Acrobot-v1          | Inverse Q-Learn                                | -74.67 ± 11.6782      | 0.9888 ± 0.0272 |
-| LunarLander-v2      | Inverse Q-Learn                                | 248.3237 ± 31.4068    | 0.9795 ± 0.0726 |
+| MountainCar-v0      | Inverse soft-Q Learning                        | -98.91 ± 8.8849       | 0.9991 ± 0.0878 |
+| Acrobot-v1          | Inverse soft-Q Learning                        | -74.67 ± 11.6782      | 0.9888 ± 0.0272 |
+| LunarLander-v2      | Inverse soft-Q Learning                        | 248.3237 ± 31.4068    | 0.9795 ± 0.0726 |
 | HalfCheetah-v4      | Inverse soft-Q Learning                        | 9931.1107 ± 1128.2828 | 1.012 ± 0.1118  |
 | Swimmer-v4          | Inverse soft-Q Learning                        | 357.7673 ± 1.3007     | 0.9935 ± 0.0036 |
 | Hopper-v4           | Inverse soft-Q Learning                        | 3538.9687 ± 49.9144   | 1.0022 ± 0.0142 |

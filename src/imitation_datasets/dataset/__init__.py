@@ -1,6 +1,6 @@
 """Module for imports"""
 from .dataset import BaselineDataset, IRLDataset
-from .random_dataset import get_random_dataset
+from .random_dataset import get_random_dataset, get_random_dataset_by_steps
 from .huggingface import (
     convert_baseline_dataset_to_dict,
     save_dataset_into_huggingface_format,

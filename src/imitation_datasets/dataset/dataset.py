@@ -123,7 +123,8 @@ class BaselineDataset(Dataset):
             raise ValueError(f"No dataset at: {path}")
 
         if source == "local":
-            self.data = np.load(path, allow_pickle=True)
+            with np.load(path, allow_pickle=True) as data:
+                self.data = dict(data)
             self.average_reward = np.mean(self.data["episode_returns"])
         else:
             dataset = load_dataset(path, split=hf_split)

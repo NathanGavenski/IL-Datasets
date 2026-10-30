@@ -19,7 +19,8 @@ from tensorboard_wrapper.tensorboard import Tensorboard
 from imitation_datasets.dataset.metrics import accuracy as accuracy_fn
 from imitation_datasets.dataset.metrics import average_episodic_reward, performance
 from imitation_datasets.utils import GymWrapper
-from imitation_datasets.dataset import get_random_dataset, BaselineDataset
+from imitation_datasets.dataset import get_random_dataset, get_random_dataset_by_steps
+from imitation_datasets.dataset import BaselineDataset
 from .policies.mlp import MLP, MlpWithAttention, MlpAttention
 from .policies.cnn import CNN, Resnet
 from .method import Metrics, Method
@@ -121,8 +122,8 @@ class BCO(Method):
         if not os.path.exists(path):
             os.makedirs(path)
 
-        name = "best_model.ckpt" if name is None else f"{name}.ckpt"
         idm_name = "best_idm.ckpt" if name is None else f"{name}_idm.ckpt"
+        name = "best_model.ckpt" if name is None else f"{name}.ckpt"
 
         torch.save(self.policy.state_dict(), f"{path}/{name}")
         torch.save(self.idm.state_dict(), f"{path}/{idm_name}")
@@ -143,13 +144,13 @@ class BCO(Method):
 
         self.policy.load_state_dict(
             torch.load(
-                f"{path}best_model.ckpt",
+                f"{path}/best_model.ckpt",
                 map_location=torch.device(self.device)
             )
         )
         self.idm.load_state_dict(
             torch.load(
-                f"{path}/idm.ckpt",
+                f"{path}/best_idm.ckpt",
                 map_location=torch.device(self.device)
             )
         )
@@ -193,10 +194,16 @@ class BCO(Method):
 
             if not os.path.exists(random_path):
                 print("Creating random dataset from scratch")
-                train_dataset["idm_dataset"] = get_random_dataset(
-                    environment_name=self.environment.spec.id,
-                    episodes=self.hyperparameters["random_episodes"]
-                )
+                if "random_steps" in self.hyperparameters:
+                    train_dataset["idm_dataset"] = get_random_dataset_by_steps(
+                        environment_name=self.environment.spec.id,
+                        steps=int(self.hyperparameters["random_steps"])
+                    )
+                else:
+                    train_dataset["idm_dataset"] = get_random_dataset(
+                        environment_name=self.environment.spec.id,
+                        episodes=self.hyperparameters["random_episodes"]
+                    )
             else:
                 print("Loading local random dataset")
                 train_dataset["idm_dataset"] = BaselineDataset(
@@ -231,6 +238,7 @@ class BCO(Method):
                 board.add_scalars("Enjoy", epoch="enjoy", **metrics)
                 board.step("enjoy")
                 if best_model < metrics["aer"] or always_save:
+                    best_model = metrics["aer"]
                     self.save(name=epoch if always_save else None)
 
                     if self.early_stop(metrics["aer"]):
@@ -248,19 +256,21 @@ class BCO(Method):
             train_dataset (DataLoader): new train dataset.
         """
         _, i_pos = self._enjoy(return_ipos=True)
+        dataset = train_dataset['idm_dataset'].dataset
+        actions = i_pos['actions'].reshape((len(i_pos['actions']), -1))
         train_dataset['idm_dataset'].dataset.states = torch.cat((
             train_dataset['idm_dataset'].dataset.states,
-            torch.from_numpy(i_pos['states'])),
+            torch.from_numpy(i_pos['states']).to(dataset.states.dtype)),
             dim=0
         )
         train_dataset['idm_dataset'].dataset.next_states = torch.cat((
             train_dataset['idm_dataset'].dataset.next_states,
-            torch.from_numpy(i_pos['next_states'])),
+            torch.from_numpy(i_pos['next_states']).to(dataset.next_states.dtype)),
             dim=0
         )
         train_dataset['idm_dataset'].dataset.actions = torch.cat((
             train_dataset['idm_dataset'].dataset.actions,
-            torch.from_numpy(i_pos['actions'].reshape((-1, 1)))),
+            torch.from_numpy(actions).to(dataset.actions.dtype)),
             dim=0
         )
         train_dataset['idm_dataset'].dataset.dones = torch.cat((
@@ -297,7 +307,10 @@ class BCO(Method):
             self.idm_optimizer.zero_grad()
             predictions = self.idm(torch.cat((state, next_state), dim=1))
 
-            loss = self.idm_loss(predictions, action.squeeze(1).long())
+            if self.discrete:
+                loss = self.idm_loss(predictions, action.squeeze(1).long())
+            else:
+                loss = self.idm_loss(predictions, action.float())
             loss.backward()
             idm_accumulated_loss.append(loss.item())
             self.idm_optimizer.step()
@@ -326,7 +339,10 @@ class BCO(Method):
             self.optimizer_fn.zero_grad()
             predictions = self.forward(state)
 
-            loss = self.loss_fn(predictions, action.long())
+            if self.discrete:
+                loss = self.loss_fn(predictions, action.long())
+            else:
+                loss = self.loss_fn(predictions, action.float())
             loss.backward()
             accumulated_loss.append(loss.item())
             self.optimizer_fn.step()

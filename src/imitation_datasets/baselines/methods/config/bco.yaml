@@ -25,3 +25,38 @@ Acrobot-v1:
   idm: 'MlpPolicy'
   policy: 'MlpPolicy'
   random_episodes: 10
+
+InvertedPendulum-v4:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_steps: 500000
+
+Swimmer-v4:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_steps: 500000
+
+HalfCheetah-v4:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_steps: 500000
+
+Hopper-v4:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_steps: 500000
+
+Ant-v4:
+  lr: 5e-4
+  idm_lr: 5e-4
+  idm: 'MlpPolicy'
+  policy: 'MlpPolicy'
+  random_steps: 500000

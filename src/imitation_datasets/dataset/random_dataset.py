@@ -4,6 +4,7 @@ import os
 import shutil
 from typing import List, Dict
 
+import gymnasium as gym
 import numpy as np
 from tqdm import tqdm
 
@@ -73,7 +74,8 @@ def collate(path: str, data: List[str]) -> bool:
 
     states = states.reshape((-1, states.shape[-1]))
 
-    actions = np.array(actions).reshape(-1)
+    actions = np.array(actions)
+    actions = actions.reshape(-1) if actions.ndim == 1 else actions.reshape(len(actions), -1)
     episodes_starts = np.array(episodes_starts).reshape(-1)
 
     rewards = np.array(rewards).reshape(-1)
@@ -172,3 +174,54 @@ def get_random_dataset(
     """
     random_dataset = create_dataset(environment_name, episodes, threads)
     return BaselineDataset(random_dataset)
+
+
+def get_random_dataset_by_steps(environment_name: str, steps: int) -> BaselineDataset:
+    """Create random dataset with a budget of environment steps (the current episode
+    is finished once the budget is reached).
+
+    Args:
+        environment_name (str): Gym id.
+        steps (int): minimum amount of environment steps.
+
+    Returns:
+        dataset (BaselineDataset): BaselineDataset object.
+    """
+    path = f"./dataset/random_{environment_name}"
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    os.makedirs(path)
+
+    env = GymWrapper(gym.make(environment_name), version="newest")
+    states, actions, rewards, episode_starts, episode_returns = [], [], [], [], []
+    with tqdm(total=steps, desc="Creating random dataset") as pbar:
+        while len(states) < steps:
+            done = False
+            state = env.reset()
+            acc_reward = 0
+            episode_starts.append(1)
+            while not done:
+                action = env.action_space.sample()
+                states.append(state)
+                actions.append(action)
+
+                state, reward, done, _ = env.step(action)
+                acc_reward += reward
+                rewards.append(reward)
+                episode_starts.append(0)
+                pbar.update(1)
+            episode_starts.pop()
+            episode_returns.append(acc_reward)
+    env.close()
+
+    actions = np.array(actions)
+    actions = actions.reshape(-1) if actions.ndim == 1 else actions.reshape(len(actions), -1)
+    episode = {
+        'obs': np.array(states, dtype=np.float32),
+        'actions': actions.astype(np.float32) if actions.ndim > 1 else actions,
+        'rewards': np.array(rewards),
+        'episode_returns': np.array(episode_returns),
+        'episode_starts': np.array(episode_starts)
+    }
+    np.savez(f'{path}/teacher', **episode)
+    return BaselineDataset(f"{path}/teacher.npz")
